@@ -17,10 +17,12 @@ After all rounds are complete, compute the score for each player. If player one
 has set of symbols `S` and player two has set of symbols `T`, then the payoff
 for player one is given by the following pseudocode:
 
-    score = 0
-    for s in S
-      for t in T
-        score += A[s][t]
+```python
+score = 0
+for s in S
+  for t in T
+    score += A[s][t]
+```
 
 Because of the properties of `A`, the game is zero sum. The player with
 positive score wins.
