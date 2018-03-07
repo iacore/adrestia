@@ -1,7 +1,7 @@
 [package]
 name = "rpsish"
 version = "0.1.0"
-authors = ["neynt"]
+authors = ["The Adrestian Colleagues"]
 
 [dependencies]
 rand = "0.4"
