@@ -1,0 +1,8 @@
+[package]
+name = "rpsish"
+version = "0.1.0"
+authors = ["neynt"]
+
+[dependencies]
+rand = "0.4"
+num = "0.1.42"
