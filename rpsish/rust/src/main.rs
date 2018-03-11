@@ -1,9 +1,9 @@
 extern crate rand;
 extern crate num;
 
-use std::cmp::Ordering;
-use rand::Rng;
 use num::integer::Integer;
+use rand::Rng;
+use std::cmp::Ordering;
 
 type PayoffTable = Vec<Vec<i32>>;
 
@@ -82,7 +82,7 @@ fn main() {
   };
   while !game_done(&state) {
     state = apply_action(state, GameAction {
-      public_symbol: modulo(rand::thread_rng().gen::<usize>(), config.num_symbols),
+      public_symbol:  modulo(rand::thread_rng().gen::<usize>(), config.num_symbols),
       private_symbol: modulo(rand::thread_rng().gen::<usize>(), config.num_symbols),
     });
     println!("{:?}", state);
