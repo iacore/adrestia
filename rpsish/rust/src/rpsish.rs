@@ -30,7 +30,6 @@ pub struct RpsishView<'a> {
 
 #[derive(Debug)]
 pub struct RpsishAction {
-  player: usize,
   public_symbol: usize,
   private_symbol: usize,
 }
@@ -74,9 +73,8 @@ fn modulo<T: Integer + Copy>(x: T, m: T) -> T {
 pub struct RandomPlayer;
 impl<'a> Player<'a> for RandomPlayer {
   type Game = RpsishState<'a>;
-  fn make_move(&self, pid: usize, view: &RpsishView) -> RpsishAction {
+  fn make_move(&self, _pid: usize, view: &RpsishView) -> RpsishAction {
     RpsishAction {
-      player:         pid,
       public_symbol:  modulo(rand::thread_rng().gen::<usize>(), view.config.num_symbols),
       private_symbol: modulo(rand::thread_rng().gen::<usize>(), view.config.num_symbols),
     }
@@ -90,9 +88,8 @@ pub struct ConstantPlayer {
 }
 impl<'a> Player<'a> for ConstantPlayer {
   type Game = RpsishState<'a>;
-  fn make_move(&self, pid: usize, _view: &RpsishView) -> RpsishAction {
+  fn make_move(&self, _pid: usize, _view: &RpsishView) -> RpsishAction {
     RpsishAction {
-      player:         pid,
       public_symbol:  self.public_symbol,
       private_symbol: self.private_symbol,
     }
@@ -104,7 +101,6 @@ impl<'a> Player<'a> for ConstantPlayer {
 pub struct SimpletonPlayer;
 impl<'a> Player<'a> for SimpletonPlayer {
   type Game = RpsishState<'a>;
-  // TODO: implement
   fn make_move(&self, pid: usize, view: &RpsishView) -> RpsishAction {
     let you = (pid + 1) % 2;
     let mut best: usize = 0;
@@ -112,8 +108,7 @@ impl<'a> Player<'a> for SimpletonPlayer {
     for i in 0..view.config.num_symbols {
       /* Why those ampersands precisely where they are? Because b o r r o w. */
       let &score =
-        &view.public_symbols[you]
-        .iter()
+        &view.public_symbols[you].iter()
         .map(|&j| view.config.payoffs[i][j])
         .sum();
       if score > best_score {
@@ -122,7 +117,6 @@ impl<'a> Player<'a> for SimpletonPlayer {
       }
     }
     RpsishAction {
-      player:         pid,
       public_symbol:  best,
       private_symbol: best,
     }
