@@ -221,7 +221,13 @@ while (true) {
     const total_width = sum(defender.units.map(u => u.kind.width));
     attacker.units.forEach(u => {
       u.kind.attack.forEach(atk => {
-        const target = defender.units[rand_int(0, total_width)];
+        let width_left = rand_int(0, total_width);
+        let target: Unit.t | undefined;
+        for (const du of defender.units) {
+          width_left -= du.kind.width;
+          if (width_left < 0) { target = du; break; }
+        }
+        if (target === undefined) { throw 'Invalid target!' }
         target.hp -= atk;
         console.log(
           `${attacker.name}'s ${u.kind.name}` +
