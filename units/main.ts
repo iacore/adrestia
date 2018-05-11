@@ -110,7 +110,8 @@ namespace Unit {
       `(${unit.kind.name}` +
       ` (width ${unit.kind.width})` +
       ` (hp ${unit.hp}/${unit.kind.health})` +
-      (unit.kind.attack.length ? ` (attack ${unit.kind.attack}))` : '')
+      (unit.kind.attack.length ? ` (attack ${unit.kind.attack})` : '') +
+      ')'
     );
   }
 }
