@@ -200,6 +200,7 @@ while (true) {
       console.log(`Resources available: ${Resources.to_string(player.resources)}`);
       console.log(`Your units:\n${player.units.map(u => Unit.to_string(u)).join('\n')}`);
       console.log('Type a unit name to buy it, or "done".');
+      console.log(`Available units: ${Object.keys(UnitKinds).sort().join()}`);
       const cmd = rl.question('> ');
       if (cmd === 'done') break;
       const unit_kind = UnitKinds[cmd];
