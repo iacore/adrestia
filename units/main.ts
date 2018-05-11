@@ -18,7 +18,7 @@ namespace Resources {
     const [red, green, blue] = s.split(' ').map(x => parseInt(x));
     return { red, green, blue };
   }
-  export function to_string(t1: t): string {
+  export function to_string_hum(t1: t): string {
     return `((red ${t1.red}) (green ${t1.green}) (blue ${t1.blue}))`;
   }
   export function subsumes(t1: t, t2: t): boolean {
@@ -105,7 +105,7 @@ namespace Unit {
     }
   }
 
-  export function to_string(unit: t): string {
+  export function to_string_hum(unit: t): string {
     return (
       `(${unit.kind.name}` +
       ` (width ${unit.kind.width})` +
@@ -197,8 +197,8 @@ while (true) {
     console.log(`Player ${pid+1}`);
     const player = state.players[pid];
     while (true) {
-      console.log(`Resources available: ${Resources.to_string(player.resources)}`);
-      console.log(`Your units:\n${player.units.map(u => Unit.to_string(u)).join('\n')}`);
+      console.log(`Resources available: ${Resources.to_string_hum(player.resources)}`);
+      console.log(`Your units:\n${player.units.map(u => Unit.to_string_hum(u)).join('\n')}`);
       console.log('Type a unit name to buy it, or "done".');
       console.log(`Available units: ${Object.keys(UnitKinds).sort().join()}`);
       const cmd = rl.question('> ');
