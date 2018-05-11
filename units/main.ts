@@ -84,12 +84,34 @@ namespace UnitKind {
     cost: { red: 1, green: 0, blue: 2 },
     before_turn: player => { player.resources.red += 1; },
   }
+
+  export const font_g: t = {
+    name: 'Font G',
+    colour: Colour.Green,
+    health: 2,
+    width: 1,
+    attack: [],
+    cost: { red: 0, green: 1, blue: 2 },
+    before_turn: player => { player.resources.green += 1; },
+  }
+
+  export const font_b: t = {
+    name: 'Font B',
+    colour: Colour.Blue,
+    health: 2,
+    width: 1,
+    attack: [],
+    cost: { red: 0, green: 0, blue: 3 },
+    before_turn: player => { player.resources.blue += 1; },
+  }
 }
 
 const UnitKinds: { [key: string]: UnitKind.t | undefined } = {
   general: UnitKind.general,
   grunt: UnitKind.grunt,
   font_r: UnitKind.font_r,
+  font_g: UnitKind.font_g,
+  font_b: UnitKind.font_b,
 };
 
 namespace Unit {
