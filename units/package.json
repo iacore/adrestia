@@ -1,0 +1,15 @@
+{
+  "name": "adrestia_units",
+  "version": "0.0.1",
+  "description": "why do you write like you're running out of time",
+  "scripts": {
+    "build": "tsc",
+    "run": "tsc && node main.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^10.0.8",
+    "@types/readline-sync": "^1.4.3",
+    "readline-sync": "^1.4.9"
+  }
+}
