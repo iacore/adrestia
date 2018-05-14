@@ -133,7 +133,7 @@ class Player:
         self.alive = True
 
 class GameState:
-    players: List[Player]
+    players: List['Player']
     turn: int
 
     def __init__(self) -> None:
@@ -177,7 +177,7 @@ if __name__ == '__main__':
                 print('Available units: ' + ' '.join(unit_kinds.keys()))
                 cmd = input()
                 if cmd == 'done': break
-                unit_kind = unit_kinds[cmd]
+                unit_kind = unit_kinds.get(cmd)
                 if unit_kind is None:
                     print('Invalid unit')
                     continue
@@ -206,7 +206,9 @@ if __name__ == '__main__':
                     if target is None:
                         raise Exception('Invalid target during battle')
                     target.health -= attack
-                    print('{}\'s {} hits {} for {}'.format(player.name, attacker.kind.name, target.kind.name, attack))
+                    message = f"{player.name}'s {attacker.kind.name} hits {target.kind.name} for {attack}"
+                    if target.health <= 0: message += ", killing it!"
+                    print(message)
 
         # Death
         for player in state.players:

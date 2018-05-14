@@ -22,11 +22,7 @@ namespace Resources {
     return `((red ${t1.red}) (green ${t1.green}) (blue ${t1.blue}))`;
   }
   export function subsumes(t1: t, t2: t): boolean {
-    return (
-      t1.red <= t2.red &&
-      t1.green <= t2.green &&
-      t1.blue <= t2.blue
-    );
+    return t1.red <= t2.red && t1.green <= t2.green && t1.blue <= t2.blue;
   }
   export function add(t1: t, t2: t): t {
     return {
@@ -200,13 +196,9 @@ function read_production(player_name: string): Resources.t {
 
 while (true) {
   // Production
-  for (let pid = 0; pid < 2; pid += 1) {
-    const player = state.players[pid];
-    player.resources = Resources.add(player.resources, player.production);
-  }
-
-  // Pre-turn effects
   state.players.forEach(player => {
+    player.resources = Resources.add(player.resources, player.production);
+    // Pre-turn effects
     player.units.forEach(unit => {
       if (unit.kind.before_turn !== null) {
         unit.kind.before_turn(player);
