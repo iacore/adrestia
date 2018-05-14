@@ -158,11 +158,9 @@ namespace Player {
 namespace GameState {
   export interface t {
     players: Player.t[],
-    turn: number,
   }
   export const empty: t = {
     players: [],
-    turn: 0,
   };
 }
 

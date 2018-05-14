@@ -2,6 +2,7 @@ from typing import List, Optional, Callable, Dict
 from enum import Enum
 import random
 import itertools
+import attr
 
 class Colour(Enum):
     BLACK = 0
@@ -9,15 +10,11 @@ class Colour(Enum):
     GREEN = 2
     BLUE = 3
 
+@attr.s
 class Resources:
-    red: int
-    green: int
-    blue: int
-
-    def __init__(self, red: int = 0, green: int = 0, blue: int = 0) -> None:
-        self.red = red
-        self.green = green
-        self.blue = blue
+    red: int   = attr.ib(default = 0)
+    green: int = attr.ib(default = 0)
+    blue: int  = attr.ib(default = 0)
 
     @staticmethod
     def of_string_exn(s: str) -> 'Resources':
@@ -42,32 +39,15 @@ class Resources:
                 green=self.green - other.green,
                 blue=self.blue - other.blue)
 
+@attr.s
 class UnitKind:
-    name: str
-    colour: Colour
-    health: int
-    width: int
-    attack: List[int]
-    cost: Optional[Resources]
-    before_turn: Optional[Callable[['Player'], None]]
-
-    def __init__(
-            self,
-            name: str,
-            colour: Colour,
-            health: int,
-            width: int,
-            attack: List[int],
-            cost: Optional[Resources],
-            before_turn: Optional[Callable[['Player'], None]] = None,
-            ) -> None:
-        self.name = name
-        self.colour = colour
-        self.health = health
-        self.width = width
-        self.attack = attack
-        self.cost = cost
-        self.before_turn = before_turn
+    name: str                                         = attr.ib()
+    colour: Colour                                    = attr.ib()
+    health: int                                       = attr.ib()
+    width: int                                        = attr.ib()
+    attack: List[int]                                 = attr.ib()
+    cost: Optional[Resources]                         = attr.ib()
+    before_turn: Optional[Callable[['Player'], None]] = attr.ib(default = None)
 
 def add_resources_effect(resources: Resources) -> Callable[['Player'], None]:
     def inner(p: 'Player') -> None:
@@ -100,13 +80,14 @@ unit_kinds: Dict[str, UnitKind] = {
     'tank': UnitKind(name='Tank', colour=Colour.BLUE, health=10, width=7, attack=[2], cost=Resources(red=1, green=5, blue=3)),
 }
 
+@attr.s
 class Unit:
-    kind: UnitKind
-    health: int
+    kind: UnitKind = attr.ib()
+    health: int    = attr.ib()
 
-    def __init__(self, kind: UnitKind) -> None:
-        self.kind = kind
-        self.health = kind.health
+    @classmethod
+    def of_kind(cls, kind: UnitKind) -> 'Unit':
+        return cls(kind, kind.health)
 
     def to_string_hum(self) -> str:
         return '({} (width {}) (hp {}/{}){})'.format(
@@ -116,29 +97,31 @@ class Unit:
                 self.kind.health,
                 ' (attack {})'.format(self.kind.attack) if len(self.kind.attack) > 0 else '')
 
+@attr.s
 class Player:
-    name: str
-    units: List[Unit]
-    resources: Resources
-    production: Resources
-    done_turn: bool
-    alive: bool
+    name: str             = attr.ib()
+    units: List[Unit]     = attr.ib()
+    resources: Resources  = attr.ib()
+    production: Resources = attr.ib()
+    done_turn: bool       = attr.ib(default = False)
+    alive: bool           = attr.ib(default = True)
 
-    def __init__(self, name: str, production: Resources) -> None:
-        self.name = name
-        self.resources = Resources()
-        self.production = production
-        self.units = [Unit(unit_kinds['general'])]
-        self.done_turn = False
-        self.alive = True
+    @classmethod
+    def create(cls, name: str, production: Resources) -> 'Player':
+        return cls(
+                name = name,
+                units = [Unit.of_kind(unit_kinds['general'])],
+                resources = Resources(),
+                production = production)
 
+@attr.s
 class GameState:
-    players: List['Player']
-    turn: int
+    players: List['Player'] = attr.ib()
+    turn: int               = attr.ib()
 
-    def __init__(self) -> None:
-        self.players = []
-        self.turn = 0
+    @classmethod
+    def create(cls) -> 'GameState':
+        return cls(players=[], turn=0)
 
 # Done type declaration; here are helper methods for actually running the game
 def read_production(player_name: str) -> Resources:
@@ -151,10 +134,10 @@ def read_production(player_name: str) -> Resources:
         return production
 
 if __name__ == '__main__':
-    state: GameState = GameState()
+    state: GameState = GameState.create()
     print('Starting game.')
     for name in ['Alice', 'Bob']:
-        state.players.append(Player(name, read_production(name)))
+        state.players.append(Player.create(name, read_production(name)))
 
     # Main game loop
     while True:
@@ -188,7 +171,7 @@ if __name__ == '__main__':
                     print('Cannot afford.')
                     continue
                 player.resources = player.resources.subtract(unit_kind.cost)
-                player.units.append(Unit(unit_kind))
+                player.units.append(Unit.of_kind(unit_kind))
 
         # Battle
         for player in state.players:
