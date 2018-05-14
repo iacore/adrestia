@@ -30,17 +30,15 @@ class Resources:
     def subsumes(self, other: 'Resources') -> bool:
         return self.red >= other.red and self.green >= other.green and self.blue >= other.blue
 
-    def add(self, other: 'Resources') -> 'Resources':
-        return Resources(
-                red=self.red + other.red,
-                green=self.green + other.green,
-                blue=self.blue + other.blue)
+    def add(self, other: 'Resources') -> None:
+        self.red += other.red
+        self.green += other.green
+        self.blue += other.blue
 
-    def subtract(self, other: 'Resources') -> 'Resources':
-        return Resources(
-                red=self.red - other.red,
-                green=self.green - other.green,
-                blue=self.blue - other.blue)
+    def subtract(self, other: 'Resources') -> None:
+        self.red -= other.red
+        self.green -= other.green
+        self.blue -= other.blue
 
 class UnitKind:
     name: str
@@ -71,7 +69,7 @@ class UnitKind:
 
 def add_resources_effect(resources: Resources) -> Callable[['Player'], None]:
     def inner(p: 'Player') -> None:
-        p.resources = p.resources.add(resources)
+        p.resources.add(resources)
     return inner
 
 unit_kinds: Dict[str, UnitKind] = {
@@ -128,9 +126,19 @@ class Player:
         self.name = name
         self.resources = Resources()
         self.production = production
-        self.units = [Unit(unit_kinds['general'])]
+        self.units = [Unit(unit_kinds['general'])] + [Unit(unit_kinds['wall']) for i in range(5)]
         self.done_turn = False
         self.alive = True
+
+class OtherPlayer:
+    name: str
+    units: List[Unit]
+    alive: bool
+
+    def __init__(self, player: Player) -> None:
+        self.name = player.name
+        self.units = player.units
+        self.alive = player.alive
 
 class GameState:
     players: List[Player]
@@ -139,6 +147,16 @@ class GameState:
     def __init__(self) -> None:
         self.players = []
         self.turn = 0
+
+class GameView:
+    viewPlayer: Player
+    otherPlayers: List[OtherPlayer]
+    turn: int
+
+    def __init__(self, game: GameState, playerIndex: int) -> None:
+        self.viewPlayer = game.players[playerIndex]
+        self.otherPlayers = [p for i, p in enumerate(game.players) if i != playerIndex]
+        self.turn = game.turn
 
 # Done type declaration; here are helper methods for actually running the game
 def read_production(player_name: str) -> Resources:
@@ -160,7 +178,7 @@ if __name__ == '__main__':
     while True:
         # Production
         for player in state.players:
-            player.resources = player.resources.add(player.production)
+            player.resources.add(player.production)
 
             # Pre-turn effects
             for unit in player.units:
@@ -177,7 +195,7 @@ if __name__ == '__main__':
                 print('Available units: ' + ' '.join(unit_kinds.keys()))
                 cmd = input()
                 if cmd == 'done': break
-                unit_kind = unit_kinds[cmd]
+                unit_kind = unit_kinds.get(cmd, None)
                 if unit_kind is None:
                     print('Invalid unit')
                     continue
@@ -187,8 +205,9 @@ if __name__ == '__main__':
                 if not player.resources.subsumes(unit_kind.cost):
                     print('Cannot afford.')
                     continue
-                player.resources = player.resources.subtract(unit_kind.cost)
+                player.resources.subtract(unit_kind.cost)
                 player.units.append(Unit(unit_kind))
+            print()
 
         # Battle
         for player in state.players:
@@ -220,4 +239,5 @@ if __name__ == '__main__':
             else:
                 print('It is a tie!')
             break
+        print()
 

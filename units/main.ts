@@ -1,4 +1,15 @@
 import * as rl from 'readline-sync';
+const readline = require('readline')
+
+const question = function(s: string) {
+  process.stdout.write(s);
+  const line = process.stdin.read();
+  if (typeof(line) === 'string') {
+    return line;
+  } else {
+    return line.toString();
+  }
+}
 
 enum Colour {
   Black,
@@ -185,7 +196,7 @@ function read_production(player_name: string): Resources.t {
   while (true) {
     const production =
       Resources.of_string_exn(
-        rl.question(`${player_name}'s production (R G B): `));
+        question(`${player_name}'s production (R G B): `));
     if (production.red + production.blue + production.green !== 7) {
       console.log('Must sum to 7');
       continue;
@@ -223,7 +234,7 @@ while (true) {
       console.log(`Your units:\n${player.units.map(u => Unit.to_string_hum(u)).join('\n')}`);
       console.log('Type a unit name to buy it, or "done".');
       console.log(`Available units: ${Object.keys(UnitKinds).sort().join()}`);
-      const cmd = rl.question('> ');
+      const cmd = question('> ');
       if (cmd === 'done') break;
       const unit_kind = UnitKinds[cmd];
       if (unit_kind === undefined) { console.log('Invalid unit.'); continue; }
