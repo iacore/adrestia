@@ -2,6 +2,8 @@ from typing import List, Optional, Callable, Dict
 from enum import Enum
 import random
 import itertools
+import attr
+import os
 
 class Colour(Enum):
     BLACK = 0
@@ -9,15 +11,11 @@ class Colour(Enum):
     GREEN = 2
     BLUE = 3
 
+@attr.s
 class Resources:
-    red: int
-    green: int
-    blue: int
-
-    def __init__(self, red: int = 0, green: int = 0, blue: int = 0) -> None:
-        self.red = red
-        self.green = green
-        self.blue = blue
+    red: int   = attr.ib(default = 0)
+    green: int = attr.ib(default = 0)
+    blue: int  = attr.ib(default = 0)
 
     @staticmethod
     def of_string_exn(s: str) -> 'Resources':
@@ -40,32 +38,15 @@ class Resources:
         self.green -= other.green
         self.blue -= other.blue
 
+@attr.s
 class UnitKind:
-    name: str
-    colour: Colour
-    health: int
-    width: int
-    attack: List[int]
-    cost: Optional[Resources]
-    before_turn: Optional[Callable[['Player'], None]]
-
-    def __init__(
-            self,
-            name: str,
-            colour: Colour,
-            health: int,
-            width: int,
-            attack: List[int],
-            cost: Optional[Resources],
-            before_turn: Optional[Callable[['Player'], None]] = None,
-            ) -> None:
-        self.name = name
-        self.colour = colour
-        self.health = health
-        self.width = width
-        self.attack = attack
-        self.cost = cost
-        self.before_turn = before_turn
+    name: str                                         = attr.ib()
+    colour: Colour                                    = attr.ib()
+    health: int                                       = attr.ib()
+    width: int                                        = attr.ib()
+    attack: List[int]                                 = attr.ib()
+    cost: Optional[Resources]                         = attr.ib()
+    before_turn: Optional[Callable[['Player'], None]] = attr.ib(default = None)
 
 def add_resources_effect(resources: Resources) -> Callable[['Player'], None]:
     def inner(p: 'Player') -> None:
@@ -98,13 +79,14 @@ unit_kinds: Dict[str, UnitKind] = {
     'tank': UnitKind(name='Tank', colour=Colour.BLUE, health=10, width=7, attack=[2], cost=Resources(red=1, green=5, blue=3)),
 }
 
+@attr.s
 class Unit:
-    kind: UnitKind
-    health: int
+    kind: UnitKind = attr.ib()
+    health: int    = attr.ib()
 
-    def __init__(self, kind: UnitKind) -> None:
-        self.kind = kind
-        self.health = kind.health
+    @staticmethod
+    def of_kind(kind: UnitKind) -> 'Unit':
+        return Unit(kind, kind.health)
 
     def to_string_hum(self) -> str:
         return '({} (width {}) (hp {}/{}){})'.format(
@@ -114,49 +96,53 @@ class Unit:
                 self.kind.health,
                 ' (attack {})'.format(self.kind.attack) if len(self.kind.attack) > 0 else '')
 
+@attr.s
 class Player:
-    name: str
-    units: List[Unit]
-    resources: Resources
-    production: Resources
-    done_turn: bool
-    alive: bool
+    name: str             = attr.ib()
+    units: List[Unit]     = attr.ib()
+    resources: Resources  = attr.ib()
+    production: Resources = attr.ib()
+    done_turn: bool       = attr.ib(default = False)
+    alive: bool           = attr.ib(default = True)
 
-    def __init__(self, name: str, production: Resources) -> None:
-        self.name = name
-        self.resources = Resources()
-        self.production = production
-        self.units = [Unit(unit_kinds['general'])] + [Unit(unit_kinds['wall']) for i in range(5)]
-        self.done_turn = False
-        self.alive = True
+    @staticmethod
+    def create(name: str, production: Resources) -> 'Player':
+        return Player(
+                name = name,
+                units = [Unit.of_kind(unit_kinds['general'])] + [Unit.of_kind(unit_kinds['wall']) for i in range(5)],
+                resources = Resources(),
+                production = production)
 
-class OtherPlayer:
-    name: str
-    units: List[Unit]
-    alive: bool
-
-    def __init__(self, player: Player) -> None:
-        self.name = player.name
-        self.units = player.units
-        self.alive = player.alive
-
+@attr.s
 class GameState:
-    players: List[Player]
-    turn: int
+    players: List['Player'] = attr.ib()
+    turn: int               = attr.ib()
 
-    def __init__(self) -> None:
-        self.players = []
-        self.turn = 0
+    @staticmethod
+    def create() -> 'GameState':
+        return GameState(players=[], turn=0)
 
+@attr.s
+class OtherPlayer:
+    name: str         = attr.ib()
+    units: List[Unit] = attr.ib()
+    alive: bool       = attr.ib()
+
+    @staticmethod
+    def of_player(player: Player) -> 'OtherPlayer':
+        return OtherPlayer(name=player.name, units=player.units, alive=player.alive)
+
+@attr.s
 class GameView:
-    viewPlayer: Player
-    otherPlayers: List[OtherPlayer]
-    turn: int
+    view_player: Player              = attr.ib()
+    other_players: List[OtherPlayer] = attr.ib()
+    turn: int                        = attr.ib()
 
-    def __init__(self, game: GameState, playerIndex: int) -> None:
-        self.viewPlayer = game.players[playerIndex]
-        self.otherPlayers = [p for i, p in enumerate(game.players) if i != playerIndex]
-        self.turn = game.turn
+    @staticmethod
+    def of_gamestate(game: GameState, player_index: int) -> 'GameView':
+        return GameView(view_player=game.players[player_index],
+                        other_players=[OtherPlayer.of_player(p) for i, p in enumerate(game.players) if i != player_index],
+                        turn=game.turn)
 
 # Done type declaration; here are helper methods for actually running the game
 def read_production(player_name: str) -> Resources:
@@ -169,10 +155,11 @@ def read_production(player_name: str) -> Resources:
         return production
 
 if __name__ == '__main__':
-    state: GameState = GameState()
+    state: GameState = GameState.create()
     print('Starting game.')
     for name in ['Alice', 'Bob']:
-        state.players.append(Player(name, read_production(name)))
+        os.system('clear')
+        state.players.append(Player.create(name, read_production(name)))
 
     # Main game loop
     while True:
@@ -187,15 +174,23 @@ if __name__ == '__main__':
 
         # Build
         for player in state.players:
+            os.system('clear')
+            print('\nPress enter to start turn')
+            input()
             print('Player: {}'.format(player.name))
+            for other in state.players:
+                if other.name == player.name: continue
+                print('{}\'s units:\n'.format(other.name) + '\n'.join(u.to_string_hum() for u in other.units))
+                print()
             while True:
                 print('Resources available: {}'.format(player.resources.to_string_hum()))
                 print('Your units:\n' + '\n'.join(u.to_string_hum() for u in player.units))
+                print()
                 print('Type a unit name to buy it, or "done".')
                 print('Available units: ' + ' '.join(unit_kinds.keys()))
                 cmd = input()
                 if cmd == 'done': break
-                unit_kind = unit_kinds.get(cmd, None)
+                unit_kind = unit_kinds.get(cmd)
                 if unit_kind is None:
                     print('Invalid unit')
                     continue
@@ -206,10 +201,10 @@ if __name__ == '__main__':
                     print('Cannot afford.')
                     continue
                 player.resources.subtract(unit_kind.cost)
-                player.units.append(Unit(unit_kind))
-            print()
+                player.units.append(Unit.of_kind(unit_kind))
 
         # Battle
+        os.system('clear')
         for player in state.players:
             target_units = list(itertools.chain.from_iterable(p.units for p in state.players if p is not player))
             total_width = sum(u.kind.width for u in target_units)
@@ -225,7 +220,11 @@ if __name__ == '__main__':
                     if target is None:
                         raise Exception('Invalid target during battle')
                     target.health -= attack
-                    print('{}\'s {} hits {} for {}'.format(player.name, attacker.kind.name, target.kind.name, attack))
+                    message = f"{player.name}'s {attacker.kind.name} hits {target.kind.name} for {attack}"
+                    if target.health <= 0: message += ", killing it!"
+                    print(message)
+        print('\nPress enter to continue')
+        input()
 
         # Death
         for player in state.players:
@@ -235,7 +234,7 @@ if __name__ == '__main__':
         remaining_players = [p for p in state.players if p.alive]
         if len(remaining_players) < 2:
             if len(remaining_players) == 1:
-                print('{} wins!'.format(remaining_players[0].name))
+                print('{remaining_players[0].name} wins!')
             else:
                 print('It is a tie!')
             break

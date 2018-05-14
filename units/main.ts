@@ -1,16 +1,6 @@
 import * as rl from 'readline-sync';
 const readline = require('readline')
 
-const question = function(s: string) {
-  process.stdout.write(s);
-  const line = process.stdin.read();
-  if (typeof(line) === 'string') {
-    return line;
-  } else {
-    return line.toString();
-  }
-}
-
 enum Colour {
   Black,
   Red,
@@ -33,11 +23,7 @@ namespace Resources {
     return `((red ${t1.red}) (green ${t1.green}) (blue ${t1.blue}))`;
   }
   export function subsumes(t1: t, t2: t): boolean {
-    return (
-      t1.red <= t2.red &&
-      t1.green <= t2.green &&
-      t1.blue <= t2.blue
-    );
+    return t1.red <= t2.red && t1.green <= t2.green && t1.blue <= t2.blue;
   }
   export function add(t1: t, t2: t): t {
     return {
@@ -173,11 +159,9 @@ namespace Player {
 namespace GameState {
   export interface t {
     players: Player.t[],
-    turn: number,
   }
   export const empty: t = {
     players: [],
-    turn: 0,
   };
 }
 
@@ -196,7 +180,7 @@ function read_production(player_name: string): Resources.t {
   while (true) {
     const production =
       Resources.of_string_exn(
-        question(`${player_name}'s production (R G B): `));
+        rl.question(`${player_name}'s production (R G B): `));
     if (production.red + production.blue + production.green !== 7) {
       console.log('Must sum to 7');
       continue;
@@ -211,13 +195,9 @@ function read_production(player_name: string): Resources.t {
 
 while (true) {
   // Production
-  for (let pid = 0; pid < 2; pid += 1) {
-    const player = state.players[pid];
-    player.resources = Resources.add(player.resources, player.production);
-  }
-
-  // Pre-turn effects
   state.players.forEach(player => {
+    player.resources = Resources.add(player.resources, player.production);
+    // Pre-turn effects
     player.units.forEach(unit => {
       if (unit.kind.before_turn !== null) {
         unit.kind.before_turn(player);
@@ -234,7 +214,7 @@ while (true) {
       console.log(`Your units:\n${player.units.map(u => Unit.to_string_hum(u)).join('\n')}`);
       console.log('Type a unit name to buy it, or "done".');
       console.log(`Available units: ${Object.keys(UnitKinds).sort().join()}`);
-      const cmd = question('> ');
+      const cmd = rl.question('> ');
       if (cmd === 'done') break;
       const unit_kind = UnitKinds[cmd];
       if (unit_kind === undefined) { console.log('Invalid unit.'); continue; }
