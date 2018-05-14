@@ -85,9 +85,9 @@ class Unit:
     kind: UnitKind = attr.ib()
     health: int    = attr.ib()
 
-    @classmethod
-    def of_kind(cls, kind: UnitKind) -> 'Unit':
-        return cls(kind, kind.health)
+    @staticmethod
+    def of_kind(kind: UnitKind) -> 'Unit':
+        return Unit(kind, kind.health)
 
     def to_string_hum(self) -> str:
         return '({} (width {}) (hp {}/{}){})'.format(
@@ -106,9 +106,9 @@ class Player:
     done_turn: bool       = attr.ib(default = False)
     alive: bool           = attr.ib(default = True)
 
-    @classmethod
-    def create(cls, name: str, production: Resources) -> 'Player':
-        return cls(
+    @staticmethod
+    def create(name: str, production: Resources) -> 'Player':
+        return Player(
                 name = name,
                 units = [Unit.of_kind(unit_kinds['general'])],
                 resources = Resources(),
@@ -119,9 +119,9 @@ class GameState:
     players: List['Player'] = attr.ib()
     turn: int               = attr.ib()
 
-    @classmethod
-    def create(cls) -> 'GameState':
-        return cls(players=[], turn=0)
+    @staticmethod
+    def create() -> 'GameState':
+        return GameState(players=[], turn=0)
 
 # Done type declaration; here are helper methods for actually running the game
 def read_production(player_name: str) -> Resources:
