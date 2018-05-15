@@ -172,15 +172,17 @@ if __name__ == '__main__':
                 if unit.kind.before_turn is not None:
                     unit.kind.before_turn(player)
 
+        unit_caches = [(player.name, '{}\'s units:\n'.format(player.name) + '\n'.join(u.to_string_hum() for u in player.units)) for player in state.players]
+
         # Build
         for player in state.players:
             os.system('clear')
             print('\nPress enter to start turn')
             input()
             print('Player: {}'.format(player.name))
-            for other in state.players:
-                if other.name == player.name: continue
-                print('{}\'s units:\n'.format(other.name) + '\n'.join(u.to_string_hum() for u in other.units))
+            for other, cache in unit_caches:
+                if other == player.name: continue
+                print(cache)
                 print()
             while True:
                 print('Resources available: {}'.format(player.resources.to_string_hum()))
@@ -234,7 +236,7 @@ if __name__ == '__main__':
         remaining_players = [p for p in state.players if p.alive]
         if len(remaining_players) < 2:
             if len(remaining_players) == 1:
-                print('{remaining_players[0].name} wins!')
+                print(f'{remaining_players[0].name} wins!')
             else:
                 print('It is a tie!')
             break
