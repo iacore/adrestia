@@ -1,9 +1,14 @@
 from typing import List, Optional, Callable, Dict
 from enum import Enum
+import copy
 import random
 import itertools
 import attr
 import os
+
+################################################################################
+# Game rules
+################################################################################
 
 class Colour(Enum):
     BLACK = 0
@@ -122,6 +127,10 @@ class GameState:
     def create() -> 'GameState':
         return GameState(players=[], turn=0)
 
+################################################################################
+# Balancer stuff
+################################################################################
+
 @attr.s
 class OtherPlayer:
     name: str         = attr.ib()
@@ -143,6 +152,39 @@ class GameView:
         return GameView(view_player=game.players[player_index],
                         other_players=[OtherPlayer.of_player(p) for i, p in enumerate(game.players) if i != player_index],
                         turn=game.turn)
+
+Strategy = Callable[[GameView], List[UnitKind]]
+StrategyGenerator = Callable[[], Strategy]
+
+@attr.s
+class BasicStrategy:
+    build_order: List[UnitKind] = attr.ib()
+    
+    def __call__(self, view: GameView) -> List[UnitKind]:
+        resources = copy.copy(view.view_player.resources)
+        build = []
+        for kind in self.build_order:
+            if kind.cost is None:
+                continue
+            if resources.subsumes(kind.cost):
+                build.append(kind)
+                resources.subtract(kind.cost)
+        return build
+
+def basic_strategy_generator() -> Strategy:
+    def random_kind() -> UnitKind:
+        while True:
+            kind = random.choice(list(unit_kinds.values()))
+            if kind.cost:
+                return kind
+    build_order = [random_kind()]
+    while random.random() > 0.5:
+        build_order.append(random_kind())
+    return BasicStrategy(build_order=build_order)
+
+################################################################################
+# Text-based manual playtesting system
+################################################################################
 
 # Done type declaration; here are helper methods for actually running the game
 def read_production(player_name: str) -> Resources:
