@@ -1,186 +1,17 @@
 from typing import List, Optional, Callable, Dict
-from enum import Enum
-import copy
-import random
 import itertools
 import attr
 import os
 
-################################################################################
-# Game rules
-################################################################################
+from colour import Colour
+from resources import Resources
+from unit_kind import UnitKind, unit_kinds
+from unit import Unit
+from player import Player
+from game_state import GameState
 
-class Colour(Enum):
-    BLACK = 0
-    RED = 1
-    GREEN = 2
-    BLUE = 3
-
-@attr.s
-class Resources:
-    red: int   = attr.ib(default = 0)
-    green: int = attr.ib(default = 0)
-    blue: int  = attr.ib(default = 0)
-
-    @staticmethod
-    def of_string_exn(s: str) -> 'Resources':
-        red, green, blue = map(int, s.split(' '))
-        return Resources(red=red, green=green, blue=blue)
-    
-    def to_string_hum(self) -> str:
-        return '((red {}) (green {}) (blue {})'.format(self.red, self.green, self.blue)
-    
-    def subsumes(self, other: 'Resources') -> bool:
-        return self.red >= other.red and self.green >= other.green and self.blue >= other.blue
-
-    def add(self, other: 'Resources') -> None:
-        self.red += other.red
-        self.green += other.green
-        self.blue += other.blue
-
-    def subtract(self, other: 'Resources') -> None:
-        self.red -= other.red
-        self.green -= other.green
-        self.blue -= other.blue
-
-@attr.s
-class UnitKind:
-    name: str                                         = attr.ib()
-    colour: Colour                                    = attr.ib()
-    health: int                                       = attr.ib()
-    width: int                                        = attr.ib()
-    attack: List[int]                                 = attr.ib()
-    cost: Optional[Resources]                         = attr.ib()
-    before_turn: Optional[Callable[['Player'], None]] = attr.ib(default = None)
-
-def add_resources_effect(resources: Resources) -> Callable[['Player'], None]:
-    def inner(p: 'Player') -> None:
-        p.resources.add(resources)
-    return inner
-
-unit_kinds: Dict[str, UnitKind] = {
-    'general': UnitKind(name='General', colour=Colour.BLACK, health=5, width=1, attack=[1], cost=None),
-    'grunt': UnitKind(name='Grunt', colour=Colour.RED, health=1, width=1, attack=[1], cost=Resources(red=2)),
-    'troll': UnitKind(name='Troll', colour=Colour.RED, health=2, width=2, attack=[4], cost=Resources(red=5)),
-    'wall': UnitKind(name='Wall', colour=Colour.GREEN, health=1, width=1, attack=[], cost=Resources(green=1)),
-    'turret': UnitKind(name='Turret', colour=Colour.GREEN, health=1, width=2, attack=[1], cost=Resources(green=2)),
-    'wide_wall': UnitKind(name='Wide Wall', colour=Colour.GREEN, health=2, width=4, attack=[], cost=Resources(green=3)),
-    'font_r': UnitKind(name='Font R', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(red=1, blue=2),
-        before_turn=add_resources_effect(Resources(red=1))),
-    'font_g': UnitKind(name='Font G', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(green=1, blue=2),
-        before_turn=add_resources_effect(Resources(green=1))),
-    'font_b': UnitKind(name='Font B', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(blue=3),
-        before_turn=add_resources_effect(Resources(blue=1))),
-    'paragon': UnitKind(name='Paragon', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(red=1, green=1, blue=7),
-        before_turn=add_resources_effect(Resources(red=1, green=1, blue=1))),
-    'ogre': UnitKind(name='Ogre', colour=Colour.RED, health=2, width=2, attack=[2], cost=Resources(red=2, green=2)),
-    'shrek': UnitKind(name='Shrek', colour=Colour.GREEN, health=4, width=3, attack=[2], cost=Resources(red=2, green=3)),
-    'soldier': UnitKind(name='Soldier', colour=Colour.BLUE, health=1, width=1, attack=[1], cost=Resources(red=1, blue=2)),
-    'commando': UnitKind(name='Commando', colour=Colour.RED, health=2, width=1, attack=[1, 1], cost=Resources(red=3, blue=2)),
-    # TODO: forts don't take damage from red units
-    'fort': UnitKind(name='Fort', colour=Colour.GREEN, health=1, width=4, attack=[], cost=Resources(green=3, blue=2)),
-    'insurgent': UnitKind(name='Insurgent', colour=Colour.RED, health=3, width=1, attack=[1], cost=Resources(red=2, green=1, blue=1)),
-    'avatar': UnitKind(name='Avatar', colour=Colour.BLUE, health=3, width=2, attack=[1, 3, 1], cost=Resources(red=5, green=1, blue=3)),
-    'tank': UnitKind(name='Tank', colour=Colour.BLUE, health=10, width=7, attack=[2], cost=Resources(red=1, green=5, blue=3)),
-}
-
-@attr.s
-class Unit:
-    kind: UnitKind = attr.ib()
-    health: int    = attr.ib()
-
-    @staticmethod
-    def of_kind(kind: UnitKind) -> 'Unit':
-        return Unit(kind, kind.health)
-
-    def to_string_hum(self) -> str:
-        return '({} (width {}) (hp {}/{}){})'.format(
-                self.kind.name,
-                self.kind.width,
-                self.health,
-                self.kind.health,
-                ' (attack {})'.format(self.kind.attack) if len(self.kind.attack) > 0 else '')
-
-@attr.s
-class Player:
-    name: str             = attr.ib()
-    units: List[Unit]     = attr.ib()
-    resources: Resources  = attr.ib()
-    production: Resources = attr.ib()
-    done_turn: bool       = attr.ib(default = False)
-    alive: bool           = attr.ib(default = True)
-
-    @staticmethod
-    def create(name: str, production: Resources) -> 'Player':
-        return Player(
-                name = name,
-                units = [Unit.of_kind(unit_kinds['general'])] + [Unit.of_kind(unit_kinds['wall']) for i in range(5)],
-                resources = Resources(),
-                production = production)
-
-@attr.s
-class GameState:
-    players: List['Player'] = attr.ib()
-    turn: int               = attr.ib()
-
-    @staticmethod
-    def create() -> 'GameState':
-        return GameState(players=[], turn=0)
-
-################################################################################
-# Balancer stuff
-################################################################################
-
-@attr.s
-class OtherPlayer:
-    name: str         = attr.ib()
-    units: List[Unit] = attr.ib()
-    alive: bool       = attr.ib()
-
-    @staticmethod
-    def of_player(player: Player) -> 'OtherPlayer':
-        return OtherPlayer(name=player.name, units=player.units, alive=player.alive)
-
-@attr.s
-class GameView:
-    view_player: Player              = attr.ib()
-    other_players: List[OtherPlayer] = attr.ib()
-    turn: int                        = attr.ib()
-
-    @staticmethod
-    def of_gamestate(game: GameState, player_index: int) -> 'GameView':
-        return GameView(view_player=game.players[player_index],
-                        other_players=[OtherPlayer.of_player(p) for i, p in enumerate(game.players) if i != player_index],
-                        turn=game.turn)
-
-Strategy = Callable[[GameView], List[UnitKind]]
-StrategyGenerator = Callable[[], Strategy]
-
-@attr.s
-class BasicStrategy:
-    build_order: List[UnitKind] = attr.ib()
-    
-    def __call__(self, view: GameView) -> List[UnitKind]:
-        resources = copy.copy(view.view_player.resources)
-        build = []
-        for kind in self.build_order:
-            if kind.cost is None:
-                continue
-            if resources.subsumes(kind.cost):
-                build.append(kind)
-                resources.subtract(kind.cost)
-        return build
-
-def basic_strategy_generator() -> Strategy:
-    def random_kind() -> UnitKind:
-        while True:
-            kind = random.choice(list(unit_kinds.values()))
-            if kind.cost:
-                return kind
-    build_order = [random_kind()]
-    while random.random() > 0.5:
-        build_order.append(random_kind())
-    return BasicStrategy(build_order=build_order)
+from game_view import GameView, OtherPlayer
+from strategy import Strategy
 
 ################################################################################
 # Text-based manual playtesting system
@@ -283,4 +114,3 @@ if __name__ == '__main__':
                 print('It is a tie!')
             break
         print()
-
