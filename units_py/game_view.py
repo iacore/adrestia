@@ -1,4 +1,5 @@
 import attr
+import copy
 from typing import List
 
 from game_state import GameState
@@ -23,6 +24,6 @@ class GameView:
 
     @staticmethod
     def of_gamestate(game: GameState, player_index: int) -> 'GameView':
-        return GameView(view_player=game.players[player_index],
+        return GameView(view_player=copy.deepcopy(game.players[player_index]),
                         other_players=[OtherPlayer.of_player(p) for i, p in enumerate(game.players) if i != player_index],
                         turn=game.turn)

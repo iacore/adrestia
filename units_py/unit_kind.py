@@ -1,9 +1,11 @@
 import attr
-from typing import List, Optional, Callable, Dict
+from typing import List, Optional, Callable, Dict, TYPE_CHECKING
 
 from colour import Colour
 from resources import Resources
-from player import Player
+
+if TYPE_CHECKING:
+    from player import Player
 
 @attr.s
 class UnitKind:

@@ -13,10 +13,10 @@ class BasicStrategy(Strategy):
     production: Resources = attr.ib()
     build_order: List[UnitKind] = attr.ib()
     
-    def getProduction(self) -> Resources:
+    def get_production(self) -> Resources:
         return self.production
 
-    def doTurn(self, view: GameView) -> List[UnitKind]:
+    def do_turn(self, view: GameView) -> List[UnitKind]:
         resources = copy.copy(view.view_player.resources)
         build = []
         for kind in self.build_order:

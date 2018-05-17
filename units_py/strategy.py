@@ -7,11 +7,11 @@ from resources import Resources
 
 class Strategy(ABC):
     @abstractmethod
-    def getProduction(self) -> Resources:
+    def get_production(self) -> Resources:
         raise NotImplementedError
 
     @abstractmethod
-    def doTurn(self, game_view: GameView) -> List[UnitKind]:
+    def do_turn(self, game_view: GameView) -> List[UnitKind]:
         raise NotImplementedError
 
 StrategyGenerator = Callable[[], Strategy]
