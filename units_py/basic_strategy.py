@@ -27,6 +27,10 @@ class BasicStrategy(Strategy):
                 resources.subtract(kind.cost)
         return build
 
+    def __str__(self) -> str:
+        unit_list = '[{}]'.format(','.join(k.name for k in self.build_order))
+        return f'<BasicStrategy {self.production} {unit_list}>'
+
 def basic_strategy_generator() -> Strategy:
     def random_kind() -> UnitKind:
         while True:

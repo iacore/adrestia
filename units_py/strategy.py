@@ -15,3 +15,10 @@ class Strategy(ABC):
         raise NotImplementedError
 
 StrategyGenerator = Callable[[], Strategy]
+
+class NullStrategy(Strategy):
+    def get_production(self) -> Resources:
+        return Resources(red=3, green=2, blue=2)
+    
+    def do_turn(self, game_view: GameView) -> List[UnitKind]:
+        return []

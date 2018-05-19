@@ -76,9 +76,10 @@ def simulate(strategies: List[Strategy], debug: bool = False) -> int:
             if len(remaining_players) == 1:
                 if debug:
                     print(f'{remaining_players[0][1].name} wins!')
+                return remaining_players[0][0]
             else:
                 if debug:
                     print('It is a tie!')
-            return remaining_players[0][0]
+                return -1
         if debug:
             print()
