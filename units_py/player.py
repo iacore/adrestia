@@ -18,6 +18,6 @@ class Player:
     def create(name: str, production: Resources) -> 'Player':
         return Player(
                 name = name,
-                units = [Unit.of_kind(unit_kinds['general'])] + [Unit.of_kind(unit_kinds['wall']) for i in range(5)],
+                units = [Unit.of_kind(unit_kinds['general'])] + [Unit.of_kind(unit_kinds['wall']) for _ in range(5)],
                 resources = Resources(),
                 production = production)
