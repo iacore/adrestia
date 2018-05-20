@@ -12,16 +12,16 @@ def find_best_response(strategy: Strategy, generator: StrategyGenerator) -> Tupl
     for i in range(5000):
         if len(arms) == 0 or random.random() < 0.5:
             candidate = generator()
-            win = simulate([strategy, candidate])
-            if win != -1:
-                arms.append((candidate, (win, 1)))
+            winners = simulate([strategy, candidate])
+            if winners:
+                arms.append((candidate, (1 if winners[0] else 0, 1)))
         else:
             # Choose the best strategy by percentage of wins
             _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms))
             candidate, (wins, games) = arms[i]
-            win = simulate([strategy, candidate])
-            if win != -1:
-                arms[i] = (candidate, (wins + win, games + 1))
+            winners = simulate([strategy, candidate])
+            if winners:
+                arms[i] = (candidate, (wins + (1 if winners[0] else 0), games + 1))
     # Find the arm that has the highest win percentage among arms with at least 10 games
     _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms) if games >= 10)
     candidate, (wins, games) = arms[i]
