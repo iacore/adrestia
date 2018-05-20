@@ -8,23 +8,23 @@ from resources import Resources
 from unit_kind import unit_kinds
 
 def find_best_response(strategy: Strategy, generator: StrategyGenerator) -> Tuple[Strategy, float]:
-    arms: List[Tuple[Strategy, Tuple[int, int]]] = []
+    arms: List[Tuple[Strategy, int, int]] = []
     for i in range(5000):
         if len(arms) == 0 or random.random() < 0.5:
             candidate = generator()
             winners = simulate([strategy, candidate])
             if winners:
-                arms.append((candidate, (int(winners[0] == 1), 1)))
+                arms.append((candidate, int(1 in winners), 1))
         else:
             # Choose the best strategy by percentage of wins
-            _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms))
-            candidate, (wins, games) = arms[i]
+            _, i = max((wins / games, i) for (i, (_, wins, games)) in enumerate(arms))
+            candidate, wins, games = arms[i]
             winners = simulate([strategy, candidate])
             if winners:
-                arms[i] = (candidate, (wins + (int(winners[0] == 1), games + 1))
+                arms[i] = (candidate, wins + int(1 in winners), games + 1)
     # Find the arm that has the highest win percentage among arms with at least 10 games
-    _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms) if games >= 10)
-    candidate, (wins, games) = arms[i]
+    _, i = max((wins / games, i) for (i, (_, wins, games)) in enumerate(arms) if games >= 10)
+    candidate, wins, games = arms[i]
     return candidate, wins / games
 
 if __name__ == '__main__':

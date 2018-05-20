@@ -72,14 +72,13 @@ def simulate(strategies: List[Strategy], debug: bool = False) -> List[int]:
             player.units = [u for u in player.units if u.health > 0]
             player.alive = any(u.kind is unit_kinds['general'] for u in player.units)
         
-        winners = list(enumerate(p for p in state.players if p.alive))
-        if debug:
-            if len(winners) > 1:
-                print('Winners: {", ".join(p.name for _, p in winners)}')
-            elif len(winners) == 0:
-                print(f'{winners[0][1].name} wins!')
-            else:
-                print('Everyone loses!')
-        return [i for i, _ in winners]
+        winners = [(i, p) for i, p in enumerate(state.players) if p.alive]
+        if len(winners) < 2:
+            if debug:
+                if len(winners) == 1:
+                    print(f'{winners[0][1].name} wins!')
+                else:
+                    print('Everyone loses!')
+            return [i for i, _ in winners]
         if debug:
             print()
