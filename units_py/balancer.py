@@ -14,14 +14,14 @@ def find_best_response(strategy: Strategy, generator: StrategyGenerator) -> Tupl
             candidate = generator()
             winners = simulate([strategy, candidate])
             if winners:
-                arms.append((candidate, (1 if winners[0] else 0, 1)))
+                arms.append((candidate, (int(winners[0] == 1), 1)))
         else:
             # Choose the best strategy by percentage of wins
             _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms))
             candidate, (wins, games) = arms[i]
             winners = simulate([strategy, candidate])
             if winners:
-                arms[i] = (candidate, (wins + (1 if winners[0] else 0), games + 1))
+                arms[i] = (candidate, (wins + (int(winners[0] == 1), games + 1))
     # Find the arm that has the highest win percentage among arms with at least 10 games
     _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms) if games >= 10)
     candidate, (wins, games) = arms[i]
