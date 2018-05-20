@@ -14,7 +14,6 @@ class Strategy(ABC):
     def do_turn(self, game_view: GameView) -> List[UnitKind]:
         raise NotImplementedError
 
-    @abstractmethod
     def mutate(self) -> 'Strategy':
         raise NotImplementedError
 

@@ -1,0 +1,2 @@
+attrs==18.1.0
+strip-hints==0.1.1
