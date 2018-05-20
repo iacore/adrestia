@@ -14,6 +14,10 @@ class Strategy(ABC):
     def do_turn(self, game_view: GameView) -> List[UnitKind]:
         raise NotImplementedError
 
+    @abstractmethod
+    def mutate(self) -> 'Strategy':
+        raise NotImplementedError
+
 StrategyGenerator = Callable[[], Strategy]
 
 class NullStrategy(Strategy):
@@ -22,3 +26,6 @@ class NullStrategy(Strategy):
     
     def do_turn(self, game_view: GameView) -> List[UnitKind]:
         return []
+
+    def mutate(self) -> Strategy:
+        return NullStrategy()
