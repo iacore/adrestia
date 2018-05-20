@@ -7,30 +7,31 @@ from simulator import simulate
 from resources import Resources
 from unit_kind import unit_kinds
 
-Trials = Tuple[int, int] # (wins, games)
 
 # Multi-armed bandit approach
 def find_best_response(strategy: Strategy, generator: StrategyGenerator) -> Tuple[Strategy, float]:
-    arms: List[Tuple[Strategy, Trials]] = []
+    arms: List[Tuple[Strategy, int, int]] = []
     for i in range(5000):
         if len(arms) == 0 or random.random() < 0.5:
             candidate = generator()
-            win = simulate([strategy, candidate])
-            if win != -1:
-                arms.append((candidate, (win, 1)))
+            winners = simulate([strategy, candidate])
+            if winners:
+                arms.append((candidate, int(1 in winners), 1))
         else:
             # Choose the best strategy by percentage of wins
-            _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms))
-            candidate, (wins, games) = arms[i]
-            win = simulate([strategy, candidate])
-            if win != -1:
-                arms[i] = (candidate, (wins + win, games + 1))
+            _, i = max((wins / games, i) for (i, (_, wins, games)) in enumerate(arms))
+            candidate, wins, games = arms[i]
+            winners = simulate([strategy, candidate])
+            if winners:
+                arms[i] = (candidate, wins + int(1 in winners), games + 1)
     # Find the arm that has the highest win percentage among arms with at least 10 games
-    _, i = max((wins / games, i) for (i, (_, (wins, games))) in enumerate(arms) if games >= 10)
-    candidate, (wins, games) = arms[i]
+    _, i = max((wins / games, i) for (i, (_, wins, games)) in enumerate(arms) if games >= 10)
+    candidate, wins, games = arms[i]
     return candidate, wins / games
 
 # Local search approach
+
+Trials = Tuple[int, int] # (wins, games)
 
 # Compares two trials; returns 1 if the first is statistically better, -1 if
 # the second is better, and 0 if the test is inconclusive.
@@ -59,16 +60,16 @@ def search_for_best_response(strategy: Strategy, generator: StrategyGenerator) -
         while mutations_without_improvement < 25:
             # Make sure we have enough current games for statistical testing
             while current_games < 100:
-                current_wins += max(0, simulate([strategy, current_strategy]))
+                current_wins += int(1 in simulate([strategy, current_strategy]))
                 current_games += 1
             # Generate a mutation
             candidate_strategy = current_strategy.mutate()
-            candidate_wins = max(0, simulate([strategy, candidate_strategy]))
+            candidate_wins = int(1 in simulate([strategy, candidate_strategy]))
             candidate_games = 1
             # Simulate games until we're sure which strategy is actually better
             while candidate_games < 100 and \
                   compare_trials((candidate_wins, candidate_games), (current_wins, current_games)) == 0:
-                candidate_wins += max(0, simulate([strategy, candidate_strategy]))
+                candidate_wins += int(1 in simulate([strategy, candidate_strategy]))
                 candidate_games += 1
             # If the new strategy is better, replace the old strategy
             if compare_trials((candidate_wins, candidate_games), (current_wins, current_games)) > 0:
@@ -79,7 +80,7 @@ def search_for_best_response(strategy: Strategy, generator: StrategyGenerator) -
             else:
                 mutations_without_improvement += 1
         while current_games < 100:
-            current_wins += max(0, simulate([strategy, current_strategy]))
+            current_wins += int(1 in simulate([strategy, current_strategy]))
             current_games += 1
         # Determine if current_strategy is better than best_strategy
         if best_games == 0 or compare_trials((current_wins, current_games), (best_wins, best_games)) > 0:

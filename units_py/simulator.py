@@ -12,7 +12,7 @@ from game_state import GameState
 from game_view import GameView, OtherPlayer
 from strategy import Strategy
 
-def simulate(strategies: List[Strategy], debug: bool = False) -> int:
+def simulate(strategies: List[Strategy], debug: bool = False) -> List[int]:
     state: GameState = GameState.create()
     names: List[str] = ['Alice', 'Bob', 'Carol']
     if debug:
@@ -60,7 +60,8 @@ def simulate(strategies: List[Strategy], debug: bool = False) -> int:
                     target.health -= attack
                     if debug:
                         message = f"{player.name}'s {attacker.kind.name} hits {target.kind.name} for {attack}"
-                        if target.health <= 0: message += ", killing it!"
+                        if target.health <= 0 and target.health + attack > 0:
+                            message += ", killing it!"
                         print(message)
         if debug:
             print('\nPress enter to continue')
@@ -69,17 +70,15 @@ def simulate(strategies: List[Strategy], debug: bool = False) -> int:
         # Death
         for player in state.players:
             player.units = [u for u in player.units if u.health > 0]
-            player.alive = next((u for u in player.units if u.kind is unit_kinds['general']), None) is not None
+            player.alive = any(u.kind is unit_kinds['general'] for u in player.units)
         
-        remaining_players = [(i, p) for i, p in enumerate(state.players) if p.alive]
-        if len(remaining_players) < 2:
-            if len(remaining_players) == 1:
-                if debug:
-                    print(f'{remaining_players[0][1].name} wins!')
-                return remaining_players[0][0]
-            else:
-                if debug:
-                    print('It is a tie!')
-                return -1
+        winners = [(i, p) for i, p in enumerate(state.players) if p.alive]
+        if len(winners) < 2:
+            if debug:
+                if len(winners) == 1:
+                    print(f'{winners[0][1].name} wins!')
+                else:
+                    print('Everyone loses!')
+            return [i for i, _ in winners]
         if debug:
             print()
