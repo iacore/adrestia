@@ -12,7 +12,7 @@ onready var reset_button = get_node("../ResetButton")
 onready var begin_button = get_node("../../BeginButton")
 onready var g = get_node("/root/global")
 
-var resources = lib.Resource.new()
+var resources = lib.Resources.empty()
 
 func _ready():
 	r_button.connect("button_down", self, "_on_r_pressed")
