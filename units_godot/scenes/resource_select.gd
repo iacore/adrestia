@@ -12,7 +12,7 @@ onready var reset_button = get_node("../ResetButton")
 onready var begin_button = get_node("../../BeginButton")
 onready var g = get_node("/root/global")
 
-var resources = lib.Resources.empty()
+onready var resources = lib.Resources.empty()
 
 func _ready():
 	r_button.connect("button_down", self, "_on_r_pressed")
@@ -20,11 +20,13 @@ func _ready():
 	b_button.connect("button_down", self, "_on_b_pressed")
 	reset_button.connect("button_down", self, "_on_reset_pressed")
 	begin_button.connect("button_down", self, "_on_begin_pressed")
+	update_labels()
 
 func update_labels():
 	r_label.text = str(resources.r)
 	g_label.text = str(resources.g)
 	b_label.text = str(resources.b)
+	begin_button.disabled = resources.total() != 7
 
 func _on_r_pressed():
 	if resources.total() < 7:
