@@ -12,7 +12,7 @@ use_filter = false
 font_data = ExtResource( 2 )
 _sections_unfolded = [ "Extra Spacing", "Font", "Settings" ]
 
-[node name="Root" type="Node" index="0"]
+[node name="Root" type="Node"]
 
 script = ExtResource( 1 )
 
@@ -137,6 +137,7 @@ group = null
 text = "Play"
 flat = false
 align = 1
+_sections_unfolded = [ "Size Flags" ]
 
 [node name="button_tutorial" type="Button" parent="MarginContainer/VBoxContainer/VBoxContainer" index="1"]
 
