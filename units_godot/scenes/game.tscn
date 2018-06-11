@@ -3,7 +3,7 @@
 [ext_resource path="res://themes/general_ui.theme" type="Theme" id=1]
 [ext_resource path="res://scenes/game.gd" type="Script" id=2]
 
-[node name="Node" type="Node"]
+[node name="Node" type="Node" index="0"]
 
 [node name="MarginContainer" type="MarginContainer" parent="." index="0"]
 
@@ -205,7 +205,6 @@ scroll_horizontal_enabled = true
 scroll_horizontal = 0
 scroll_vertical_enabled = true
 scroll_vertical = 0
-_sections_unfolded = [ "Size Flags" ]
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" index="0"]
 

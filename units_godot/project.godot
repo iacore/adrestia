@@ -14,6 +14,8 @@ config/name="aderpstia"
 run/main_scene="res://scenes/title.tscn"
 run/disable_stdout=true
 config/icon="res://icon.png"
+config/auto_accept_quit=false
+config/quit_on_go_back=false
 
 [autoload]
 

@@ -53,3 +53,7 @@ func _on_begin_pressed():
 	if resources.total() == 7:
 		g.players[0].resource_gain = resources
 		get_tree().change_scene("res://scenes/game.tscn")
+
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST or what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+		get_tree().change_scene("res://scenes/title.tscn")
