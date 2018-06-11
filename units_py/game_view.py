@@ -5,16 +5,18 @@ from typing import List
 from game_state import GameState
 from player import Player
 from unit import Unit
+from unit_kind import UnitKind
 
 @attr.s
 class OtherPlayer:
-    name: str         = attr.ib()
-    units: List[Unit] = attr.ib()
-    alive: bool       = attr.ib()
+    name: str                         = attr.ib()
+    units: List[Unit]                 = attr.ib()
+    build_order: List[List[UnitKind]] = attr.ib()
+    alive: bool                       = attr.ib()
 
     @staticmethod
     def of_player(player: Player) -> 'OtherPlayer':
-        return OtherPlayer(name=player.name, units=player.units[:], alive=player.alive)
+        return OtherPlayer(name=player.name, units=player.units[:], build_order=player.build_order[:], alive=player.alive)
 
 @attr.s
 class GameView:

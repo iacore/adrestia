@@ -22,23 +22,29 @@ def simulate(strategies: List[Strategy], debug: bool = False) -> List[int]:
 
     # Main game loop
     while True:
+        # Cache player views
+        player_views = [GameView.of_gamestate(state, player_index) for player_index in range(len(state.players))]
+
         # Production
         for player in state.players:
             player.resources.add(player.production)
 
             # Pre-turn effects
             for unit in player.units:
-                if unit.kind.before_turn is not None:
-                    unit.kind.before_turn(player)
+                if unit.kind.font is not None:
+                    player.resources.add(unit.kind.font)
 
         # Build
         for player_index, player in enumerate(state.players):
             strategy = strategies[player_index]
-            build_list = strategy.do_turn(GameView.of_gamestate(state, player_index))
+            build_list = strategy.do_turn(player_views[player_index])
+            actual_build_list = []
             for kind in build_list:
                 if kind.cost is not None and player.resources.subsumes(kind.cost):
                     player.resources.subtract(kind.cost)
                     player.units.append(Unit.of_kind(kind))
+                    actual_build_list.append(kind)
+            player.build_order.append(actual_build_list)
 
         # Battle
         if debug:

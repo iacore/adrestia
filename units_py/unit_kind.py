@@ -15,12 +15,7 @@ class UnitKind:
     width: int                                        = attr.ib()
     attack: List[int]                                 = attr.ib()
     cost: Optional[Resources]                         = attr.ib()
-    before_turn: Optional[Callable[['Player'], None]] = attr.ib(default = None)
-
-def add_resources_effect(resources: Resources) -> Callable[['Player'], None]:
-    def inner(p: 'Player') -> None:
-        p.resources.add(resources)
-    return inner
+    font: Optional[Resources]                         = attr.ib(default = None)
 
 unit_kinds: Dict[str, UnitKind] = {
     'general': UnitKind(name='General', colour=Colour.BLACK, health=5, width=1, attack=[1], cost=None),
@@ -30,13 +25,13 @@ unit_kinds: Dict[str, UnitKind] = {
     'turret': UnitKind(name='Turret', colour=Colour.GREEN, health=1, width=2, attack=[1], cost=Resources(green=2)),
     'wide_wall': UnitKind(name='Wide Wall', colour=Colour.GREEN, health=2, width=4, attack=[], cost=Resources(green=3)),
     'font_r': UnitKind(name='Font R', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(red=1, blue=2),
-        before_turn=add_resources_effect(Resources(red=1))),
+        font=Resources(red=1)),
     'font_g': UnitKind(name='Font G', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(green=1, blue=2),
-        before_turn=add_resources_effect(Resources(green=1))),
+        font=Resources(green=1)),
     'font_b': UnitKind(name='Font B', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(blue=3),
-        before_turn=add_resources_effect(Resources(blue=1))),
+        font=Resources(blue=1)),
     'paragon': UnitKind(name='Paragon', colour=Colour.BLUE, health=2, width=1, attack=[], cost=Resources(red=1, green=1, blue=7),
-        before_turn=add_resources_effect(Resources(red=1, green=1, blue=1))),
+        font=Resources(red=1, green=1, blue=1)),
     'ogre': UnitKind(name='Ogre', colour=Colour.RED, health=2, width=2, attack=[2], cost=Resources(red=2, green=2)),
     'shrek': UnitKind(name='Shrek', colour=Colour.GREEN, health=4, width=3, attack=[2], cost=Resources(red=2, green=3)),
     'soldier': UnitKind(name='Soldier', colour=Colour.BLUE, health=1, width=1, attack=[1], cost=Resources(red=1, blue=2)),
