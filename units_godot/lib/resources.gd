@@ -12,6 +12,21 @@ func _init(r, g, b):
 static func empty():
   return new(0, 0, 0)
 
+static func of_json(json):
+  if json == null:
+    return null
+  return new(
+      json["red"] if json.has("red") else 0,
+      json["green"] if json.has("green") else 0,
+      json["blue"] if json.has("blue") else 0)
+
+func jsonify():
+  var obj = {}
+  if r: obj["red"] = r
+  if g: obj["green"] = g
+  if b: obj["blue"] = b
+  return obj
+
 func total():
   return r + g + b
 
