@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://themes/general_ui.theme" type="Theme" id=1]
 [ext_resource path="res://scenes/game.gd" type="Script" id=2]
+[ext_resource path="res://components/army_view.tscn" type="PackedScene" id=3]
 
-[node name="Node" type="Node" index="0"]
+[node name="Node" type="Node"]
 
 [node name="MarginContainer" type="MarginContainer" parent="." index="0"]
 
@@ -38,7 +39,7 @@ alignment = 0
 script = ExtResource( 2 )
 _sections_unfolded = [ "Margin" ]
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" index="0"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -51,6 +52,48 @@ rect_clip_content = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
+size_flags_vertical = 3
+custom_constants/margin_right = 20
+custom_constants/margin_top = 20
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+_sections_unfolded = [ "Size Flags", "custom_constants" ]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = 520.0
+margin_bottom = 421.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+custom_constants/separation = 20
+alignment = 0
+_sections_unfolded = [ "custom_constants" ]
+
+[node name="OpponentArmy" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer" index="0" instance=ExtResource( 3 )]
+
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 500.0
+margin_bottom = 190.0
+size_flags_vertical = 3
+
+[node name="MyArmy" parent="MarginContainer/VBoxContainer/MarginContainer/VBoxContainer" index="1" instance=ExtResource( 3 )]
+
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 210.0
+margin_right = 500.0
+margin_bottom = 401.0
 size_flags_vertical = 3
 
 [node name="Toolbar" type="HBoxContainer" parent="MarginContainer/VBoxContainer" index="1"]
