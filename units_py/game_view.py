@@ -22,6 +22,9 @@ class GameView:
     other_players: List[OtherPlayer] = attr.ib()
     turn: int                        = attr.ib()
 
+    # Returns a player's view of the game state (all the information they can
+    # see). Modifying this view should not affect the original game state in
+    # any way.
     @staticmethod
     def of_gamestate(game: GameState, player_index: int) -> 'GameView':
         return GameView(view_player=copy.deepcopy(game.players[player_index]),

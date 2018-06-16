@@ -41,7 +41,7 @@ unit_kinds: Dict[str, UnitKind] = {
     'shrek': UnitKind(name='Shrek', colour=Colour.GREEN, health=4, width=3, attack=[2], cost=Resources(red=2, green=3)),
     'soldier': UnitKind(name='Soldier', colour=Colour.BLUE, health=1, width=1, attack=[1], cost=Resources(red=1, blue=2)),
     'commando': UnitKind(name='Commando', colour=Colour.RED, health=2, width=1, attack=[1, 1], cost=Resources(red=3, blue=2)),
-    # TODO: forts shouldn't take damage from red units
+    # TODO: charles: forts shouldn't take damage from red units
     'fort': UnitKind(name='Fort', colour=Colour.GREEN, health=1, width=4, attack=[], cost=Resources(green=3, blue=2)),
     'insurgent': UnitKind(name='Insurgent', colour=Colour.RED, health=3, width=1, attack=[1], cost=Resources(red=2, green=1, blue=1)),
     'avatar': UnitKind(name='Avatar', colour=Colour.BLUE, health=3, width=2, attack=[1, 3, 1], cost=Resources(red=5, green=1, blue=3)),

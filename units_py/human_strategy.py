@@ -6,6 +6,7 @@ from resources import Resources
 from strategy import Strategy
 from unit_kind import UnitKind, unit_kinds
 
+# Requests actions from standard input with human-readable prompts and input formats.
 class HumanStrategy(Strategy):
     def get_production(self) -> Resources:
         os.system('clear')
