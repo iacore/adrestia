@@ -1,9 +1,8 @@
-extends Node
+extends Reference
 
-class Unit:
-	var kind
-	var health
-	
-	func _init(kind):
-		self.kind = kind
-		self.health = kind.health
+var kind
+var health
+
+func _init(kind):
+  self.kind = kind
+  self.health = kind.health
