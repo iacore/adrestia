@@ -21,6 +21,10 @@ config/quit_on_go_back=false
 global="*res://global.gd"
 UnitKinds="*res://lib/unit_kinds.gd"
 
+[debug]
+
+settings/fps/force_fps=60
+
 [display]
 
 window/size/width=540

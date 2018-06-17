@@ -4,7 +4,7 @@
 [ext_resource path="res://scenes/game.gd" type="Script" id=2]
 [ext_resource path="res://components/army_view.tscn" type="PackedScene" id=3]
 
-[node name="Node" type="Node" index="0"]
+[node name="Node" type="Node"]
 
 [node name="MarginContainer" type="MarginContainer" parent="." index="0"]
 
@@ -248,7 +248,7 @@ scroll_horizontal_enabled = true
 scroll_horizontal = 0
 scroll_vertical_enabled = true
 scroll_vertical = 0
-_sections_unfolded = [ "Margin", "Size Flags" ]
+_sections_unfolded = [ "Margin" ]
 
 [node name="UnitList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" index="0"]
 
