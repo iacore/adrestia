@@ -10,6 +10,7 @@ var width
 var attack
 var cost
 var font
+var image
 
 func _init(name, colour, health, width, attack, cost, font=null):
   self.name = name
@@ -23,7 +24,7 @@ func _init(name, colour, health, width, attack, cost, font=null):
 static func of_json(json):
   for i in range(json["attack"].size()):
     json["attack"][i] = int(json["attack"][i])
-  return new(
+  var result = new(
       json["name"],
       Colour.of_json(json["colour"]),
       int(json["health"]),
@@ -32,3 +33,5 @@ static func of_json(json):
       Resources.of_json(json["cost"]),
       Resources.of_json(json["font"]) if json.has("font") else null
     )
+  result.image = load('res://art/%s' % json['image']) if json.has('image') else load('res://art/unknown_unit.png')
+  return result

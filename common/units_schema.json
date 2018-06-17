@@ -12,7 +12,8 @@
         "width": {"type": "integer", "minimum": 1},
         "attack": {"type": "array", "items": {"type": "integer", "minimum": 1}},
         "cost": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/resources"}]},
-        "font": {"$ref": "#/definitions/resources"}
+        "font": {"$ref": "#/definitions/resources"},
+        "image": {"type": "string"}
       },
       "additionalProperties": false,
       "required": ["name", "colour", "health", "width", "attack", "cost"]

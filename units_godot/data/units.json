@@ -29,7 +29,8 @@
     "health": 1,
     "width": 1,
     "attack": [],
-    "cost": {"green": 1}
+    "cost": {"green": 1},
+    "image": "wall.png"
   },
   "turret": {
     "name": "Turret",
@@ -37,7 +38,8 @@
     "health": 1,
     "width": 2,
     "attack": [1],
-    "cost": {"green": 2}
+    "cost": {"green": 2},
+    "image": "turret.png"
   },
   "wide_wall": {
     "name": "Wide Wall",
@@ -45,7 +47,8 @@
     "health": 2,
     "width": 4,
     "attack": [],
-    "cost": {"green": 3}
+    "cost": {"green": 3},
+    "image": "wide_wall.png"
   },
   "font_r": {
     "name": "Font R",
@@ -63,7 +66,8 @@
     "width": 1,
     "attack": [],
     "cost": {"green": 1, "blue": 2},
-    "font": {"green": 1}
+    "font": {"green": 1},
+    "image": "font_g.png"
   },
   "font_b": {
     "name": "Font B",

@@ -11,6 +11,5 @@ func init(unit_type_):
   unit_type = unit_type_
 
 func _ready():
-  var texture = load('res://art/unknown_unit.png')
-  image.texture = texture
+  image.texture = unit_type.image
   unit_name.text = unit_type.name
