@@ -23,7 +23,7 @@ func _ready():
   for unit in units:
     if units[unit].cost != null:
       var bar = unit_buy_bar.instance()
-      bar.show()
+      bar.init(units[unit]);
       unit_bars[unit] = bar
       UnitList.add_child(bar)
   EndTurnButton.connect("button_down", self, "_on_EndTurnButton_pressed")
