@@ -32,9 +32,9 @@ func total():
 
 func to_string():
   var result = ""
-  if r: result += "%dR" % r
-  if g: result += "%dG" % g
-  if b: result += "%dB" % b
+  for i in range(r): result += "R"
+  for i in range(g): result += "G"
+  for i in range(b): result += "B"
   if not result: result = "0"
   return result
 
