@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://themes/general_ui.theme" type="Theme" id=1]
 [ext_resource path="res://components/unit_buy_bar.gd" type="Script" id=2]
 [ext_resource path="res://art/unknown_unit.png" type="Texture" id=3]
+[ext_resource path="res://signika.tres" type="DynamicFont" id=4]
 
 [node name="Control" type="VBoxContainer"]
 
@@ -59,27 +60,67 @@ expand = true
 stretch_mode = 6
 _sections_unfolded = [ "Mouse" ]
 
-[node name="UnitName" type="Label" parent="HBox" index="1"]
+[node name="Center" type="VBoxContainer" parent="HBox" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 104.0
-margin_top = 15.0
 margin_right = 444.0
-margin_bottom = 85.0
+margin_bottom = 100.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
-size_flags_vertical = 4
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="UnitName" type="Label" parent="HBox/Center" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 340.0
+margin_bottom = 48.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
 text = "unit"
+valign = 2
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Mouse", "Size Flags" ]
+_sections_unfolded = [ "Size Flags", "custom_fonts" ]
+
+[node name="UnitDesc" type="Label" parent="HBox/Center" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 52.0
+margin_right = 340.0
+margin_bottom = 100.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+custom_fonts/font = ExtResource( 4 )
+text = "line2"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "custom_fonts" ]
 
 [node name="BuyButton" type="Button" parent="HBox" index="2"]
 

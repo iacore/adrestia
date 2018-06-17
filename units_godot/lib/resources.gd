@@ -30,6 +30,14 @@ func jsonify():
 func total():
   return r + g + b
 
+func to_string():
+  var result = ""
+  if r: result += "%dR" % r
+  if g: result += "%dG" % g
+  if b: result += "%dB" % b
+  if not result: result = "0"
+  return result
+
 func add(other):
   r += other.r
   g += other.g
@@ -42,3 +50,4 @@ func subtract(other):
 
 func subsumes(other):
   return r >= other.r and g >= other.g and b >= other.b
+
