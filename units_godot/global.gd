@@ -1,20 +1,7 @@
 extends Node
 
-# TODO: charles: Replace global.gd with a game state.
-
-const Resources = preload("res://lib/resources.gd")
+const GameState = preload("res://lib/game_state.gd")
 const Player = preload("res://lib/player.gd")
+onready var units = get_node("/root/UnitKinds").units
 
-var players
-
-func _ready():
-  players = [Player.new(), Player.new()]
-
-func start_game():
-  for player in players:
-    player.resources = Resources.empty()
-    player.resources.add(player.resource_gain)
-
-func advance_turn():
-  for player in players:
-    player.resources.add(player.resource_gain)
+onready var gs = GameState.new(units, 2)

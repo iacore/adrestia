@@ -1,6 +1,7 @@
 extends HBoxContainer
 
 const Resources = preload("res://lib/resources.gd")
+const ChooseResources = preload("res://lib/actions/choose_resources.gd")
 
 var resource_total = 7
 
@@ -45,7 +46,8 @@ func _on_reset_pressed():
 
 func _on_begin_pressed():
   if resources.total() == resource_total:
-    g.players[0].resource_gain = resources
+    g.gs.perform_action(ChooseResources.new(0, resources))
+    # TODO: charles: get AI resources
     get_tree().change_scene("res://scenes/game.tscn")
 
 func _notification(what):

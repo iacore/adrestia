@@ -67,6 +67,9 @@ func simulate_battle():
   # TODO: charles: BattleResult should also have copy of unit states before battle
   var result = BattleResult.new()
 
+  if is_game_over():
+    return result
+
   # Generate attacks
   for player in range(players.size()):
     var targets = []
@@ -79,19 +82,28 @@ func simulate_battle():
           total_width += width
     for a in players[player].units:
       var attacker = players[player].units[a]
-      for attack in attacker.kind.attack:
+      for attack_index in attacker.kind.attack.size():
         var width_left = randi() % total_width
         for u in targets:
           if width_left < u[0]:
-            result.attacks.append([player, a, u[1], u[2], width_left])
+            result.add_attack(player, a, attack_index, u[1], u[2], width_left)
             break
           else:
             width_left -= u[0]
 
   # Apply attacks
-  # TODO: charles: loop through attacks in result, do damage, kill dead units
+  for attack in result.attacks:
+    var damage = players[attack.player].units[attack.unit_id].kind.attack[attack.attack_index]
+    players[attack.target_player].units[attack.target_unit_id].health -= damage
 
+  # Remove dead units
+  for player in players:
+    for u in player.units:
+      if player.units[u].health <= 0:
+        player.units.erase(u)
+    
   # Advance the turn if the game is not over
   if !is_game_over():
     advance_turn()
-  return null
+
+  return result 

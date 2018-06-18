@@ -1,5 +1,7 @@
 extends Control
 
+signal buy_unit
+
 var unit_type
 
 onready var hbox = $HBox
@@ -23,3 +25,7 @@ func _ready():
   desc_parts.append("H%d" % unit_type.health)
   if unit_type.attack: desc_parts.append("A%s" % str(unit_type.attack))
   unit_desc.text = PoolStringArray(desc_parts).join(" / ")
+
+func _on_BuyButton_pressed():
+  print("buying unit in unit_buy_bar.gd")
+  emit_signal("buy_unit")

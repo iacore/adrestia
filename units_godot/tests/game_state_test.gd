@@ -17,5 +17,6 @@ func _init():
   assert(state.perform_action(BuildUnit.new(1, unit_kinds['turret'])))
   assert(!state.perform_action(BuildUnit.new(1, unit_kinds['turret'])))
   var result = state.simulate_battle()
+  assert(result.attacks.size() == 5)
   assert(state.perform_action(BuildUnit.new(1, unit_kinds['turret'])))
   quit()
