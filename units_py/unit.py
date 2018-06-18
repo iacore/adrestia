@@ -1,20 +1,44 @@
+"""A file defining the class Unit, representing a single unit in play."""
+
+
 import attr
 
 from unit_kind import UnitKind
 
+
 @attr.s
 class Unit:
-    kind: UnitKind = attr.ib()
-    health: int    = attr.ib()
+    """A class defining a single unit in play."""
+    kind: UnitKind = attr.ib()  # What kind of unit is this?
+    health: int    = attr.ib()  # How much health does this unit have, right now?
+
 
     @staticmethod
     def of_kind(kind: UnitKind) -> 'Unit':
+        """@brief Creates a Unit from a given UnitKind. The unit starts at full health.
+
+        @param kind: The UnitKind of unit this will be.
+
+        @return A Unit object, at full health and of the given kind.
+        """
+
         return Unit(kind, kind.health)
 
+
     def to_string_hum(self) -> str:
-        return '({} (width {}) (hp {}/{}){})'.format(
-                self.kind.name,
-                self.kind.width,
-                self.health,
-                self.kind.health,
-                ' (attack {})'.format(self.kind.attack) if len(self.kind.attack) > 0 else '')
+        """@brief Creates a string representation of this unit and its attributes.
+
+        @return A human-readable string describing this unit and its attributes.
+        """
+
+        attack_string = "[None]"
+        if len(self.kind.attack):
+            attack_string = self.kind.attack
+
+        return '({name} (width {width}) (hp {remaining_hp}/{max_hp}) (attack {attack}))'.format(
+                    name=self.kind.name,
+                    width=self.kind.width,
+                    remaining_hp=self.health,
+                    max_hp=self.kind.health,
+                    attack=attack_string
+                )
