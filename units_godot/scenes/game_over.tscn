@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/game_over.gd" type="Script" id=1]
 [ext_resource path="res://Signika-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://art/turret.png" type="Texture" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 
@@ -10,6 +11,46 @@ use_mipmaps = false
 use_filter = false
 font_data = ExtResource( 2 )
 _sections_unfolded = [ "Font", "Settings" ]
+
+[sub_resource type="ParticlesMaterial" id=2]
+
+render_priority = 0
+trail_divisor = 1
+emission_shape = 2
+emission_box_extents = Vector3( 1, 1, 1 )
+flag_align_y = false
+flag_rotate_y = false
+flag_disable_z = true
+spread = 180.0
+flatness = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 300.0
+initial_velocity_random = 0.0
+angular_velocity = 40.0
+angular_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = 0.0
+linear_accel_random = 0.0
+radial_accel = 0.0
+radial_accel_random = 0.0
+tangential_accel = 0.0
+tangential_accel_random = 0.0
+damping = 0.0
+damping_random = 0.0
+angle = 360.0
+angle_random = 1.0
+scale = 1.0
+scale_random = 0.0
+color = Color( 1, 1, 1, 1 )
+hue_variation = 0.0
+hue_variation_random = 0.0
+anim_speed = 0.0
+anim_speed_random = 0.0
+anim_offset = 0.0
+anim_offset_random = 0.0
+anim_loop = false
+_sections_unfolded = [ "Initial Velocity", "Spread" ]
 
 [node name="Control" type="VBoxContainer" index="0"]
 
@@ -56,5 +97,29 @@ process_mode = 1
 wait_time = 2.0
 one_shot = true
 autostart = true
+
+[node name="Particles2D" type="Particles2D" parent="." index="2"]
+
+position = Vector2( 257.775, 205.419 )
+scale = Vector2( 0.5, 0.5 )
+emitting = true
+amount = 8
+lifetime = 1.0
+one_shot = false
+preprocess = 0.0
+speed_scale = 1.0
+explosiveness = 0.2
+randomness = 0.5
+fixed_fps = 0
+fract_delta = true
+visibility_rect = Rect2( -100, -100, 200, 200 )
+local_coords = true
+draw_order = 0
+process_material = SubResource( 2 )
+texture = ExtResource( 3 )
+normal_map = null
+h_frames = 1
+v_frames = 1
+_sections_unfolded = [ "Drawing", "Material", "Process Material", "Textures", "Time", "Transform", "Visibility" ]
 
 
