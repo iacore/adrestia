@@ -27,5 +27,4 @@ func _ready():
   unit_desc.text = PoolStringArray(desc_parts).join(" / ")
 
 func _on_BuyButton_pressed():
-  print("buying unit in unit_buy_bar.gd")
   emit_signal("buy_unit")

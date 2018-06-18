@@ -106,4 +106,4 @@ func simulate_battle():
   if !is_game_over():
     advance_turn()
 
-  return result 
+  return result

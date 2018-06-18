@@ -13,14 +13,14 @@ onready var units = get_node("/root/UnitKinds").units
 var unit_bars = {}
 
 func update_ui():
-  r_label.text = str(g.gs.players[0].resources.r)
-  g_label.text = str(g.gs.players[0].resources.g)
-  b_label.text = str(g.gs.players[0].resources.b)
+  var view = g.man.get_view()
+  r_label.text = str(view.players[0].resources.r)
+  g_label.text = str(view.players[0].resources.g)
+  b_label.text = str(view.players[0].resources.b)
   for unit in unit_bars:
-    unit_bars[unit].buy_button.disabled = !g.gs.players[0].resources.subsumes(units[unit].cost)
+    unit_bars[unit].buy_button.disabled = !view.players[0].resources.subsumes(units[unit].cost)
 
 func _ready():
-  print(units.size())
   for unit in units:
     if units[unit].cost != null:
       var bar = unit_buy_bar.instance()
@@ -29,17 +29,22 @@ func _ready():
       bar.connect("buy_unit", self, "_on_buy_unit", [unit])
       UnitList.add_child(bar)
   EndTurnButton.connect("button_down", self, "_on_EndTurnButton_pressed")
-  g.gs.start_game()
   update_ui()
 
 func _on_EndTurnButton_pressed():
-  g.gs.simulate_battle()
-  if g.gs.is_game_over():
+  g.man.simulate_battle(self, '_on_simulate_battle_complete')
+
+func _on_simulate_battle_complete(result):
+  # TODO: charles: display result in some way
+  if g.man.get_view().is_game_over():
     get_tree().change_scene("res://scenes/game_over.tscn")
   else:
     update_ui()
 
 func _on_buy_unit(unit):
-  print("buying unit in game.gd")
-  g.gs.perform_action(BuildUnit.new(0, units[unit]))
+  # TODO: charles: Don't actually make moves until the end of the turn;
+  # instead, keep local list of units and draw army with [current units] plus
+  # [queued units]. This will allow us to implement undo, and potentially
+  # display queued units in a different way (e.g. faded)
+  g.man.perform_action(BuildUnit.new(0, units[unit]))
   update_ui()

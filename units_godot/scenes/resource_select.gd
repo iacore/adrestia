@@ -16,6 +16,8 @@ onready var counters = [$RCounter, $GCounter, $BCounter]
 var color_chars = "rgb"
 
 func _ready():
+  get_tree().set_auto_accept_quit(false)
+  get_tree().set_quit_on_go_back(false)
   for i in range(counters.size()):
     counters[i].connect("increment", self, "_on_pressed", [color_chars[i], 1])
     counters[i].connect("decrement", self, "_on_pressed", [color_chars[i], -1])
@@ -46,9 +48,12 @@ func _on_reset_pressed():
 
 func _on_begin_pressed():
   if resources.total() == resource_total:
-    g.gs.perform_action(ChooseResources.new(0, resources))
-    # TODO: charles: get AI resources
-    get_tree().change_scene("res://scenes/game.tscn")
+    g.man.perform_action(ChooseResources.new(0, resources))
+    begin_button.disabled = true
+    g.man.start_game(self, '_on_game_start')
+
+func _on_game_start():
+  get_tree().change_scene("res://scenes/game.tscn")
 
 func _notification(what):
   if what == MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST or what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
