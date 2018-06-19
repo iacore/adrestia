@@ -8,11 +8,14 @@ extends Control
 # and arrangement of tiles, and Unit will have a position
 
 # Example data: [Color(0, 0, 1), [0, 0], [1, 0, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 2, 2]],
-var data = [] setget set_data
+#var data = [] setget set_data
+var data = [[Color(0, 0, 1), [0, 0], [1, 0, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 2, 2]]] setget set_data
 var max_tile_size = 50
 
 var OutlinedPolygon2D = preload("outlined_polygon2d.gd")
-onready var parent = $Container
+
+onready var scale_container = $ScaleContainer
+onready var offset_container = $ScaleContainer/OffsetContainer
 
 static func squares_to_polygon(coords):
   # Converts a bunch of squares into a list of vertices.
@@ -72,22 +75,26 @@ func set_data(new_data):
 func redraw():
   # This should hopefully be called not-so-often
   var max_x = 0; var max_y = 0;
-  for child in parent.get_children():
+  for child in offset_container.get_children():
     child.queue_free()
   for unit in data:
     var polygon = OutlinedPolygon2D.new()
     polygon.color = unit[0]
     var vertices = PoolVector2Array()
     var poly_coords = squares_to_polygon(unit[2])
-    var x_ofs = unit[1][0] * 30
-    var y_ofs = unit[1][1] * 30
+    var x_ofs = unit[1][0] * 50
+    var y_ofs = unit[1][1] * 50
     for xy in poly_coords:
-      var x = xy[0] * 30; var y = xy[1] * 30;
+      var x = xy[0] * 50; var y = xy[1] * 50;
       max_x = max(max_x, x + x_ofs)
       max_y = max(max_y, y + y_ofs)
       vertices.append(Vector2(x, y))
     polygon.position = Vector2(x_ofs, y_ofs)
     polygon.polygon = vertices
-    parent.add_child(polygon)
-  # TODO jim: Make squares smaller if necessary. Either zoom out (with scale property) or draw smaller squares.
-  parent.position = Vector2((rect_size.x - max_x) / 2, (rect_size.y - max_y) / 2)
+    offset_container.add_child(polygon)
+  offset_container.position = Vector2(-max_x / 2, -max_y / 2)
+  scale_container.position = Vector2(rect_size.x / 2, rect_size.y / 2)
+  var scale = 1.0
+  scale = min(scale, rect_size.x / max_x)
+  scale = min(scale, rect_size.y / max_y)
+  scale_container.scale = Vector2(scale, scale)
