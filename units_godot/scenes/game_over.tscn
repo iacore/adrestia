@@ -94,7 +94,7 @@ _sections_unfolded = [ "Size Flags", "custom_colors", "custom_fonts", "custom_st
 [node name="Timer" type="Timer" parent="." index="1"]
 
 process_mode = 1
-wait_time = 2.0
+wait_time = 5.0
 one_shot = true
 autostart = true
 
