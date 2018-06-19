@@ -155,6 +155,8 @@ func redraw():
     polygon.polygon = vertices
 
     var label = Label.new()
+    # TODO: jim: This doesn't work properly if the unit doesn't have a square
+    # at (0,0), e.g. Tank.
     label.text = "%s (%d)" % [unit.kind.label, unit.health]
     polygon.add_child(label)
 
