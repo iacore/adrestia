@@ -2,7 +2,7 @@
 
 [ext_resource path="res://components/army_view.gd" type="Script" id=1]
 
-[node name="ArmyView" type="Control"]
+[node name="ArmyView" type="Control" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -16,5 +16,9 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 script = ExtResource( 1 )
 _sections_unfolded = [ "Margin", "Size Flags" ]
+
+[node name="Container" type="Node2D" parent="." index="0"]
+
+_sections_unfolded = [ "Transform", "Z Index" ]
 
 
