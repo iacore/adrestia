@@ -5,7 +5,9 @@
     "health": 5,
     "width": 1,
     "attack": [1],
-    "cost": null
+    "cost": null,
+    "tiles": [0, 0],
+    "label": "G"
   },
   "grunt": {
     "name": "Grunt",
@@ -13,7 +15,9 @@
     "health": 1,
     "width": 1,
     "attack": [1],
-    "cost": {"red": 2}
+    "cost": {"red": 2},
+    "tiles": [0, 0],
+    "label": "g"
   },
   "troll": {
     "name": "Troll",
@@ -21,7 +25,9 @@
     "health": 2,
     "width": 2,
     "attack": [4],
-    "cost": {"red": 5}
+    "cost": {"red": 5},
+    "tiles": [0, 0, 1, 0],
+    "label": "T"
   },
   "wall": {
     "name": "Wall",
@@ -30,7 +36,9 @@
     "width": 1,
     "attack": [],
     "cost": {"green": 1},
-    "image": "wall.png"
+    "image": "wall.png",
+    "tiles": [0, 0],
+    "label": "w"
   },
   "turret": {
     "name": "Turret",
@@ -39,7 +47,9 @@
     "width": 2,
     "attack": [1],
     "cost": {"green": 2},
-    "image": "turret.png"
+    "image": "turret.png",
+    "tiles": [0, 0, 0, 1],
+    "label": "t"
   },
   "wide_wall": {
     "name": "Wide Wall",
@@ -48,7 +58,9 @@
     "width": 4,
     "attack": [],
     "cost": {"green": 3},
-    "image": "wide_wall.png"
+    "image": "wide_wall.png",
+    "tiles": [0, 0, 1, 0, 2, 0, 3, 0],
+    "label": "W"
   },
   "font_r": {
     "name": "Font R",
@@ -57,7 +69,9 @@
     "width": 1,
     "attack": [],
     "cost": {"red": 1, "blue": 2},
-    "font": {"red": 1}
+    "font": {"red": 1},
+    "tiles": [0, 0],
+    "label": "r"
   },
   "font_g": {
     "name": "Font G",
@@ -67,7 +81,9 @@
     "attack": [],
     "cost": {"green": 1, "blue": 2},
     "font": {"green": 1},
-    "image": "font_g.png"
+    "image": "font_g.png",
+    "tiles": [0, 0],
+    "label": "f"
   },
   "font_b": {
     "name": "Font B",
@@ -76,7 +92,9 @@
     "width": 1,
     "attack": [],
     "cost": {"blue": 3},
-    "font": {"blue": 1}
+    "font": {"blue": 1},
+    "tiles": [0, 0],
+    "label": "b"
   },
   "paragon": {
     "name": "Paragon",
@@ -85,7 +103,9 @@
     "width": 1,
     "attack": [],
     "cost": {"red": 1, "green": 1, "blue": 7},
-    "font": {"red": 1, "green": 1, "blue": 1}
+    "font": {"red": 1, "green": 1, "blue": 1},
+    "tiles": [0, 0],
+    "label": "p"
   },
   "ogre": {
     "name": "Ogre",
@@ -93,7 +113,9 @@
     "health": 2,
     "width": 2,
     "attack": [2],
-    "cost": {"red": 2, "green": 2}
+    "cost": {"red": 2, "green": 2},
+    "tiles": [0, 0, 1, 0],
+    "label": "o"
   },
   "shrek": {
     "name": "Shrek",
@@ -101,7 +123,9 @@
     "health": 4,
     "width": 3,
     "attack": [2],
-    "cost": {"red": 2, "green": 3}
+    "cost": {"red": 2, "green": 3},
+    "tiles": [0, 0, 1, 0, 2, 0],
+    "label": "S"
   },
   "soldier": {
     "name": "Soldier",
@@ -109,7 +133,9 @@
     "health": 1,
     "width": 1,
     "attack": [1],
-    "cost": {"red": 1, "blue": 2}
+    "cost": {"red": 1, "blue": 2},
+    "tiles": [0, 0],
+    "label": "s"
   },
   "commando": {
     "name": "Commando",
@@ -117,7 +143,9 @@
     "health": 2,
     "width": 1,
     "attack": [1, 1],
-    "cost": {"red": 3, "blue": 2}
+    "cost": {"red": 3, "blue": 2},
+    "tiles": [0, 0],
+    "label": "c"
   },
   "fort": {
     "name": "Fort",
@@ -125,7 +153,9 @@
     "health": 1,
     "width": 4,
     "attack": [],
-    "cost": {"green": 3, "blue": 2}
+    "cost": {"green": 3, "blue": 2},
+    "tiles": [0, 0, 0, 1, 1, 0, 1, 1],
+    "label": "F"
   },
   "insurgent": {
     "name": "Insurgent",
@@ -133,7 +163,9 @@
     "health": 3,
     "width": 1,
     "attack": [1],
-    "cost": {"red": 2, "green": 1, "blue": 1}
+    "cost": {"red": 2, "green": 1, "blue": 1},
+    "tiles": [0, 0],
+    "label": "i"
   },
   "avatar": {
     "name": "Avatar",
@@ -141,7 +173,9 @@
     "health": 3,
     "width": 2,
     "attack": [1, 3, 1],
-    "cost": {"red": 5, "green": 1, "blue": 3}
+    "cost": {"red": 5, "green": 1, "blue": 3},
+    "tiles": [0, 0, 0, 1],
+    "label": "A"
   },
   "tank": {
     "name": "Tank",
@@ -149,6 +183,8 @@
     "health": 10,
     "width": 7,
     "attack": [2],
-    "cost": {"red": 1, "green": 5, "blue": 3}
+    "cost": {"red": 1, "green": 5, "blue": 3},
+    "tiles": [1, 0, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 2, 2],
+    "label": "K"
   }
 }
