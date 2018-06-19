@@ -6,16 +6,11 @@ extends Control
 # TODO: charles: change to a better format after we figure out how to represent
 # result of box packing algorithm; probably, UnitKind will specify the colour
 # and arrangement of tiles, and Unit will have a position
-var data = [
-    [Color(0, 0, 1), [0, 0], [1, 0, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 2, 2]],
-    [Color(0.5, 0.5, 0.5), [2, 0], [0, 0]],
-    [Color(1, 0, 0), [3, 0], [0, 0]],
-    [Color(1, 0, 0), [4, 0], [0, 0]],
-    [Color(0, 1, 0), [3, 1], [0, 0, 1, 0]],
-    [Color(0, 1, 0), [3, 2], [0, 0, 1, 0]]
-  ]
-var line_color = Color(0.2, 0.2, 0.2)
+
+# Example data: [Color(0, 0, 1), [0, 0], [1, 0, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 2, 2]],
+var data = [] setget set_data
 var max_tile_size = 50
+
 var OutlinedPolygon2D = preload("outlined_polygon2d.gd")
 onready var parent = $Container
 
@@ -67,12 +62,15 @@ static func squares_to_polygon(coords):
   return poly_coords
 
 func _ready():
-  connect("resized", self, "_on_resized")
-  _on_resized()
+  connect("resized", self, "redraw")
+  redraw()
+  
+func set_data(new_data):
+  data = new_data
+  redraw()
 
-func _on_resized():
-  # This should hopefully be called like, once max per game
-  print("army_view resized! this may be expensive")
+func redraw():
+  # This should hopefully be called not-so-often
   var max_x = 0; var max_y = 0;
   for child in parent.get_children():
     child.queue_free()
@@ -81,14 +79,15 @@ func _on_resized():
     polygon.color = unit[0]
     var vertices = PoolVector2Array()
     var poly_coords = squares_to_polygon(unit[2])
-    var x_ofs = unit[1][0] * 50
-    var y_ofs = unit[1][1] * 50
+    var x_ofs = unit[1][0] * 30
+    var y_ofs = unit[1][1] * 30
     for xy in poly_coords:
-      var x = xy[0] * 50; var y = xy[1] * 50;
+      var x = xy[0] * 30; var y = xy[1] * 30;
       max_x = max(max_x, x + x_ofs)
       max_y = max(max_y, y + y_ofs)
       vertices.append(Vector2(x, y))
     polygon.position = Vector2(x_ofs, y_ofs)
     polygon.polygon = vertices
     parent.add_child(polygon)
+  # TODO jim: Make squares smaller if necessary. Either zoom out (with scale property) or draw smaller squares.
   parent.position = Vector2((rect_size.x - max_x) / 2, (rect_size.y - max_y) / 2)
