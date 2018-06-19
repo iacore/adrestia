@@ -153,6 +153,11 @@ func redraw():
     polygon.color = Colour.to_color(unit.kind.colour)
     polygon.position = Vector2(x_ofs, y_ofs)
     polygon.polygon = vertices
+
+    var label = Label.new()
+    label.text = "%s (%d)" % [unit.kind.label, unit.health]
+    polygon.add_child(label)
+
     offset_container.add_child(polygon)
   offset_container.position = Vector2(-max_x / 2, -max_y / 2)
 
