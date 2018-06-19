@@ -27,6 +27,9 @@ func start_game():
 func advance_turn():
   for player in players:
     player.resources.add(player.resource_gain)
+    for unit in player.units:
+      if player.units[unit].kind.font != null:
+        player.resources.add(player.units[unit].kind.font)
 
 # Returns whether the action was legal
 func perform_action(action):
@@ -98,7 +101,7 @@ func simulate_battle():
 
   # Remove dead units
   for player in players:
-    for u in player.units:
+    for u in player.units.keys():
       if player.units[u].health <= 0:
         player.units.erase(u)
     

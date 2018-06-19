@@ -16,6 +16,9 @@ class AttackDetails:
     self.target_unit_id = target_unit_id
     self.target_square_index = target_square_index
 
+  func to_string():
+    return "[" + str(player) + "," + str(unit_id) + "," + str(attack_index) + "," + str(target_player) + "," + str(target_unit_id) + "," + str(target_square_index) + "]"
+
 # Array of tuples [player, unit_id, attack_index, target_player, target_unit_id, target_square_in_unit] for each player in the game
 var attacks = []
 

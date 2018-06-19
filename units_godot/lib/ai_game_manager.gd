@@ -1,10 +1,15 @@
 extends "game_manager.gd"
 
 const GameState = preload("res://lib/game_state.gd")
+const ChooseResources = preload("res://lib/actions/choose_resources.gd")
+const BuildUnit = preload("res://lib/actions/build_unit.gd")
+const Resources = preload("res://lib/resources.gd")
 
 var gs
+var units
 
 func _init(units):
+  self.units = units
   gs = GameState.new(units, 2)
 
 func perform_action(action):
@@ -12,7 +17,15 @@ func perform_action(action):
   gs.perform_action(action)
 
 func start_game(callback_obj, callback):
-  # TODO: charles: put AI resource action here
+  # AI resource selection
+  randomize()
+  var x = randi() % 4
+  var y = randi() % 4
+  var r = 1 + min(x, y)
+  var g = 1 + abs(x - y)
+  var b = 7 - r - g
+  gs.perform_action(ChooseResources.new(1, Resources.new(r, g, b)))
+  # Start the game
   gs.start_game()
   callback_obj.call(callback)
 
@@ -22,6 +35,16 @@ func get_view():
   return gs
 
 func simulate_battle(callback_obj, callback):
-  #TODO: charles: make AI move here
+  # AI move
+  randomize()
+  var resources = get_view().players[1].resources
+  for i in range(100):
+    if resources.total() <= 1:
+      break
+    var u = randi() % units.size()
+    var kind = units[units.keys()[u]]
+    if kind.cost != null && resources.subsumes(kind.cost):
+      gs.perform_action(BuildUnit.new(1, kind))
+  # Actually run battle
   var result = gs.simulate_battle()
   callback_obj.call(callback, result)
