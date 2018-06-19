@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://components/army_view.gd" type="Script" id=1]
+[ext_resource path="res://themes/army_view.theme" type="Theme" id=1]
+[ext_resource path="res://components/army_view.gd" type="Script" id=2]
 
 [node name="ArmyView" type="Control"]
 
@@ -14,8 +15,9 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-script = ExtResource( 1 )
-_sections_unfolded = [ "Margin", "Size Flags" ]
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+_sections_unfolded = [ "Margin", "Size Flags", "Theme" ]
 
 [node name="ScaleContainer" type="Node2D" parent="." index="0"]
 
