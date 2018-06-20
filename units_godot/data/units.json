@@ -47,7 +47,7 @@
     "width": 2,
     "attack": [1],
     "cost": {"green": 2},
-    "image": "turret.png",
+    "image": "cutie.png",
     "tiles": [0, 0, 0, 1],
     "label": "t"
   },
