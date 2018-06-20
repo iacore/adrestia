@@ -125,7 +125,8 @@
     "attack": [2],
     "cost": {"red": 2, "green": 3},
     "tiles": [0, 0, 1, 0, 2, 0],
-    "label": "S"
+    "label": "S",
+    "image": "shrek.png"
   },
   "soldier": {
     "name": "Soldier",
