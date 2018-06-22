@@ -17,7 +17,8 @@
     "attack": [1],
     "cost": {"red": 2},
     "tiles": [0, 0],
-    "label": "g"
+    "label": "g",
+    "image": "the_grunt.png"
   },
   "troll": {
     "name": "Troll",
@@ -115,7 +116,8 @@
     "attack": [2],
     "cost": {"red": 2, "green": 2},
     "tiles": [0, 0, 1, 0],
-    "label": "o"
+    "label": "o",
+    "image": "the_ogre.png"
   },
   "shrek": {
     "name": "Shrek",
