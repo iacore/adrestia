@@ -73,16 +73,32 @@ class MonteStrategy(Strategy):
         return Resources(3, 2, 2)
 
     def do_turn(self, view: GameView) -> List[UnitKind]:
-        # Always update resources
-        if self.observed_resources is None:
-            self.observed_resources = [(Resources(), Resources()) for _ in view.other_players]
-        for i, p in enumerate(view.other_players):
-            self.observed_resources[i] = update_observed_resources(self.observed_resources[i], p, self.turn)
-
         t = self.partial_strategy.do_turn(view)
         if t is not None:
             self.turn += 1
             return t
 
+        # Find current resources for other players
+        current_resources = []
+        for i, p in enumerate(view.others):
+            r = Resources()
+            for build in p.build_order:
+                r.add(view.productions[i])
+                for u in build:
+                    r.subtract(u.cost)
+            current_resources.append(r)
+
         # Determine all possible build orders for this turn
+        my_orders = possible_build_orders[view.player.resources]
+        # TODO: charles: Support more than two players at somme point.
+        their_orders = possible_build_orders[current_resources[0]]
+        # TODO: charles: Finish algorithm. Outline:
+        # create game state from view based, for running simulations
+        # until time runs out:
+        #   for each player:
+        #     if there are orders that have not yet been tried, choose
+        #     otherwise, choose orders that have highest fraction of wins
+        #   make chosen moves, then simulate using random moves
+        #   record winner in matrix
+        # choose order from my_orders that has highest fraction of wins
         return []

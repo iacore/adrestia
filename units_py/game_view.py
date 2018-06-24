@@ -4,6 +4,7 @@ from typing import List
 
 from game_state import GameState
 from player import Player
+from resources import Resources
 from unit import Unit
 from unit_kind import UnitKind
 
@@ -23,6 +24,9 @@ class GameView:
     view_player: Player              = attr.ib()
     other_players: List[OtherPlayer] = attr.ib()
     turn: int                        = attr.ib()
+    # Reading productions is technically cheating, but we allow it because it
+    # makes the AI simpler.
+    productions: List[Resources]     = attr.ib()
 
     # Returns a player's view of the game state (all the information they can
     # see). Modifying this view should not affect the original game state in
@@ -31,4 +35,5 @@ class GameView:
     def of_gamestate(game: GameState, player_index: int) -> 'GameView':
         return GameView(view_player=copy.deepcopy(game.players[player_index]),
                         other_players=[OtherPlayer.of_player(p) for i, p in enumerate(game.players) if i != player_index],
-                        turn=game.turn)
+                        turn=game.turn,
+                        productions=[p.production for i, p in enumerate(game.players) if i != player_index])
