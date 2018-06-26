@@ -40,6 +40,9 @@ def simulate_turn(state: GameState, strategies: List[Strategy], debug: bool = Fa
     # Battle
     if debug:
         os.system('clear')
+    if debug:
+        for player in state.players:
+            print(player.name, 'built', [k.name for k in player.build_order[-1]])
     for player in state.players:
         target_units = list(itertools.chain.from_iterable(p.units for p in state.players if p is not player))
         total_width = sum(u.kind.width for u in target_units)

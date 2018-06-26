@@ -25,7 +25,7 @@ class OnlyStartPartialStrategy(PartialStrategy):
 
 if __name__ == '__main__':
     strategies: List[Strategy] = [
-            HumanStrategy(),
-            MonteStrategy(partial_strategy=OnlyStartPartialStrategy(resources=Resources(0, 7, 0)))
+            MonteStrategy(partial_strategy=OnlyStartPartialStrategy(resources=Resources(4, 2, 1))),
+            MonteStrategy(partial_strategy=OnlyStartPartialStrategy(resources=Resources(2, 4, 1)))
         ]
     simulate(strategies, debug=True)

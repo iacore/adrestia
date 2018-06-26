@@ -160,6 +160,4 @@ class MonteStrategy(Strategy):
 
         # Find order for self with highest fraction of wins
         chosen_order = max((wins[0][i] / plays[0][i], i) for i in range(len(wins[0])) if plays[0][i] > 0)[1]
-        print("The best move is", [k.name for k in possible_orders[0][chosen_order]])
-        input()
         return possible_orders[0][chosen_order]
