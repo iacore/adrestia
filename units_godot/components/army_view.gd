@@ -160,17 +160,19 @@ func redraw():
     polygon.polygon = vertices
     
     var unit_info = Node2D.new()
-
-    var label = Label.new()
-    label.text = "%s" % [unit.kind.label]
-    unit_info.add_child(label)
     
     var unit_sprite = Sprite.new()
     unit_sprite.texture = unit.kind.image
     unit_sprite.centered = false
     unit_sprite.region_enabled = true
-    unit_sprite.region_rect = Rect2(0, 0, 50, 50)
+    unit_sprite.region_rect = Rect2(0, 0, 256, 256)
+    unit_sprite.scale = Vector2(50.0/256, 50.0/256)
+    unit_sprite.modulate = Color(1.0, 1.0, 1.0, 0.5)
     unit_info.add_child(unit_sprite)
+    
+    var label = Label.new()
+    label.text = "%s" % [unit.kind.label]
+    unit_info.add_child(label)
     
     for i in range(unit.kind.health):
       var health_sprite = Sprite.new()

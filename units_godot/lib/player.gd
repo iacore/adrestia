@@ -10,3 +10,9 @@ var next_unit_id = 0
 func add_unit(unit):
   units[next_unit_id] = unit
   next_unit_id += 1
+
+func is_alive():
+  for i in units:
+    if units[i].kind.name == 'General':
+      return true
+  return false

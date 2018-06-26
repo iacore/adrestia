@@ -6,6 +6,7 @@
     "width": 1,
     "attack": [1],
     "cost": null,
+    "image": "commander.png",
     "tiles": [0, 0],
     "label": "G"
   },
@@ -16,9 +17,9 @@
     "width": 1,
     "attack": [1],
     "cost": {"red": 2},
+    "image": "the_grunt.png",
     "tiles": [0, 0],
-    "label": "g",
-    "image": "the_grunt.png"
+    "label": "g"
   },
   "troll": {
     "name": "Troll",
@@ -27,6 +28,7 @@
     "width": 2,
     "attack": [4],
     "cost": {"red": 5},
+    "image": "the_troll.png",
     "tiles": [0, 0, 1, 0],
     "label": "T"
   },
@@ -71,6 +73,7 @@
     "attack": [],
     "cost": {"red": 1, "blue": 2},
     "font": {"red": 1},
+    "image": "font_r.png",
     "tiles": [0, 0],
     "label": "r"
   },
@@ -94,6 +97,7 @@
     "attack": [],
     "cost": {"blue": 3},
     "font": {"blue": 1},
+    "image": "font_b.png",
     "tiles": [0, 0],
     "label": "b"
   },
@@ -105,6 +109,7 @@
     "attack": [],
     "cost": {"red": 1, "green": 1, "blue": 7},
     "font": {"red": 1, "green": 1, "blue": 1},
+    "image": "paragon.png",
     "tiles": [0, 0],
     "label": "p"
   },
@@ -137,6 +142,7 @@
     "width": 1,
     "attack": [1],
     "cost": {"red": 1, "blue": 2},
+    "image": "default_blue.png",
     "tiles": [0, 0],
     "label": "s"
   },
@@ -147,6 +153,7 @@
     "width": 1,
     "attack": [1, 1],
     "cost": {"red": 3, "blue": 2},
+    "image": "default_red.png",
     "tiles": [0, 0],
     "label": "c"
   },
@@ -157,6 +164,7 @@
     "width": 4,
     "attack": [],
     "cost": {"green": 3, "blue": 2},
+    "image": "default_green.png",
     "tiles": [0, 0, 0, 1, 1, 0, 1, 1],
     "label": "F"
   },
@@ -167,6 +175,7 @@
     "width": 1,
     "attack": [1],
     "cost": {"red": 2, "green": 1, "blue": 1},
+    "image": "insurgent.png",
     "tiles": [0, 0],
     "label": "i"
   },
@@ -177,6 +186,7 @@
     "width": 2,
     "attack": [1, 3, 1],
     "cost": {"red": 5, "green": 1, "blue": 3},
+    "image": "avatar.png",
     "tiles": [0, 0, 0, 1],
     "label": "A"
   },
@@ -187,6 +197,7 @@
     "width": 7,
     "attack": [2],
     "cost": {"red": 1, "green": 5, "blue": 3},
+    "image": "tank.png",
     "tiles": [1, 0, 0, 1, 1, 1, 2, 1, 0, 2, 1, 2, 2, 2],
     "label": "K"
   }

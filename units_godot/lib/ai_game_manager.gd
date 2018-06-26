@@ -30,7 +30,7 @@ func start_game(callback_obj, callback):
   callback_obj.call(callback)
 
 func get_view():
-  #TODO: charles: Return an actual view. Right now we trust the client not to
+  # TODO: charles: Return an actual view. Right now we trust the client not to
   # peek, and to know which player it is.
   return gs
 

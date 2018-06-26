@@ -3,14 +3,16 @@ extends VBoxContainer
 var unit_buy_bar = preload('res://components/unit_buy_bar.tscn')
 var BuildUnit = preload('res://lib/actions/build_unit.gd')
 
+onready var g = get_node("/root/global")
+onready var units = get_node("/root/UnitKinds").units
+
 onready var r_label = $Toolbar/R
 onready var g_label = $Toolbar/G
 onready var b_label = $Toolbar/B
 onready var EndTurnButton = $Toolbar/EndTurnButton
 onready var UnitList = $ScrollContainer/UnitList
-onready var Armies = $MarginContainer/Armies
-onready var g = get_node("/root/global")
-onready var units = get_node("/root/UnitKinds").units
+onready var Armies = $ArmiesBox/Armies
+onready var animation_player = $AnimationPlayer
 var unit_bars = {}
 
 func update_ui():
@@ -35,6 +37,7 @@ func _ready():
       bar.connect("buy_unit", self, "_on_buy_unit", [unit])
       UnitList.add_child(bar)
   EndTurnButton.connect("button_down", self, "_on_EndTurnButton_pressed")
+  animation_player.play('partikuhl')
   update_ui()
 
 func _on_EndTurnButton_pressed():

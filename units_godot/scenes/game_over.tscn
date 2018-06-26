@@ -2,7 +2,7 @@
 
 [ext_resource path="res://scenes/game_over.gd" type="Script" id=1]
 [ext_resource path="res://Signika-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://art/turret.png" type="Texture" id=3]
+[ext_resource path="res://art/attack.png" type="Texture" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 
@@ -52,7 +52,7 @@ anim_offset_random = 0.0
 anim_loop = false
 _sections_unfolded = [ "Initial Velocity", "Spread" ]
 
-[node name="Control" type="VBoxContainer" index="0"]
+[node name="Control" type="VBoxContainer"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -87,7 +87,7 @@ rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
+size_flags_horizontal = 3
 size_flags_vertical = 6
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
@@ -116,7 +116,7 @@ size_flags_vertical = 3
 alignment = 0
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="Offset" type="Control" parent="Container" index="0"]
+[node name="Control" type="Control" parent="Container" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -132,7 +132,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="Control" type="Control" parent="Container" index="1"]
+[node name="Control2" type="Control" parent="Container" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -149,7 +149,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 1
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="Particles2D" type="Particles2D" parent="Container/Control" index="0"]
+[node name="Particles2D" type="Particles2D" parent="Container/Control2" index="0"]
 
 scale = Vector2( 0.5, 0.5 )
 emitting = true
