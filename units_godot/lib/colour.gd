@@ -31,8 +31,8 @@ static func of_json(json):
 static func to_color(colour):
   match colour:
     BLACK: return Color(0.5, 0.5, 0.5)
-    RED  : return Color(1.0, 0.0, 0.0)
-    GREEN: return Color(0.0, 1.0, 0.0)
-    BLUE : return Color(0.0, 0.0, 1.0)
+    RED  : return Color(0.8, 0.25, 0.25)
+    GREEN: return Color(0.2, 0.66, 0.35)
+    BLUE : return Color(0.2, 0.6, 0.85)
     WHITE: return Color(0.9, 0.9, 0.9)
   return Color(0.0, 0.0, 0.0)

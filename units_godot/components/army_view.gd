@@ -124,7 +124,8 @@ func set_data(new_data):
 
 func redraw():
   # This should hopefully be called not-so-often
-  var max_x = 0; var max_y = 0;
+  var max_x = 0;
+  var max_y = 0;
   for child in offset_container.get_children():
     child.queue_free()
 
@@ -142,24 +143,49 @@ func redraw():
 
     var poly_coords = squares_to_polygon(unit.kind.tiles)
 
+    var unit_info_pos = null
     var x_ofs = unit_x * 50
     var y_ofs = unit_y * 50
     for xy in poly_coords:
       var x = xy[0] * 50; var y = xy[1] * 50;
       max_x = max(max_x, x + x_ofs)
       max_y = max(max_y, y + y_ofs)
-      vertices.append(Vector2(x, y))
+      var vec = Vector2(x, y)
+      if unit_info_pos == null:
+        unit_info_pos = vec
+      vertices.append(vec)
 
     polygon.color = Colour.to_color(unit.kind.colour)
     polygon.position = Vector2(x_ofs, y_ofs)
     polygon.polygon = vertices
+    
+    var unit_info = Node2D.new()
 
     var label = Label.new()
-    # TODO: jim: This doesn't work properly if the unit doesn't have a square
-    # at (0,0), e.g. Tank.
-    label.text = "%s (%d)" % [unit.kind.label, unit.health]
-    polygon.add_child(label)
+    label.text = "%s" % [unit.kind.label]
+    unit_info.add_child(label)
+    
+    var unit_sprite = Sprite.new()
+    unit_sprite.texture = unit.kind.image
+    unit_sprite.centered = false
+    unit_sprite.region_enabled = true
+    unit_sprite.region_rect = Rect2(0, 0, 50, 50)
+    unit_info.add_child(unit_sprite)
+    
+    for i in range(unit.kind.health):
+      var health_sprite = Sprite.new()
+      # load() should be memoized, so no leak here probably
+      if i < unit.health:
+        health_sprite.texture = load('res://art/heart.png')
+      else:
+        health_sprite.texture = load('res://art/heart-empty.png')
+      health_sprite.centered = false
+      health_sprite.scale = Vector2(0.5, 0.5)
+      health_sprite.position = Vector2(50-17, i*5)
+      unit_info.add_child(health_sprite)
 
+    unit_info.position = unit_info_pos
+    polygon.add_child(unit_info)
     offset_container.add_child(polygon)
   offset_container.position = Vector2(-max_x / 2, -max_y / 2)
 

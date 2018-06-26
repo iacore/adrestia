@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://themes/army_view.theme" type="Theme" id=1]
 [ext_resource path="res://components/army_view.gd" type="Script" id=2]
+[ext_resource path="res://art/heart.png" type="Texture" id=3]
 
 [node name="ArmyView" type="Control" index="0"]
 
@@ -26,5 +27,11 @@ _sections_unfolded = [ "Transform" ]
 [node name="OffsetContainer" type="Node2D" parent="ScaleContainer" index="0"]
 
 _sections_unfolded = [ "Transform" ]
+
+[node name="Sprite" type="Sprite" parent="ScaleContainer/OffsetContainer" index="0"]
+
+texture = ExtResource( 3 )
+centered = false
+_sections_unfolded = [ "Offset", "Region", "Transform", "Z Index" ]
 
 
