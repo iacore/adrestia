@@ -155,7 +155,7 @@ func redraw():
         unit_info_pos = vec
       vertices.append(vec)
 
-    polygon.color = Colour.to_color(unit.kind.colour)
+    polygon.color = Colour.to_color(unit.kind.colour).lightened(0.6)
     polygon.position = Vector2(x_ofs, y_ofs)
     polygon.polygon = vertices
     
@@ -167,7 +167,7 @@ func redraw():
     unit_sprite.region_enabled = true
     unit_sprite.region_rect = Rect2(0, 0, 256, 256)
     unit_sprite.scale = Vector2(50.0/256, 50.0/256)
-    unit_sprite.modulate = Color(1.0, 1.0, 1.0, 0.5)
+    unit_sprite.modulate = Color(1.0, 1.0, 1.0, 1.0)
     unit_info.add_child(unit_sprite)
     
     var label = Label.new()
