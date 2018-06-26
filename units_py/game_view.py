@@ -33,7 +33,19 @@ class GameView:
     # any way.
     @staticmethod
     def of_gamestate(game: GameState, player_index: int) -> 'GameView':
-        return GameView(view_player=copy.deepcopy(game.players[player_index]),
+        return GameView(view_player=game.players[player_index].clone(),
                         other_players=[OtherPlayer.of_player(p) for i, p in enumerate(game.players) if i != player_index],
                         turn=game.turn,
                         productions=[p.production for i, p in enumerate(game.players) if i != player_index])
+
+    def to_gamestate(self, resources: List[Resources]) -> GameState:
+        return GameState(players=[self.view_player] + [
+                Player(
+                    p.name,
+                    p.units,
+                    resources[i],
+                    self.productions[i],
+                    alive=p.alive
+                )
+                for i, p in enumerate(self.other_players)
+            ], turn=self.turn)

@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 import attr
 import copy
-import random
 import math
+import random
+import time
 from typing import List, Optional, Tuple
 
 from game_view import GameView, OtherPlayer
@@ -10,6 +11,7 @@ from game_state import GameState
 from resources import Resources
 from strategy import Strategy
 from unit_kind import UnitKind, unit_kinds
+from simulator import simulate_turn
 
 # r is a tuple of (min_resources, observed_resources), where
 # min_resources is the minimum allocation to each colour necessary to be able to afford the observed units, and
@@ -46,6 +48,32 @@ def possible_build_orders(resources: Resources) -> List[List[UnitKind]]:
     aux([], resources, 0)
     return build_orders
 
+class RandomStrategy(Strategy):
+    def get_production(self) -> Resources:
+        return Resources(3, 2, 2)
+
+    def do_turn(self, view: GameView) -> List[UnitKind]:
+        r = view.view_player.resources
+        build = []
+        while random.random() < 0.99 and r.red + r.green + r.blue > 0:
+            kind = random.choice(list(unit_kinds.values()))
+            if kind.cost is not None and r.subsumes(kind.cost):
+                build.append(kind)
+                r.subtract(kind.cost)
+        return build
+
+# Returns the winner. -1 if its a tie or the turn limit is reached.
+# Turn limit is from the current turn, not the game's turn
+def playout(state: GameState, turn_limit: int) -> int:
+    for i in range(turn_limit):
+        simulate_turn(state, [RandomStrategy() for p in state.players], debug=False)
+        winners = [i for i, p in enumerate(state.players) if p.alive]
+        if len(winners) == 1:
+            return winners[0]
+        elif len(winners) == 0:
+            return -1
+    return -2
+
 class PartialStrategy(ABC):
     @abstractmethod
     def get_production(self) -> Optional[Resources]:
@@ -54,6 +82,16 @@ class PartialStrategy(ABC):
     @abstractmethod
     def do_turn(self, game_view: GameView) -> Optional[List[UnitKind]]:
         raise NotImplementedError
+
+@attr.s
+class FixedStrategy(Strategy):
+    build: List[UnitKind] = attr.ib()
+
+    def get_production(self) -> Resources:
+        return Resources(3, 2, 2)
+
+    def do_turn(self, view: GameView) -> List[UnitKind]:
+        return self.build
 
 class MonteStrategy(Strategy):
     partial_strategy: PartialStrategy
@@ -69,7 +107,8 @@ class MonteStrategy(Strategy):
         p = self.partial_strategy.get_production()
         if p is not None:
             return p
-        # TODO: determine resources to use by simulation
+        # TODO: charles: determine resources to use by simulation if not
+        # specified by the partial strategy
         return Resources(3, 2, 2)
 
     def do_turn(self, view: GameView) -> List[UnitKind]:
@@ -80,25 +119,47 @@ class MonteStrategy(Strategy):
 
         # Find current resources for other players
         current_resources = []
-        for i, p in enumerate(view.others):
+        for i, p in enumerate(view.other_players):
             r = Resources()
             for build in p.build_order:
                 r.add(view.productions[i])
                 for u in build:
-                    r.subtract(u.cost)
+                    if u.cost is not None:
+                        r.subtract(u.cost)
+            r.add(view.productions[i])
             current_resources.append(r)
 
         # Determine all possible build orders for this turn
-        my_orders = possible_build_orders[view.player.resources]
-        # TODO: charles: Support more than two players at somme point.
-        their_orders = possible_build_orders[current_resources[0]]
-        # TODO: charles: Finish algorithm. Outline:
-        # create game state from view based, for running simulations
-        # until time runs out:
-        #   for each player:
-        #     if there are orders that have not yet been tried, choose
-        #     otherwise, choose orders that have highest fraction of wins
-        #   make chosen moves, then simulate using random moves
-        #   record winner in matrix
-        # choose order from my_orders that has highest fraction of wins
-        return []
+        possible_orders = [possible_build_orders(view.view_player.resources)] + [possible_build_orders(r) for r in current_resources]
+
+        # Record of plays and wins for each player; wins[i][j]/plays[i][j] is
+        # the fraction of times that player i has played strategy j that resulted
+        # in a win for player i
+        wins = [[0 for _ in o] for o in possible_orders]
+        plays = [[0 for _ in o] for o in possible_orders]
+
+        # Create game state from view based, for running simulations
+        state = view.to_gamestate(current_resources)
+        start_time = time.time()
+        c = 2**0.5
+        while time.time() < start_time + 5.0:
+            selected_orders = []
+            for j in range(len(wins)):
+                N = sum(plays[j])
+                if not any(x == 0 for x in plays[j]):
+                    order = max((wins[j][i] / plays[j][i] + c * (math.log(N) / plays[j][i]), i) for i in range(len(wins[j])))[1]
+                else:
+                    order = random.choice([i for i in range(len(plays[j])) if plays[j][i] == 0])
+                plays[j][order] += 1
+                selected_orders.append(order)
+            copy = state.clone()
+            simulate_turn(copy, [FixedStrategy(po[i]) for po, i in zip(possible_orders, selected_orders)], debug=False)
+            result = playout(copy, 10)
+            if result > -1:
+                wins[result][selected_orders[result]] += 1
+
+        # Find order for self with highest fraction of wins
+        chosen_order = max((wins[0][i] / plays[0][i], i) for i in range(len(wins[0])) if plays[0][i] > 0)[1]
+        print("The best move is", [k.name for k in possible_orders[0][chosen_order]])
+        input()
+        return possible_orders[0][chosen_order]
