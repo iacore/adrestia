@@ -68,7 +68,7 @@ def test_Unit_to_string_hum_civilian():
     test_unit = unit.Unit.of_kind(mock_unitkind)
     test_unit.health = current_health  # A different value than full
 
-    expected_string = "({name} (width {width}) (hp {remaining_hp}/{max_hp}) (attack {attack}))".format(
+    expected_string = "({name} (width {width}) (hp {remaining_hp}/{max_hp}))".format(
                             name=mock_unitkind.name,
                             width=mock_unitkind.width,
                             remaining_hp=current_health,

@@ -23,7 +23,6 @@ class UnitKind:
     font: Optional[Resources]                         = attr.ib(default = None)
 
 
-# TODO: Attack should be None if no attack, not empty
 # A dictionary of all Adrestia's units. Key is the "internal" unit name. Attributes are:
 #     name: The displayable name
 #     colour: The associated colour

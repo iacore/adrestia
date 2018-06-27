@@ -31,11 +31,11 @@ class Unit:
         @return A human-readable string describing this unit and its attributes.
         """
 
-        attack_string = "[None]"
-        if len(self.kind.attack):
-            attack_string = self.kind.attack
+        attack_string = ""
+        if self.kind.attack:
+            attack_string = " (attack {attack})".format(attack=self.kind.attack)
 
-        return '({name} (width {width}) (hp {remaining_hp}/{max_hp}) (attack {attack}))'.format(
+        return '({name} (width {width}) (hp {remaining_hp}/{max_hp}){attack})'.format(
                     name=self.kind.name,
                     width=self.kind.width,
                     remaining_hp=self.health,

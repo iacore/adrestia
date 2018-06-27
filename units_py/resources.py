@@ -14,7 +14,7 @@ class Resources:
 
     @staticmethod
     def of_string_exn(s: str) -> 'Resources':
-        """@brief Creates and returns Resources object from a string formated like '{red} {green} {blue}'.
+        """@brief Creates and returns Resources object from a string formatted like '{red} {green} {blue}'.
 
         @param s: The input string.
 
@@ -35,11 +35,11 @@ class Resources:
 
 
     def subsumes(self, other: 'Resources') -> bool:
-        """@brief Returns whether the parameter 'other' represents more resources than are in this object.
+        """@brief Returns whether the parameter 'other' represents less or equal resources than are in this object.
 
         @param other: A resources object.
 
-        @return boolean representing whether other represents more resources than are in this object.
+        @return boolean representing whether other represents less or equal resources than are in this object.
         """
 
         return self.red >= other.red and self.green >= other.green and self.blue >= other.blue
@@ -57,7 +57,7 @@ class Resources:
 
 
     def subtract(self, other: 'Resources') -> None:
-        """@brief Subtracts resources represented by paramter 'other' from this object. This subtraction can allow
+        """@brief Subtracts resources represented by parameter 'other' from this object. This subtraction can allow
         this object's resources to go into negatives.
 
         @param other: A Resources object; its contents are subtracted from this object.
