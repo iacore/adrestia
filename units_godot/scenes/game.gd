@@ -40,11 +40,12 @@ func _ready():
       unit_bars[unit] = bar
       bar.connect("buy_unit", self, "_on_buy_unit", [unit])
       unit_list.add_child(bar)
-  end_turn_button.connect("button_down", self, "_on_end_turn_button_pressed")
+  end_turn_button.connect("pressed", self, "_on_end_turn_button_pressed")
   animation_player.play('particle')
   update_ui()
 
 func _on_end_turn_button_pressed():
+  end_turn_button.disabled = true
   g.man.end_turn(self, '_on_enemy_turn_done')
 
 func _on_enemy_turn_done():
@@ -120,6 +121,7 @@ func _on_simulate_battle_complete(result):
   yield(t, 'timeout')
   t.queue_free()
 
+  end_turn_button.disabled = false
   if g.man.get_view().is_game_over():
     # TODO: charles: display result in some way
     get_tree().change_scene("res://scenes/game_over.tscn")
