@@ -34,7 +34,7 @@ func get_view():
   # peek, and to know which player it is.
   return gs
 
-func simulate_battle(callback_obj, callback):
+func end_turn(callback_obj, callback):
   # AI move
   randomize()
   var resources = get_view().players[1].resources
@@ -45,6 +45,9 @@ func simulate_battle(callback_obj, callback):
     var kind = units[units.keys()[u]]
     if kind.cost != null && resources.subsumes(kind.cost):
       gs.perform_action(BuildUnit.new(1, kind))
+  callback_obj.call(callback)
+
+func simulate_battle(callback_obj, callback):
   # Actually run battle
   var result = gs.simulate_battle()
   callback_obj.call(callback, result)

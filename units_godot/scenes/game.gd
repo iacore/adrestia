@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends Node
 
 var unit_buy_bar = preload('res://components/unit_buy_bar.tscn')
 var BuildUnit = preload('res://lib/actions/build_unit.gd')
@@ -6,12 +6,13 @@ var BuildUnit = preload('res://lib/actions/build_unit.gd')
 onready var g = get_node("/root/global")
 onready var units = get_node("/root/UnitKinds").units
 
-onready var r_label = $Toolbar/R
-onready var g_label = $Toolbar/G
-onready var b_label = $Toolbar/B
-onready var EndTurnButton = $Toolbar/EndTurnButton
-onready var UnitList = $ScrollContainer/UnitList
-onready var Armies = $ArmiesBox/Armies
+onready var r_label = $MarginContainer/VBoxContainer/Toolbar/R
+onready var g_label = $MarginContainer/VBoxContainer/Toolbar/G
+onready var b_label = $MarginContainer/VBoxContainer/Toolbar/B
+onready var EndTurnButton = $MarginContainer/VBoxContainer/Toolbar/EndTurnButton
+onready var UnitList = $MarginContainer/VBoxContainer/ScrollContainer/UnitList
+onready var Armies = $MarginContainer/VBoxContainer/ArmiesBox/Armies
+onready var particles = $MarginContainer/VBoxContainer/ArmiesBox/Particles
 onready var animation_player = $AnimationPlayer
 var unit_bars = {}
 
@@ -37,10 +38,24 @@ func _ready():
       bar.connect("buy_unit", self, "_on_buy_unit", [unit])
       UnitList.add_child(bar)
   EndTurnButton.connect("button_down", self, "_on_EndTurnButton_pressed")
-  animation_player.play('partikuhl')
+  animation_player.play('particle')
   update_ui()
 
 func _on_EndTurnButton_pressed():
+  g.man.end_turn(self, '_on_enemy_turn_done')
+
+func _on_enemy_turn_done():
+  update_ui()
+
+  # wait for 0.5s
+  var t = Timer.new()
+  t.set_wait_time(0.5)
+  t.set_one_shot(true)
+  self.add_child(t)
+  t.start()
+  yield(t, 'timeout')
+  t.queue_free()
+
   g.man.simulate_battle(self, '_on_simulate_battle_complete')
 
 func _on_simulate_battle_complete(result):
