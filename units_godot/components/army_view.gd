@@ -1,11 +1,9 @@
 tool
 extends Control
 
-var Colour = preload('res://lib/colour.gd')
-
 var data = {} setget set_data
 var max_tile_size = 50
-var OutlinedPolygon2D = preload("outlined_polygon2d.gd")
+var UnitPolygon = preload("unit_polygon.gd")
 onready var scale_container = $ScaleContainer
 onready var offset_container = $ScaleContainer/OffsetContainer
 
@@ -81,7 +79,8 @@ static func position_units(orig_units):
       blocks.append([flat_blocks[2 * i], flat_blocks[2 * i + 1]])
 
     # Find a place to put this unit.
-    var result_x; var result_y
+    var result_x;
+    var result_y
     var x = 0
     var y = 0
     var done = false
@@ -138,7 +137,7 @@ func redraw():
     var unit_x = record[1]
     var unit_y = record[2]
 
-    var polygon = OutlinedPolygon2D.new()
+    var polygon = UnitPolygon.new(unit)
     var vertices = PoolVector2Array()
 
     var poly_coords = squares_to_polygon(unit.kind.tiles)
@@ -155,7 +154,6 @@ func redraw():
         unit_info_pos = vec
       vertices.append(vec)
 
-    polygon.color = Colour.to_color(unit.kind.colour).lightened(0.6)
     polygon.position = Vector2(x_ofs, y_ofs)
     polygon.polygon = vertices
     
@@ -173,6 +171,10 @@ func redraw():
     var label = Label.new()
     label.text = "%s" % [unit.kind.label]
     unit_info.add_child(label)
+
+    var health_icons = Node2D.new()
+    health_icons.name = 'HealthIcons'
+    unit_info.add_child(health_icons)
     
     for i in range(unit.kind.health):
       var health_sprite = Sprite.new()
@@ -183,17 +185,19 @@ func redraw():
         health_sprite.texture = load('res://art/heart-empty.png')
       health_sprite.centered = false
       health_sprite.scale = Vector2(0.5, 0.5)
-      health_sprite.position = Vector2(50-17, i*5)
-      unit_info.add_child(health_sprite)
+      health_sprite.position = Vector2(50-18, i*5)
+      health_icons.add_child(health_sprite)
+
+    unit_info.add_child(health_icons)
 
     unit_info.position = unit_info_pos
+    unit_info.name = 'UnitInfo'
     polygon.add_child(unit_info)
     offset_container.add_child(polygon)
 
     unit.polygon = polygon
 
   offset_container.position = Vector2(-max_x / 2, -max_y / 2)
-
   scale_container.position = Vector2(rect_size.x / 2, rect_size.y / 2)
   var scale = 1.0
   scale = min(scale, rect_size.x / max_x)

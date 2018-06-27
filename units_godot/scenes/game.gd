@@ -9,9 +9,9 @@ onready var units = get_node("/root/UnitKinds").units
 onready var r_label = $MarginContainer/VBoxContainer/Toolbar/R
 onready var g_label = $MarginContainer/VBoxContainer/Toolbar/G
 onready var b_label = $MarginContainer/VBoxContainer/Toolbar/B
-onready var EndTurnButton = $MarginContainer/VBoxContainer/Toolbar/EndTurnButton
-onready var UnitList = $MarginContainer/VBoxContainer/ScrollContainer/UnitList
-onready var Armies = $MarginContainer/VBoxContainer/ArmiesBox/Armies
+onready var end_turn_button = $MarginContainer/VBoxContainer/Toolbar/EndTurnButton
+onready var unit_list = $MarginContainer/VBoxContainer/ScrollContainer/UnitList
+onready var armies = $MarginContainer/VBoxContainer/ArmiesBox/Armies
 onready var particles = $MarginContainer/VBoxContainer/ArmiesBox/Particles
 onready var animation_player = $AnimationPlayer
 var unit_bars = {}
@@ -30,7 +30,7 @@ func update_ui():
     # jim: This triggers the redraw. duplicate() is needed because when drawing
     # attack particles, we need access to what is CURRENTLY drawn on the
     # screen, even if the actual game state has changed in the meantime.
-    Armies.get_child(1 - pid).data = player.units.duplicate()
+    armies.get_child(1 - pid).data = player.units.duplicate()
 
 func _ready():
   for unit in units:
@@ -39,12 +39,12 @@ func _ready():
       bar.init(units[unit]);
       unit_bars[unit] = bar
       bar.connect("buy_unit", self, "_on_buy_unit", [unit])
-      UnitList.add_child(bar)
-  EndTurnButton.connect("button_down", self, "_on_EndTurnButton_pressed")
+      unit_list.add_child(bar)
+  end_turn_button.connect("button_down", self, "_on_end_turn_button_pressed")
   animation_player.play('particle')
   update_ui()
 
-func _on_EndTurnButton_pressed():
+func _on_end_turn_button_pressed():
   g.man.end_turn(self, '_on_enemy_turn_done')
 
 func _on_enemy_turn_done():
@@ -59,8 +59,8 @@ func _on_simulate_battle_complete(result):
   for attack in result.attacks:
     var spark = Sprite.new()
     spark.texture = load('res://art/attack.png')
-    var attacking_unit = Armies.get_child(1 - attack.player).data[attack.unit_id]
-    var defending_unit = Armies.get_child(1 - attack.target_player).data[attack.target_unit_id]
+    var attacking_unit = armies.get_child(1 - attack.player).data[attack.unit_id]
+    var defending_unit = armies.get_child(1 - attack.target_player).data[attack.target_unit_id]
 
     # TODO jim: Stop spreading 50, and simple fractions and multiples thereof,
     # across the codebase
@@ -84,7 +84,6 @@ func _on_simulate_battle_complete(result):
 
   animation_player.play('particle')
 
-  # wait for 1.0s
   var t = Timer.new()
   t.set_wait_time(1.0)
   t.set_one_shot(true)
@@ -96,6 +95,30 @@ func _on_simulate_battle_complete(result):
   animation.clear()
   for spark in particles.get_children():
     spark.queue_free()
+
+  # Update hearts immediately, so that it looks like the spark "took away" the heart.
+  for attack in result.attacks:
+    var defending_unit = armies.get_child(1 - attack.target_player).data[attack.target_unit_id]
+    var health_icons = defending_unit.polygon.get_node('UnitInfo/HealthIcons')
+
+    # Determine new health of unit, if it still exists
+    var new_units = gs.players[attack.target_player].units
+    var new_health = 0
+    if new_units.has(attack.target_unit_id):
+      new_health = new_units[attack.target_unit_id].health
+
+    for i in range(health_icons.get_child_count()):
+      var icon = health_icons.get_child(i)
+      if i >= new_health:
+        icon.texture = load('res://art/heart-empty.png')
+
+  t = Timer.new()
+  t.set_wait_time(0.5)
+  self.add_child(t)
+  t.set_paused(false)
+  t.start()
+  yield(t, 'timeout')
+  t.queue_free()
 
   if g.man.get_view().is_game_over():
     # TODO: charles: display result in some way
