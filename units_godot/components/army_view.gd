@@ -3,7 +3,7 @@ extends Control
 
 var Colour = preload('res://lib/colour.gd')
 
-var data = [] setget set_data
+var data = {} setget set_data
 var max_tile_size = 50
 var OutlinedPolygon2D = preload("outlined_polygon2d.gd")
 onready var scale_container = $ScaleContainer
@@ -71,7 +71,7 @@ static func position_units(orig_units):
   var occupied = {}
   var units_and_positions = []
   var goal_aspect = 2.0 # Goal aspect ratio. >1 is wider.
-  var units = [] + orig_units
+  var units = [] + orig_units.values()
   units.sort_custom(SortUnitsByWidth, "sort")
 
   for unit in units:
@@ -189,6 +189,9 @@ func redraw():
     unit_info.position = unit_info_pos
     polygon.add_child(unit_info)
     offset_container.add_child(polygon)
+
+    unit.polygon = polygon
+
   offset_container.position = Vector2(-max_x / 2, -max_y / 2)
 
   scale_container.position = Vector2(rect_size.x / 2, rect_size.y / 2)

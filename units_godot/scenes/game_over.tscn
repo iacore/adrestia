@@ -151,7 +151,6 @@ _sections_unfolded = [ "Size Flags" ]
 
 [node name="Particles2D" type="Particles2D" parent="Container/Control2" index="0"]
 
-scale = Vector2( 0.5, 0.5 )
 emitting = true
 amount = 8
 lifetime = 1.0

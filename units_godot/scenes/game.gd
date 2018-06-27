@@ -27,7 +27,10 @@ func update_ui():
   
   for pid in range(view.players.size()):
     var player = view.players[pid]
-    Armies.get_child(1 - pid).data = player.units.values()
+    # jim: This triggers the redraw. duplicate() is needed because when drawing
+    # attack particles, we need access to what is CURRENTLY drawn on the
+    # screen, even if the actual game state has changed in the meantime.
+    Armies.get_child(1 - pid).data = player.units.duplicate()
 
 func _ready():
   for unit in units:
@@ -46,21 +49,56 @@ func _on_EndTurnButton_pressed():
 
 func _on_enemy_turn_done():
   update_ui()
+  g.man.simulate_battle(self, '_on_simulate_battle_complete')
 
-  # wait for 0.5s
+func _on_simulate_battle_complete(result):
+  var gs = g.man.get_view()
+  var animation = animation_player.get_animation('particle')
+  
+  # TODO jim: Stagger attacks for effect.
+  for attack in result.attacks:
+    var spark = Sprite.new()
+    spark.texture = load('res://art/attack.png')
+    var attacking_unit = Armies.get_child(1 - attack.player).data[attack.unit_id]
+    var defending_unit = Armies.get_child(1 - attack.target_player).data[attack.target_unit_id]
+
+    # TODO jim: Stop spreading 50, and simple fractions and multiples thereof,
+    # across the codebase
+    var center_offset = Vector2(25, 25)
+    var square_x = defending_unit.kind.tiles[2 * attack.target_square_index]
+    var square_y = defending_unit.kind.tiles[2 * attack.target_square_index + 1]
+    var square_offset = Vector2(50 * square_x, 50 * square_y)
+    var start_scale = attacking_unit.polygon.global_scale.x
+    var final_scale = defending_unit.polygon.global_scale.y
+    var start_position = attacking_unit.polygon.global_position + start_scale * center_offset
+    var final_position = defending_unit.polygon.global_position + final_scale * (center_offset + square_offset)
+    particles.add_child(spark)
+
+    var track_id = animation.add_track(Animation.TYPE_VALUE)
+    var path = NodePath("%s:position" % spark.get_path())
+    animation.track_set_path(track_id, path)
+
+    var offset = square_offset + center_offset
+    animation.track_insert_key(track_id, 0.0, start_position)
+    animation.track_insert_key(track_id, 1.0, final_position)
+
+  animation_player.play('particle')
+
+  # wait for 1.0s
   var t = Timer.new()
-  t.set_wait_time(0.5)
+  t.set_wait_time(1.0)
   t.set_one_shot(true)
   self.add_child(t)
   t.start()
   yield(t, 'timeout')
   t.queue_free()
 
-  g.man.simulate_battle(self, '_on_simulate_battle_complete')
+  animation.clear()
+  for spark in particles.get_children():
+    spark.queue_free()
 
-func _on_simulate_battle_complete(result):
-  # TODO: charles: display result in some way
   if g.man.get_view().is_game_over():
+    # TODO: charles: display result in some way
     get_tree().change_scene("res://scenes/game_over.tscn")
   else:
     update_ui()

@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/game.gd" type="Script" id=1]
 [ext_resource path="res://themes/general_ui.theme" type="Theme" id=2]
 [ext_resource path="res://components/army_view.tscn" type="PackedScene" id=3]
-[ext_resource path="res://art/attack.png" type="Texture" id=4]
 
 [sub_resource type="Animation" id=1]
 
@@ -11,18 +10,6 @@ resource_name = "particle"
 length = 1.0
 loop = false
 step = 0.1
-tracks/0/type = "value"
-tracks/0/path = NodePath("MarginContainer/VBoxContainer/ArmiesBox/Particles/Sprite:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Vector2( 0, 0 ), Vector2( 293.953, 183.72 ) ]
-}
 
 [node name="Node" type="Node" index="0"]
 
@@ -118,12 +105,6 @@ margin_bottom = 401.0
 size_flags_vertical = 3
 
 [node name="Particles" type="Node2D" parent="MarginContainer/VBoxContainer/ArmiesBox" index="1"]
-
-[node name="Sprite" type="Sprite" parent="MarginContainer/VBoxContainer/ArmiesBox/Particles" index="0"]
-
-position = Vector2( 293.953, 183.72 )
-texture = ExtResource( 4 )
-_sections_unfolded = [ "Transform" ]
 
 [node name="Toolbar" type="HBoxContainer" parent="MarginContainer/VBoxContainer" index="1"]
 
