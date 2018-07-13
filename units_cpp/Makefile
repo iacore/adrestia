@@ -7,7 +7,7 @@ MAIN_OBJS = ${OBJECTS} main.o
 MAIN_DEPS = ${MAIN_OBJS:.o=.d}
 
 TEST_EXEC = test
-TEST_OBJS = ${OBJECTS} tests/resources_test.o tests/test.o
+TEST_OBJS = ${OBJECTS} tests/resources_test.o tests/unit_kind_test.o tests/test.o
 TEST_DEPS = ${TEST_OBJS:.o=.d}
 
 EXECS = ${MAIN_EXEC} ${TEST_EXEC}
