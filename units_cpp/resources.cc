@@ -37,7 +37,7 @@ void Resources::subtract(const Resources &r) {
   blue -= r.blue;
 }
 
-bool Resources::includes(const Resources &r) {
+bool Resources::includes(const Resources &r) const {
   return (
       red >= r.red &&
       green >= r.green &&
@@ -46,10 +46,14 @@ bool Resources::includes(const Resources &r) {
 }
 
 bool Resources::operator<=(const Resources &r) {
-  return this->includes(r);
+  return r.includes(*this);
 }
 
 std::ostream &operator<<(std::ostream &os, const Resources &r) {
   os << json(r);
   return os;
+}
+
+bool operator==(const Resources &a, const Resources &b) {
+  return a.red == b.red && a.green == b.green && a.blue == b.blue;
 }
