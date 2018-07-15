@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "description": "Set of Adrestia units",
+  "type": "object",
+  "properties": {
+    "unit_kinds": {"type": "array", "items": {"$ref": "#/definitions/unit_kind"}},
+    "starting_resources": {"type": "integer", "minimum": 1}
+  },
+  "required": ["unit_kinds", "starting_resources"],
+  "additionalProperties": false,
+  "definitions": {
+    "unit_kind": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z_]+$"},
+        "name": {"type": "string"},
+        "colour": {"$ref": "#/definitions/colour"},
+        "health": {"type": "integer", "minimum": 1},
+        "shields": {"type": "integer", "minimum": 0},
+        "width": {"type": "integer", "minimum": 1},
+        "build_time": {"type": "integer", "minimum": 0},
+        "attack": {"type": "array", "items": {"type": "integer", "minimum": 1}},
+        "cost": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/resources"}]},
+        "font": {"$ref": "#/definitions/resources"},
+        "image": {"type": "string"},
+        "tiles": {"type": "array", "items": {"type": "integer", "minimum": 0}},
+        "label": {"type": "string"}
+      },
+      "additionalProperties": false,
+      "required": ["id", "name", "colour", "health", "width", "attack", "cost", "tiles", "label"]
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "red": {"type": "integer", "minimum": 1},
+        "green": {"type": "integer", "minimum": 1},
+        "blue": {"type": "integer", "minimum": 1}
+      },
+      "anyOf": [{"required": ["red"]}, {"required": ["green"]}, {"required": ["blue"]}],
+      "additionalProperties": false
+    },
+    "colour": {"enum": ["RED", "GREEN", "BLUE", "BLACK"]}
+  }
+}

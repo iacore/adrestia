@@ -63,7 +63,7 @@ TEST_CASE("UnitKind") {
     REQUIRE(kind.get_attack().size() == 2);
     REQUIRE(kind.get_attack()[0] == 3);
     REQUIRE(kind.get_attack()[1] == 1);
-    REQUIRE(*kind.get_cost() == Resources(0, 3, 3));
+    REQUIRE(*kind.get_cost() == Resources(0, 0, 3, 3));
     REQUIRE(kind.get_font() == nullptr);
     REQUIRE(kind.get_image() == "superturret.png");
     REQUIRE(kind.get_tiles().size() == 6);
