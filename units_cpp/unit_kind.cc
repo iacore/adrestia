@@ -9,6 +9,7 @@ UnitKind::~UnitKind() {
 }
 
 void from_json(const json &j, UnitKind &kind) {
+  kind.id = j["id"];
   kind.name = j["name"];
   kind.colour = j["colour"].get<Colour>();
   kind.health = j["health"];
@@ -30,6 +31,7 @@ void from_json(const json &j, UnitKind &kind) {
 }
 
 void to_json(json &j, const UnitKind &kind) {
+  j["id"] = kind.id;
   j["name"] = kind.name;
   j["colour"] = kind.colour;
   j["health"] = kind.health;
@@ -46,6 +48,10 @@ void to_json(json &j, const UnitKind &kind) {
   j["image"] = kind.image;
   j["tiles"] = kind.tiles;
   j["label"] = std::string(1, kind.label);
+}
+
+std::string UnitKind::get_id() const {
+  return id;
 }
 
 std::string UnitKind::get_name() const {

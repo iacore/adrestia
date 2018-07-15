@@ -10,6 +10,7 @@ class UnitKind {
  public:
   UnitKind();
   ~UnitKind();
+  std::string get_id() const;
   std::string get_name() const;
   Colour get_colour() const;
   unsigned short get_health() const;
@@ -26,6 +27,7 @@ class UnitKind {
   friend void to_json(json &j, const UnitKind &kind);
   friend void from_json(const json &j, UnitKind &kind);
  private:
+  std::string id;
   std::string name;
   Colour colour;
   unsigned short health;

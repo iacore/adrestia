@@ -8,6 +8,7 @@ TEST_CASE("UnitKind") {
   SECTION("stats for General") {
     json general_json = R"(
     {
+      "id": "general",
       "name": "General",
       "colour": "BLACK",
       "health": 5,
@@ -39,6 +40,7 @@ TEST_CASE("UnitKind") {
   SECTION("stats for normal unit") {
     UnitKind kind = R"(
     {
+      "id": "super_turret",
       "name": "Super Turret",
       "colour": "GREEN",
       "health": 4,
