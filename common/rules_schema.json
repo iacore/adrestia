@@ -4,7 +4,8 @@
   "type": "object",
   "properties": {
     "unit_kinds": {"type": "array", "items": {"$ref": "#/definitions/unit_kind"}},
-    "starting_resources": {"type": "integer", "minimum": 1}
+    "starting_resources": {"type": "integer", "minimum": 1},
+    "starting_units": {"type": "array", "items": {"type": "string", "pattern": "^[a-z_]+$"}}
   },
   "required": ["unit_kinds", "starting_resources"],
   "additionalProperties": false,

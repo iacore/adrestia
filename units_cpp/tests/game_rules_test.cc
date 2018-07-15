@@ -7,13 +7,15 @@
 using json = nlohmann::json;
 
 TEST_CASE("GameRules") {
-  json j;
-  std::ifstream in("rules.json");
-  in >> j;
-  GameRules rules = j;
+  GameRules rules("rules.json");
 
   SECTION("get unit kind") {
     const UnitKind &kind = rules.get_unit_kind("general");
     REQUIRE(kind.get_id() == "general");
+  }
+
+  SECTION("starting resources and units") {
+    REQUIRE(rules.get_starting_resources() == 7);
+    REQUIRE(rules.get_starting_units().size() == 6);
   }
 }

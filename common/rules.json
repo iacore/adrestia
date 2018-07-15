@@ -221,5 +221,6 @@
       "label": "K"
     }
   ],
-  "starting_resources": 7
+  "starting_resources": 7,
+  "starting_units": ["general", "wall", "wall", "wall", "wall", "wall"]
 }
