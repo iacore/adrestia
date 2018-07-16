@@ -1,8 +1,19 @@
 #include "player.h"
+#include "unit_kind.h"
+#include "game_rules.h"
 
-Player::Player(const GameRules &rules) : alive(true) {
+Player::Player(const GameRules &rules) : alive(true), next_unit(0) {
   std::vector<UnitKind*> starting_units = rules.get_starting_units();
   for (auto it = starting_units.begin(); it != starting_units.end(); it++) {
-    units.push_back(Unit(**it));
+    build_unit(**it);
   }
+}
+
+void Player::build_unit(const UnitKind &kind) {
+  units.emplace(next_unit, Unit(kind));
+  next_unit++;
+}
+
+void Player::begin_turn() {
+  resources.add(production);
 }

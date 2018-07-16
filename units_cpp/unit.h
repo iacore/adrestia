@@ -9,7 +9,7 @@ class Unit {
   Unit(const UnitKind &kind);
   Unit(const Unit &unit);
 
-  friend void to_json(json &j, const UnitKind &kind);
+  friend void to_json(json &j, const Unit &unit);
 
   const UnitKind &kind;
   unsigned short health;

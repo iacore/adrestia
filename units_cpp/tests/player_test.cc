@@ -2,6 +2,8 @@
 #include "../resources.h"
 #include "catch.hpp"
 
+#include <iostream>
+
 TEST_CASE("Player") {
   GameRules rules("rules.json");
   Player p(rules);
