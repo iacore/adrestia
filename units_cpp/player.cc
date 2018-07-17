@@ -17,3 +17,11 @@ void Player::build_unit(const UnitKind &kind) {
 void Player::begin_turn() {
   resources.add(production);
 }
+
+void Player::execute_build(std::vector<const UnitKind*> builds) {
+  for (auto it = builds.begin(); it != builds.end(); it++) {
+    build_unit(**it);
+  }
+  build_order.push_back(std::shared_ptr<std::vector<const UnitKind*>>(
+        new std::vector<const UnitKind*>(builds)));
+}
