@@ -1,4 +1,4 @@
-*.o
 *.d
+*.o
 test
 main
