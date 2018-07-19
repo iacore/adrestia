@@ -1,8 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://scenes/title.gd" type="Script" id=1]
 [ext_resource path="res://Signika-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://themes/theme.theme" type="Theme" id=3]
+[ext_resource path="res://art/cutie.png" type="Texture" id=4]
+[ext_resource path="res://native/gdexample.gdns" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 
@@ -12,7 +14,7 @@ use_filter = false
 font_data = ExtResource( 2 )
 _sections_unfolded = [ "Extra Spacing", "Font", "Settings" ]
 
-[node name="Root" type="Node"]
+[node name="Root" type="Node" index="0"]
 
 script = ExtResource( 1 )
 
@@ -188,6 +190,14 @@ text = "Settings"
 flat = false
 align = 1
 _sections_unfolded = [ "Hint", "Theme", "custom_styles" ]
+
+[node name="Sprite" type="Sprite" parent="." index="1"]
+
+position = Vector2( 10, 10 )
+texture = ExtResource( 4 )
+centered = false
+script = ExtResource( 5 )
+_sections_unfolded = [ "Animation", "Offset", "Region", "Transform" ]
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxContainer/button_play" to="." method="_on_button_play_pressed"]
 
