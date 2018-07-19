@@ -15,11 +15,13 @@ class Player {
   void begin_turn();
   void execute_build(std::vector<const UnitKind*> builds);
 
-  std::map<unsigned short, Unit> units;
+  friend void to_json(json &j, const Player &player);
+
+  std::map<int, Unit> units;
   bool alive;
   Resources production;
   Resources resources;
   std::vector<std::shared_ptr<const std::vector<const UnitKind*>>> build_order;
  private:
-  unsigned short next_unit;
+  int next_unit;
 };

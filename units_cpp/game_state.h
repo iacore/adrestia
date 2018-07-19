@@ -1,10 +1,9 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <random>
 #include "game_rules.h"
 #include "action.h"
-#include "choose_resources_action.h"
-#include "build_units_action.h"
 #include "player.h"
 #include "player_view.h"
 #include "json.h"
@@ -12,38 +11,47 @@
 using json = nlohmann::json;
 
 struct Attack {
-  unsigned short from_player;
-  unsigned short from_unit;
-  unsigned short to_player;
-  unsigned short to_unit;
-}
+  int from_player;
+  int from_unit;
+  int to_player;
+  int to_unit;
+  int damage;
+};
 
 class Battle {
  public:
-  // Battle(const std::vector<Player> &players);
-  Battle(const std::vector<Player> &players, long seed);
-  Battle(const Battle &battle) = 0;
+  Battle(const std::vector<Player> &players);
+  static void set_seed(long seed);
 
   const std::vector<PlayerView> &get_players() const;
   const std::vector<Attack> &get_attacks() const;
+
+  friend void to_json(json &j, const Battle &battle);
  private:
   std::vector<PlayerView> players;
   std::vector<Attack> attacks;
+
+  static std::mt19937 gen;
 };
 
+enum GameStage { CHOOSING_RESOURCES = 0, BUILDING };
 class GameState {
  public:
-  GameState(const GameRules &rules, unsigned short num_players);
+  GameState(const GameRules &rules, int num_players);
   GameState(const GameState &game_state);
-  bool perform_action(unsigned short player, const Action &action);
-  const GameView &get_view(unsigned short player);
-  std::vector<unsigned short> get_winners() const; // Empty list indicates that game is still in progress
+  bool perform_action(int player, const Action &action);
+  // const GameView &get_view(int player);
+  std::vector<int> get_winners() const; // Empty list indicates that game is still in progress
 
   friend void to_json(json &j, const GameState &game_state);
-  friend void from_json(const json &j, GameState &game_state);
  private:
   const GameRules &rules;
   std::vector<Player> players;
   std::vector<std::shared_ptr<Battle>> battles;
-  unsigned int turn;
+  int turn;
+  int players_ready;
+  GameStage stage;
+
+  void begin_building(); // Advance stage from CHOOSING_RESOURCES to BUILDING
+  void execute_battle(); // Executes the battle and advances the turn
 };

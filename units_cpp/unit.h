@@ -12,7 +12,7 @@ class Unit {
   friend void to_json(json &j, const Unit &unit);
 
   const UnitKind &kind;
-  unsigned short health;
-  unsigned short shields;
-  unsigned short build_time; // Time remaining
+  int health;
+  int shields;
+  int build_time; // Time remaining
 };

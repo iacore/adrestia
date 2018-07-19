@@ -35,7 +35,7 @@ const UnitKind &GameRules::get_unit_kind(std::string id) const {
   return unit_kinds.at(id);
 }
 
-unsigned short GameRules::get_starting_resources() const {
+int GameRules::get_starting_resources() const {
   return starting_resources;
 }
 

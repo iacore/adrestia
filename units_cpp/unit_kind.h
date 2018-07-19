@@ -13,15 +13,15 @@ class UnitKind {
   std::string get_id() const;
   std::string get_name() const;
   Colour get_colour() const;
-  unsigned short get_health() const;
-  unsigned short get_shields() const;
-  unsigned short get_width() const;
-  unsigned short get_build_time() const;
-  const std::vector<unsigned short> get_attack() const;
+  int get_health() const;
+  int get_shields() const;
+  int get_width() const;
+  int get_build_time() const;
+  const std::vector<int> get_attack() const;
   const Resources *get_cost() const;
   const Resources *get_font() const;
   std::string get_image() const;
-  const std::vector<unsigned short> get_tiles() const;
+  const std::vector<int> get_tiles() const;
   char get_label() const;
 
   friend void to_json(json &j, const UnitKind &kind);
@@ -30,15 +30,15 @@ class UnitKind {
   std::string id;
   std::string name;
   Colour colour;
-  unsigned short health;
-  unsigned short shields;
-  unsigned short width;
-  unsigned short build_time;
-  std::vector<unsigned short> attack;
+  int health;
+  int shields;
+  int width;
+  int build_time;
+  std::vector<int> attack;
   Resources *cost; // nullptr for no cost
   Resources *font; // nullptr for no font behaviour
   std::string image;
-  std::vector<unsigned short> tiles;
+  std::vector<int> tiles;
   char label;
 };
 

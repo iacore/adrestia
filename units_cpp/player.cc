@@ -25,3 +25,12 @@ void Player::execute_build(std::vector<const UnitKind*> builds) {
   build_order.push_back(std::shared_ptr<std::vector<const UnitKind*>>(
         new std::vector<const UnitKind*>(builds)));
 }
+
+void to_json(json &j, const Player &player) {
+  j["units"] = player.units;
+  j["alive"] = player.alive;
+  j["production"] = player.production;
+  j["resources"] = player.production;
+  j["next_unit"] = player.next_unit;
+  // TODO: charles: Save build_order
+}
