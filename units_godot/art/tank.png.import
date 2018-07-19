@@ -7,10 +7,7 @@ path="res://.import/tank.png-9090b66c0c9fe8a8190a4916fc4a3b6e.stex"
 [deps]
 
 source_file="res://art/tank.png"
-source_md5="dad5ade90697a05a4f9cf337175893bc"
-
 dest_files=[ "res://.import/tank.png-9090b66c0c9fe8a8190a4916fc4a3b6e.stex" ]
-dest_md5="37fe3b60d7a52d5ec11a8369857f7e5c"
 
 [params]
 

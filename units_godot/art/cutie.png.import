@@ -7,10 +7,7 @@ path="res://.import/cutie.png-6c1eac3cadfadae3b9e318e3fcc62429.stex"
 [deps]
 
 source_file="res://art/cutie.png"
-source_md5="64441d44157075193e8c7071fa5d72e8"
-
 dest_files=[ "res://.import/cutie.png-6c1eac3cadfadae3b9e318e3fcc62429.stex" ]
-dest_md5="ad26fe155de7eaa16b1911b31e918296"
 
 [params]
 

@@ -7,10 +7,7 @@ path="res://.import/wide_wall.png-6190c5c23155cb9cbc9d0b27a63f5eee.stex"
 [deps]
 
 source_file="res://art/wide_wall.png"
-source_md5="e10a6e6d86e1b1e4e4fff49e193b8fba"
-
 dest_files=[ "res://.import/wide_wall.png-6190c5c23155cb9cbc9d0b27a63f5eee.stex" ]
-dest_md5="143902d5cb700fa70b06910ff0352868"
 
 [params]
 
