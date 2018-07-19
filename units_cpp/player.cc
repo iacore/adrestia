@@ -16,6 +16,11 @@ void Player::build_unit(const UnitKind &kind) {
 
 void Player::begin_turn() {
   resources.add(production);
+  for (auto it = units.begin(); it != units.end(); it++) {
+    if (it->second.build_time > 0) {
+      it->second.build_time -= 1;
+    }
+  }
 }
 
 void Player::execute_build(std::vector<const UnitKind*> builds) {

@@ -5,9 +5,9 @@
 
 class BuildUnitsAction : public Action {
  public:
-  BuildUnitsAction(std::vector<const UnitKind*> units);
-  const std::vector<const UnitKind*> &get_units() const;
+  BuildUnitsAction(std::vector<std::string> units);
+  const std::vector<std::string> &get_units() const;
  private:
-  std::vector<const UnitKind*> units;
+  std::vector<std::string> units;
 };
 

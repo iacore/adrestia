@@ -22,6 +22,7 @@ Battle::Battle(const std::vector<Player> &players) {
       }
     }
     for (auto it = player.units.begin(); it != player.units.end(); it++) {
+      if (it->second.build_time > 0) continue;
       const auto &unit_attacks = it->second.kind.get_attack();
       for (auto dmg = unit_attacks.begin(); dmg != unit_attacks.end(); dmg++) {
         int target_index = Battle::gen() % targets.size();
@@ -84,15 +85,34 @@ void to_json(json &j, const GameState &game_state) {
 }
 
 std::vector<int> GameState::get_winners() const {
-  // TODO: charles: Implement this
-  return std::vector<int>();
+  std::vector<int> winners;
+  for (int i = 0; i < players.size(); i++) {
+    for (auto it = players[i].units.begin(); it != players[i].units.end(); it++) {
+      if (it->second.kind.get_id() == "general") {
+        winners.push_back(i);
+      }
+    }
+  }
+  if (winners.size() == 1) {
+    return winners;
+  } else if (winners.size() == 0) {
+    for (int i = 0; i < players.size(); i++) {
+      winners.push_back(i);
+    }
+    return winners;
+  } else {
+    return std::vector<int>();
+  }
 }
 
 void GameState::begin_building() {
   players_ready = 0;
   stage = BUILDING;
-  for (auto it = players.begin(); it != players.end(); it++) {
-    it->begin_turn();
+  for (auto player = players.begin(); player != players.end(); player++) {
+    player->begin_turn();
+    for (auto it = player->units.begin(); it != player->units.end(); it++) {
+      it->second.build_time = 0; // All units start built
+    }
   }
 }
 
@@ -155,14 +175,17 @@ bool GameState::perform_action(int player, const Action &action) {
     if (players[player].build_order.size() > turn) return false; // Already build units this turn
     const BuildUnitsAction *a = (BuildUnitsAction*)&action;
     Resources total_cost;
+    std::vector<const UnitKind*> build_order;
     for (auto it = a->get_units().begin(); it != a->get_units().end(); it++) {
-      if ((*it)->get_cost() == nullptr) return false;
-      // TODO: also check for unit availability
-      total_cost.add(*(*it)->get_cost());
+      const UnitKind &kind = rules.get_unit_kind(*it);
+      if (kind.get_cost() == nullptr) return false;
+      // TODO: charles: also check for unit availability in tech tree, once that exists
+      total_cost.add(*kind.get_cost());
+      build_order.push_back(&kind);
     }
     if (!players[player].resources.includes(total_cost)) return false;
     // Action is valid
-    players[player].execute_build(a->get_units());
+    players[player].execute_build(build_order);
     players[player].resources.subtract(total_cost);
     players_ready++;
     // Perform additional work if all players have submitted action for this stage

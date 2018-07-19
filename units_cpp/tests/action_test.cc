@@ -16,11 +16,11 @@ TEST_CASE("Action") {
 
   SECTION("BuildUnitsAction") {
     GameRules rules("rules.json");
-    Action *a = new BuildUnitsAction(std::vector<const UnitKind*>({&rules.get_unit_kind("turret")}));
+    Action *a = new BuildUnitsAction(std::vector<std::string>({"turret"}));
     REQUIRE(a->get_type() == BUILD_UNITS);
     BuildUnitsAction *bua = (BuildUnitsAction*)a;
     REQUIRE(bua->get_units().size() == 1);
-    REQUIRE(bua->get_units()[0]->get_id() == "turret");
+    REQUIRE(bua->get_units()[0] == "turret");
     delete a;
   }
 }
