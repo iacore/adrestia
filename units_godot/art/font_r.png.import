@@ -7,10 +7,7 @@ path="res://.import/font_r.png-dbf3ceff18077e10079ddf438c054047.stex"
 [deps]
 
 source_file="res://art/font_r.png"
-source_md5="2e2d4f2b55c285d76603d754211e24b7"
-
 dest_files=[ "res://.import/font_r.png-dbf3ceff18077e10079ddf438c054047.stex" ]
-dest_md5="a5a910473d59e34cb26ada20f1733cb6"
 
 [params]
 

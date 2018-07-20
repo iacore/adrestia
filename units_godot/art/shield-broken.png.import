@@ -7,10 +7,7 @@ path="res://.import/shield-broken.png-7752a9d8c852644573525bf396ece19a.stex"
 [deps]
 
 source_file="res://art/shield-broken.png"
-source_md5="c5c850588caf3099b06a51c19b4ef651"
-
 dest_files=[ "res://.import/shield-broken.png-7752a9d8c852644573525bf396ece19a.stex" ]
-dest_md5="9b2efacfe1bfaad6d91eb5a4c82475db"
 
 [params]
 
