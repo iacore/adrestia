@@ -11,4 +11,4 @@ godot --gdnative-generate-json-api godot-cpp/godot_api.json
 
 # Build it! The resulting static library will be put in godot-cpp/bin/, and
 # will be named something like "libgodot-cpp.linux.64.a".
-(cd godot-cpp && scons platform=$(./detect_platform.sh) headers=../godot_headers -j$(nproc --ignore=1) generate_bindings=yes)
+(cd godot-cpp && scons platform=$(../detect_platform.sh) headers=../godot_headers -j$(nproc --ignore=1) generate_bindings=yes)
