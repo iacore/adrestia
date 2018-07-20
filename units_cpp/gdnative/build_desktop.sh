@@ -1,6 +1,4 @@
 #!/bin/bash
+set -e
 
-# Possible values: linux, windows, osx
-PLATFORM=linux
-
-scons platform=$PLATFORM
+scons platform=$(./detect_platform.sh)

@@ -1,11 +1,5 @@
 #!/bin/bash
-
-# First, we pull in `godot_headers` and `godot-cpp` as submodules.
-# `godot_headers` provides the gdnative C api. If you have the godot source
-# code, it is pretty much the same as what is located at
-# `modules/gdnative/include`. `godot-cpp` is a layer that makes it easier to
-# write idiomatic C++ code for gdnative.
-git submodule update
+set -e
 
 # `godot-cpp` doesn't come with a SCons config to build for Android, so we use
 # ndk-build directly. We included a config for ndk-build at godot-cpp-jni/.

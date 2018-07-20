@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # We also use `ndk-build` to build our library. The configs in the jni/ folder
 # tell ndk-build to link against the static libraries in godot-cpp-libs/ that
