@@ -6,13 +6,13 @@ using json = nlohmann::json;
 
 class Resources {
  public:
-  unsigned short coins;
-  unsigned short red;
-  unsigned short green;
-  unsigned short blue;
+  int coins;
+  int red;
+  int green;
+  int blue;
 
   Resources();
-  Resources(unsigned short coins, unsigned short red, unsigned short green, unsigned short blue);
+  Resources(int coins, int red, int green, int blue);
   void add(const Resources &r);
   void subtract(const Resources &r);
   bool includes(const Resources &r) const;

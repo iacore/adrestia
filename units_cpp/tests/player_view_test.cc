@@ -20,13 +20,13 @@ TEST_CASE("PlayerView") {
   }
 
   SECTION("modifying view does not modify player") {
-    unsigned short original_health = v.units.at(0).health;
+    int original_health = v.units.at(0).health;
     v.units.at(0).health--;
     REQUIRE(p.units.at(0).health == original_health);
   }
 
   SECTION("modifying player does not modify view") {
-    unsigned short original_health = p.units.at(0).health;
+    int original_health = p.units.at(0).health;
     p.units.at(0).health--;
     REQUIRE(v.units.at(0).health == original_health);
   }

@@ -3,15 +3,15 @@
 #include "json.h"
 
 Resources::Resources() : coins(0), red(0), green(0), blue(0) {}
-Resources::Resources(unsigned short coins, unsigned short red, unsigned short green, unsigned short blue)
+Resources::Resources(int coins, int red, int green, int blue)
   : coins(coins), red(red), green(green), blue(blue) {
 }
 
 void from_json(const json &j, Resources &r) {
-  r.coins = j.find("coins") != j.end() ? j["coins"].get<unsigned short>() : 0;
-  r.red = j.find("red") != j.end() ? j["red"].get<unsigned short>() : 0;
-  r.green = j.find("green") != j.end() ? j["green"].get<unsigned short>() : 0;
-  r.blue = j.find("blue") != j.end() ? j["blue"].get<unsigned short>() : 0;
+  r.coins = j.find("coins") != j.end() ? j["coins"].get<int>() : 0;
+  r.red = j.find("red") != j.end() ? j["red"].get<int>() : 0;
+  r.green = j.find("green") != j.end() ? j["green"].get<int>() : 0;
+  r.blue = j.find("blue") != j.end() ? j["blue"].get<int>() : 0;
 }
 
 void to_json(json &j, const Resources &r) {

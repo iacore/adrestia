@@ -16,6 +16,11 @@ void Player::build_unit(const UnitKind &kind) {
 
 void Player::begin_turn() {
   resources.add(production);
+  for (auto it = units.begin(); it != units.end(); it++) {
+    if (it->second.build_time > 0) {
+      it->second.build_time -= 1;
+    }
+  }
 }
 
 void Player::execute_build(std::vector<const UnitKind*> builds) {
@@ -24,4 +29,13 @@ void Player::execute_build(std::vector<const UnitKind*> builds) {
   }
   build_order.push_back(std::shared_ptr<std::vector<const UnitKind*>>(
         new std::vector<const UnitKind*>(builds)));
+}
+
+void to_json(json &j, const Player &player) {
+  j["units"] = player.units;
+  j["alive"] = player.alive;
+  j["production"] = player.production;
+  j["resources"] = player.production;
+  j["next_unit"] = player.next_unit;
+  // TODO: charles: Save build_order
 }

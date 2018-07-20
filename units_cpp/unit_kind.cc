@@ -16,14 +16,14 @@ void from_json(const json &j, UnitKind &kind) {
   kind.shields = j.find("shields") != j.end() ? (int)j["shields"] : 0;
   kind.width = j["width"];
   kind.build_time = j.find("build_time") != j.end() ? (int)j["build_time"] : 0;
-  kind.attack = std::vector<unsigned short>();
+  kind.attack = std::vector<int>();
   for (size_t i = 0; i < j["attack"].size(); i++) {
     kind.attack.push_back(j["attack"][i]);
   }
   kind.cost = !j["cost"].is_null() ? new Resources(j["cost"]) : nullptr;
   kind.font = j.find("font") != j.end() ? new Resources(j["font"]) : nullptr;
   kind.image = j["image"];
-  kind.tiles = std::vector<unsigned short>();
+  kind.tiles = std::vector<int>();
   for (size_t i = 0; i < j["tiles"].size(); i++) {
     kind.tiles.push_back(j["tiles"][i]);
   }
@@ -62,23 +62,23 @@ Colour UnitKind::get_colour() const {
   return colour;
 }
 
-unsigned short UnitKind::get_health() const {
+int UnitKind::get_health() const {
   return health;
 }
 
-unsigned short UnitKind::get_shields() const {
+int UnitKind::get_shields() const {
   return shields;
 }
 
-unsigned short UnitKind::get_width() const {
+int UnitKind::get_width() const {
   return width;
 }
 
-unsigned short UnitKind::get_build_time() const {
+int UnitKind::get_build_time() const {
   return build_time;
 }
 
-const std::vector<unsigned short> UnitKind::get_attack() const {
+const std::vector<int> UnitKind::get_attack() const {
   return attack;
 }
 
@@ -94,7 +94,7 @@ std::string UnitKind::get_image() const {
   return image;
 }
 
-const std::vector<unsigned short> UnitKind::get_tiles() const {
+const std::vector<int> UnitKind::get_tiles() const {
   return tiles;
 }
 
