@@ -1,6 +1,6 @@
 [submodule "units_cpp/gdnative/godot_headers"]
-	path = units_cpp/gdnative/godot_headers
+	path = libadrestia_gdnative/godot_headers
 	url = https://github.com/GodotNativeTools/godot_headers.git
 [submodule "units_cpp/gdnative/godot-cpp"]
-	path = units_cpp/gdnative/godot-cpp
+	path = libadrestia_gdnative/godot-cpp
 	url = https://github.com/GodotNativeTools/godot-cpp.git
