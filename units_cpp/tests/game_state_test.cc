@@ -24,6 +24,4 @@ TEST_CASE("GameState") {
     REQUIRE(game.perform_action(0, BuildUnitsAction(std::vector<std::string>({}))));
     REQUIRE(game.perform_action(1, BuildUnitsAction(std::vector<std::string>({}))));
   }
-
-  std::cout << json(game) << std::endl;
 }
