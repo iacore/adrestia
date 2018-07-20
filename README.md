@@ -1,1 +1,3 @@
-# adrestia
+# Adrestia
+
+A balance game.
