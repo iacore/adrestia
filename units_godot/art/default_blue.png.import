@@ -7,7 +7,10 @@ path="res://.import/default_blue.png-552ef16518cd3a2cc4a359ef5a2e52bc.stex"
 [deps]
 
 source_file="res://art/default_blue.png"
+source_md5="48b8439742476c05c2fcc17e78ef594e"
+
 dest_files=[ "res://.import/default_blue.png-552ef16518cd3a2cc4a359ef5a2e52bc.stex" ]
+dest_md5="0be35f925c916c04728c2f28215d19a7"
 
 [params]
 

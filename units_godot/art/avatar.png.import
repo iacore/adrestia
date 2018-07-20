@@ -7,7 +7,10 @@ path="res://.import/avatar.png-3c4989c4b405ab014658c0e9c736d632.stex"
 [deps]
 
 source_file="res://art/avatar.png"
+source_md5="7be29a90f95a5ea07c9b2c221565f2ad"
+
 dest_files=[ "res://.import/avatar.png-3c4989c4b405ab014658c0e9c736d632.stex" ]
+dest_md5="67a13767ef25523b28d0c9eda7661ebb"
 
 [params]
 

@@ -7,7 +7,10 @@ path="res://.import/heart-empty.png-8ed4bec57d5f01d8fb0893c88f6edfc8.stex"
 [deps]
 
 source_file="res://art/heart-empty.png"
+source_md5="bac35b5dd9510002da1e63ac6f974f09"
+
 dest_files=[ "res://.import/heart-empty.png-8ed4bec57d5f01d8fb0893c88f6edfc8.stex" ]
+dest_md5="a2fd20c6ea8534f7f99eafece3f189fb"
 
 [params]
 

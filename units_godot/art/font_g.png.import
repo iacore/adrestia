@@ -7,7 +7,10 @@ path="res://.import/font_g.png-ec1a1e12526294bb49e1a4b1a25dd5e1.stex"
 [deps]
 
 source_file="res://art/font_g.png"
+source_md5="5466cfcfef5b064ea1c072356c7a5317"
+
 dest_files=[ "res://.import/font_g.png-ec1a1e12526294bb49e1a4b1a25dd5e1.stex" ]
+dest_md5="cfd90042264653cad595a303fca14344"
 
 [params]
 

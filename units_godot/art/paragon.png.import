@@ -7,7 +7,10 @@ path="res://.import/paragon.png-aa8e690cdf47a134d2229274dba32498.stex"
 [deps]
 
 source_file="res://art/paragon.png"
+source_md5="e136e8a06ff52340239dee536160b611"
+
 dest_files=[ "res://.import/paragon.png-aa8e690cdf47a134d2229274dba32498.stex" ]
+dest_md5="66f21c0e99bfd658984a3e7ad9921224"
 
 [params]
 

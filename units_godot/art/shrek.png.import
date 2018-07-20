@@ -7,7 +7,10 @@ path="res://.import/shrek.png-861a84dfbc154961eabc3ef57d6e1a92.stex"
 [deps]
 
 source_file="res://art/shrek.png"
+source_md5="e4675d9380a8904eb420c4fab0bbd4c1"
+
 dest_files=[ "res://.import/shrek.png-861a84dfbc154961eabc3ef57d6e1a92.stex" ]
+dest_md5="354d990baf9c4bfb35ff9778d043267e"
 
 [params]
 

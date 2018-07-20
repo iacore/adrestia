@@ -7,7 +7,10 @@ path="res://.import/commander.png-2ff232d653c3b4b94746c0b1ce8daea3.stex"
 [deps]
 
 source_file="res://art/commander.png"
+source_md5="7561ca4f23312f6b3a4a9cc979db3164"
+
 dest_files=[ "res://.import/commander.png-2ff232d653c3b4b94746c0b1ce8daea3.stex" ]
+dest_md5="d835a31595911e6ba1773f2b1a7e7160"
 
 [params]
 
