@@ -258,6 +258,7 @@ scroll_horizontal_enabled = true
 scroll_horizontal = 0
 scroll_vertical_enabled = true
 scroll_vertical = 0
+scroll_deadzone = 0
 _sections_unfolded = [ "Margin", "Mouse" ]
 
 [node name="UnitList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ScrollContainer" index="0"]

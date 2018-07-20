@@ -18,11 +18,11 @@ class Resources {
   bool includes(const Resources &r) const;
 
   Resources operator+(const Resources &r);
-  bool operator<=(const Resources &r);
 
-  friend void to_json(json &j, const Resources &r);
-  friend void from_json(const json &j, Resources &r);
   friend std::ostream &operator<<(std::ostream &os, const Resources &r);
-  friend bool operator==(const Resources &a, const Resources &b);
 };
 
+void to_json(json &j, const Resources &r);
+void from_json(const json &j, Resources &r);
+bool operator<=(const Resources &r1, const Resources &r2);
+bool operator==(const Resources &a, const Resources &b);

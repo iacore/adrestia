@@ -50,8 +50,8 @@ bool Resources::includes(const Resources &r) const {
   );
 }
 
-bool Resources::operator<=(const Resources &r) {
-  return r.includes(*this);
+bool operator<=(const Resources &r1, const Resources &r2) {
+  return r1.includes(r2);
 }
 
 std::ostream &operator<<(std::ostream &os, const Resources &r) {

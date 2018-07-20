@@ -17,14 +17,14 @@ void from_json(const json &j, UnitKind &kind) {
   kind.width = j["width"];
   kind.build_time = j.find("build_time") != j.end() ? (int)j["build_time"] : 0;
   kind.attack = std::vector<unsigned short>();
-  for (int i = 0; i < j["attack"].size(); i++) {
+  for (size_t i = 0; i < j["attack"].size(); i++) {
     kind.attack.push_back(j["attack"][i]);
   }
   kind.cost = !j["cost"].is_null() ? new Resources(j["cost"]) : nullptr;
   kind.font = j.find("font") != j.end() ? new Resources(j["font"]) : nullptr;
   kind.image = j["image"];
   kind.tiles = std::vector<unsigned short>();
-  for (int i = 0; i < j["tiles"].size(); i++) {
+  for (size_t i = 0; i < j["tiles"].size(); i++) {
     kind.tiles.push_back(j["tiles"][i]);
   }
   kind.label = j["label"].get<std::string>()[0];
