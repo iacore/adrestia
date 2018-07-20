@@ -11,7 +11,7 @@ length = 1.0
 loop = false
 step = 0.1
 
-[node name="Node" type="Node" index="0"]
+[node name="Node" type="Node"]
 
 script = ExtResource( 1 )
 
