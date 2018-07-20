@@ -2,6 +2,7 @@
 obj
 libs
 godot-cpp-libs
+bin/android
 
 # SCons cache
 .sconsign.dblite

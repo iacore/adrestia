@@ -1,12 +1,14 @@
 #!/bin/bash
 set -e
 
+source ./config.sh
+
 # `godot-cpp` doesn't come with a SCons config to build for Android, so we use
 # ndk-build directly. We included a config for ndk-build at godot-cpp-jni/.
 cp -r godot-cpp-jni godot-cpp/jni
 
 # Now we simply build godot-cpp using ndk-build.
-(cd godot-cpp && ndk-build -j$(nproc --ignore=1))
+(cd godot-cpp && ndk-build -j${JOBS})
 
 # This should produce some directories under godot-cpp/obj/local/, one for each
 # ABI. Each directory will contain two files: `libc++_shared.so` is the C++

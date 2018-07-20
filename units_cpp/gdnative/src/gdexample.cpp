@@ -19,5 +19,4 @@ void gdexample::_process(float delta) {
       10.0 + (10.0 * sin(time_passed * 2.0)),
       10.0 + (10.0 * cos(time_passed * 1.5)));
   owner->set_position(new_position);
-  printf("weh");
 }

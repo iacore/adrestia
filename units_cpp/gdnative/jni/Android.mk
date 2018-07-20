@@ -12,13 +12,14 @@ LOCAL_CPPFLAGS := -std=c++14
 LOCAL_CPP_FEATURES := rtti exceptions
 LOCAL_LDLIBS := -llog
 
-LOCAL_SRC_FILES += ../src/gdlibrary.cpp
-LOCAL_SRC_FILES += ../src/gdexample.cpp
+LOCAL_SRC_FILES := $(wildcard $(abspath $(LOCAL_PATH)/../src/*.cpp))
+LOCAL_SRC_FILES += $(wildcard $(abspath $(LOCAL_PATH)/../../*.cc))
 
 LOCAL_STATIC_LIBRARIES += godot-cpp
 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../godot-cpp/include/core
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../godot-cpp/include
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../godot_headers
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../..
 
 include $(BUILD_SHARED_LIBRARY)
