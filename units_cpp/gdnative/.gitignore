@@ -1,0 +1,12 @@
+# Built files
+obj
+libs
+godot-cpp-libs
+godot-cpp
+godot_headers
+
+# SCons cache
+.sconsign.dblite
+
+# Built object code
+src/*.os

@@ -1,0 +1,26 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true
+
+[entry]
+
+Android.armeabi-v7a="res://native/android/armeabi-v7a/libgdexample.so"
+Android.arm64-v8a="res://native/android/arm64-v8a/libgdexample.so"
+Android.x86="res://native/android/x86/libgdexample.so"
+Android.x86_64="res://native/android/x86_64/libgdexample.so"
+OSX.64=""
+Windows.64=""
+X11.64="res://native/x11/libgdexample.so"
+
+[dependencies]
+
+Android.armeabi-v7a=[ "res://native/android/armeabi-v7a/libc++_shared.so" ]
+Android.arm64-v8a=[ "res://native/android/arm64-v8a/libc++_shared.so" ]
+Android.x86=[ "res://native/android/x86/libc++_shared.so" ]
+Android.x86_64=[ "res://native/android/x86_64/libc++_shared.so" ]
+OSX.64=[  ]
+Windows.64=[  ]
+X11.64=[  ]
