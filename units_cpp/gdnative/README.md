@@ -4,9 +4,8 @@
 
 For desktop, you need SCons.
 
-For Android, you need to have the Android NDK
-installed, and ndk-build (which should be the in the root directory of the NDK)
-should be in your PATH.
+For Android, you need to have the Android NDK installed, and ndk-build (which
+should be the in the root directory of the NDK) should be in your PATH.
 
 ### Desktop
 
