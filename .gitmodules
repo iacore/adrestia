@@ -3,4 +3,4 @@
 	url = https://github.com/GodotNativeTools/godot_headers.git
 [submodule "units_cpp/gdnative/godot-cpp"]
 	path = units_cpp/gdnative/godot-cpp
-	url = https://github.com/GodotNativeTools/godot-cpp
+	url = https://github.com/GodotNativeTools/godot-cpp.git
