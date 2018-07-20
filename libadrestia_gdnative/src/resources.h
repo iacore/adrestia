@@ -1,7 +1,10 @@
 #pragma once
 #include <Godot.hpp>
 #include <Reference.hpp>
-#include "../../resources.h"
+#include <resources.h>
+// TODO jim: <resources.h> is in units_cpp. "resources.h" is this file, which
+// serves as an adapter. I think this is a brilliant hack, but it may lead to
+// confusion so maybe we should change it.
 
 namespace godot {
   class Resources : public godot::GodotScript<Reference> {

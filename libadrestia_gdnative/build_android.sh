@@ -14,6 +14,7 @@ for dir in libs/*/; do
   platform=$(basename $dir)
   mkdir -p bin/android/$platform
   cp libs/$platform/*.so bin/android/$platform/
+  echo "libs/$platform -> bin/android/$platform"
 done
 
 echo "Done."
