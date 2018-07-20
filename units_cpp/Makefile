@@ -15,7 +15,7 @@ EXECS = ${MAIN_EXEC} ${TEST_EXEC}
 all: ${EXECS}
 
 tests/catch.hpp:
-	curl https://raw.githubusercontent.com/philsquared/Catch/master/single_include/catch.hpp > tests/catch.hpp
+	curl https://github.com/catchorg/Catch2/releases/download/v2.2.3/catch.hpp > tests/catch.hpp
 
 ${MAIN_EXEC}: ${MAIN_OBJS}
 	${CXX} ${CXXFLAGS} $^ -o $@
