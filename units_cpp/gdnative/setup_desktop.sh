@@ -8,4 +8,4 @@ git submodule update
 
 # Build it! The resulting static library will be put in godot-cpp/bin/, and
 # will be named something like "libgodot-cpp.linux.64.a".
-(cd godot-cpp && scons platform=$PLATFORM)
+(cd godot-cpp && scons platform=$PLATFORM headers=../godot_headers)
