@@ -1,7 +1,7 @@
 extends Node
 
 onready var g = get_node("/root/global")
-var in_settings;
+var in_settings
 
 func _ready():
   get_tree().set_auto_accept_quit(true)
@@ -22,8 +22,10 @@ func _on_button_settings_pressed():
     in_settings = true
     
 func _notification(what):
-  if in_settings:
-    if what == MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST or what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
-      $AnimationPlayer.play("SettingsLoad", -1, -1.0, true);
-      in_settings = false;
+  if what == MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST or what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+    if in_settings:
+      $AnimationPlayer.play("SettingsLoad", -1, -1.0, true)
+      in_settings = false
       get_tree().set_quit_on_go_back(true)
+    else:
+      get_tree().quit()
