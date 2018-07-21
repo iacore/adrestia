@@ -1,12 +1,28 @@
 extends Node
 
 onready var g = get_node("/root/global")
+var in_settings;
 
 func _ready():
   get_tree().set_auto_accept_quit(true)
   get_tree().set_quit_on_go_back(true)
   print("OS is %s" % [OS.get_name()])
-  $ColorRect/AnimationPlayer.play("LoadingFade");
+  $AnimationPlayer.play("LoadingFade");
+  in_settings = false;
 
 func _on_button_play_pressed():
   g.new_ai_game()
+
+func _on_button_settings_pressed():
+  if (!in_settings):
+    get_tree().set_auto_accept_quit(false)
+    get_tree().set_quit_on_go_back(false);
+    $AnimationPlayer.play("SettingsLoad");
+    in_settings = true
+    
+func _notification(what):
+  if in_settings:
+    if what == MainLoop.NOTIFICATION_WM_GO_BACK_REQUEST or what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+      $AnimationPlayer.play("SettingsLoad", -1, -1.0, true);
+      in_settings = false;
+      get_tree().set_quit_on_go_back(true)
