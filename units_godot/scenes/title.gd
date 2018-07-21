@@ -11,7 +11,8 @@ func _ready():
   in_settings = false;
 
 func _on_button_play_pressed():
-  g.new_ai_game()
+  if (!in_settings):
+    g.new_ai_game()
 
 func _on_button_settings_pressed():
   if (!in_settings):
