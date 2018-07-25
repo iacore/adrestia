@@ -1,16 +1,16 @@
-#include "../resources.h"
+#include "../tech.h"
 #include "../action.h"
-#include "../choose_resources_action.h"
+#include "../choose_tech_action.h"
 #include "../build_units_action.h"
 #include "../game_rules.h"
 #include "catch.hpp"
 
 TEST_CASE("Action") {
-  SECTION("ChooseResourcesAction") {
-    Action *a = new ChooseResourcesAction(Resources(1, 2, 3, 4));
-    REQUIRE(a->get_type() == CHOOSE_RESOURCES);
-    ChooseResourcesAction *cra = (ChooseResourcesAction*)a;
-    REQUIRE(cra->get_resources() == Resources(1, 2, 3, 4));
+  SECTION("ChooseTechAction") {
+    Action *a = new ChooseTechAction(GREEN);
+    REQUIRE(a->get_type() == CHOOSE_TECH);
+    ChooseTechAction *cra = (ChooseTechAction*)a;
+    REQUIRE(cra->get_colour() == GREEN);
     delete a;
   }
 

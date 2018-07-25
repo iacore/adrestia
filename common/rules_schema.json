@@ -4,10 +4,10 @@
   "type": "object",
   "properties": {
     "unit_kinds": {"type": "array", "items": {"$ref": "#/definitions/unit_kind"}},
-    "starting_resources": {"type": "integer", "minimum": 1},
-    "starting_units": {"type": "array", "items": {"type": "string", "pattern": "^[a-z_]+$"}}
+    "starting_units": {"type": "array", "items": {"type": "string", "pattern": "^[a-z_]+$"}},
+    "unit_cap": {"type": "integer", "minimum": 1}
   },
-  "required": ["unit_kinds", "starting_resources"],
+  "required": ["unit_kinds", "starting_units", "unit_cap"],
   "additionalProperties": false,
   "definitions": {
     "unit_kind": {
@@ -21,23 +21,23 @@
         "width": {"type": "integer", "minimum": 1},
         "build_time": {"type": "integer", "minimum": 0},
         "attack": {"type": "array", "items": {"type": "integer", "minimum": 1}},
-        "cost": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/resources"}]},
-        "font": {"$ref": "#/definitions/resources"},
+        "cost": {"type": "integer", "minimum": 0},
+        "tech": {"oneOf": [{"type": "null"}, {"$ref": "#/definitions/tech"}]},
+        "font": {"type": "integer", "minimum": 0},
         "image": {"type": "string"},
         "tiles": {"type": "array", "items": {"type": "integer", "minimum": 0}},
         "label": {"type": "string"}
       },
       "additionalProperties": false,
-      "required": ["id", "name", "colour", "health", "width", "attack", "cost", "tiles", "label"]
+      "required": ["id", "name", "colour", "health", "width", "attack", "cost", "tech", "tiles", "label"]
     },
-    "resources": {
+    "tech": {
       "type": "object",
       "properties": {
         "red": {"type": "integer", "minimum": 1},
         "green": {"type": "integer", "minimum": 1},
         "blue": {"type": "integer", "minimum": 1}
       },
-      "anyOf": [{"required": ["red"]}, {"required": ["green"]}, {"required": ["blue"]}],
       "additionalProperties": false
     },
     "colour": {"enum": ["RED", "GREEN", "BLUE", "BLACK"]}

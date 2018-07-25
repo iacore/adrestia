@@ -10,13 +10,13 @@ class GameRules {
   GameRules();
   GameRules(std::string rules_filename);
   const UnitKind &get_unit_kind(std::string id) const;
-  int get_starting_resources() const;
+  int get_unit_cap() const;
   const std::vector<UnitKind*> &get_starting_units() const;
 
   friend void to_json(json &j, const GameRules &rules);
   friend void from_json(const json &j, GameRules &rules);
  private:
   std::map<std::string, UnitKind> unit_kinds;
-  int starting_resources;
+  int unit_cap;
   std::vector<UnitKind*> starting_units;
 };

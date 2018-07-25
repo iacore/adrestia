@@ -2,7 +2,7 @@
 #include <vector>
 #include "action.h"
 #include "build_units_action.h"
-#include "choose_resources_action.h"
+#include "choose_tech_action.h"
 #include "player.h"
 #include "player_view.h"
 
@@ -63,6 +63,7 @@ GameState::GameState(const GameRules &rules, int num_players)
   for (int i = 0; i < num_players; i++) {
     players.push_back(Player(rules));
   }
+  begin_turn();
 }
 
 // TODO: charles: Is this just the default copy constructor?
@@ -105,14 +106,12 @@ std::vector<int> GameState::get_winners() const {
   }
 }
 
-void GameState::begin_building() {
+void GameState::begin_turn() {
+  turn++;
   players_ready = 0;
   stage = BUILDING;
   for (auto player = players.begin(); player != players.end(); player++) {
     player->begin_turn();
-    for (auto it = player->units.begin(); it != player->units.end(); it++) {
-      it->second.build_time = 0; // All units start built
-    }
   }
 }
 
@@ -141,52 +140,44 @@ void GameState::execute_battle() {
       }
     }
   }
-  players_ready = 0;
   if (get_winners().size() == 0) {
-    turn++;
-    for (auto it = players.begin(); it != players.end(); it++) {
-      it->begin_turn();
-    }
+    begin_turn();
   }
 }
 
 bool GameState::perform_action(int player, const Action &action) {
   if (get_winners().size() > 0) return false;
   if (player > players.size()) return false;
-  if (!players[player].alive) return false;
-  if (action.get_type() == CHOOSE_RESOURCES) {
+  Player &p = players[player];
+  if (!p.alive) return false;
+  int total_tech = p.tech.red + p.tech.green + p.tech.blue;
+  if (action.get_type() == CHOOSE_TECH) {
     // Check action legality
-    if (stage != CHOOSING_RESOURCES) return false;
-    if (!(players[player].production == Resources())) return false;
-    const ChooseResourcesAction *a = (ChooseResourcesAction*)&action;
-    const Resources &r = a->get_resources();
-    if (r.coins != 0) return false;
-    if (r.red + r.green + r.blue != rules.get_starting_resources()) return false;
+    if (total_tech >= turn) return false;
+    const ChooseTechAction *a = (ChooseTechAction*)&action;
+    Colour colour = a->get_colour();
+    if (colour == BLACK) return false;
     // Action is valid
-    players[player].production = r;
-    players_ready++;
-    // Perform additional work if all players have submitted action for this stage
-    if (players_ready == players.size()) {
-      begin_building();
-    }
+    p.tech.increment(colour);
     return true;
   } else if (action.get_type() == BUILD_UNITS) {
-    if (stage != BUILDING) return false;
-    if (players[player].build_order.size() > turn) return false; // Already build units this turn
+    if (total_tech < turn) return false; // Haven't selected resources yet this turn
+    if (p.build_order.size() > turn) return false; // Already built units this turn
     const BuildUnitsAction *a = (BuildUnitsAction*)&action;
-    Resources total_cost;
+    if (a->get_units().size() + p.units.size() > rules.get_unit_cap()) return false;
+    int total_cost = 0;
     std::vector<const UnitKind*> build_order;
     for (auto it = a->get_units().begin(); it != a->get_units().end(); it++) {
       const UnitKind &kind = rules.get_unit_kind(*it);
-      if (kind.get_cost() == nullptr) return false;
-      // TODO: charles: also check for unit availability in tech tree, once that exists
-      total_cost.add(*kind.get_cost());
+      if (kind.get_tech() == nullptr) return false;
+      if (!p.tech.includes(*kind.get_tech())) return false;
+      total_cost += kind.get_cost();
       build_order.push_back(&kind);
     }
-    if (!players[player].resources.includes(total_cost)) return false;
+    if (p.coins < total_cost) return false;
     // Action is valid
-    players[player].execute_build(build_order);
-    players[player].resources.subtract(total_cost);
+    p.execute_build(build_order);
+    p.coins -= total_cost;
     players_ready++;
     // Perform additional work if all players have submitted action for this stage
     if (players_ready == players.size()) {

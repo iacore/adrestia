@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "colour.h"
-#include "resources.h"
+#include "tech.h"
 #include "json.h"
 
 using json = nlohmann::json;
@@ -18,8 +18,9 @@ class UnitKind {
   int get_width() const;
   int get_build_time() const;
   const std::vector<int> get_attack() const;
-  const Resources *get_cost() const;
-  const Resources *get_font() const;
+  int get_cost() const;
+  const Tech *get_tech() const;
+  int get_font() const;
   std::string get_image() const;
   const std::vector<int> get_tiles() const;
   char get_label() const;
@@ -35,8 +36,9 @@ class UnitKind {
   int width;
   int build_time;
   std::vector<int> attack;
-  Resources *cost; // nullptr for no cost
-  Resources *font; // nullptr for no font behaviour
+  int cost;
+  int font;
+  Tech *tech; // nullptr for no tech (not buildable)
   std::string image;
   std::vector<int> tiles;
   char label;

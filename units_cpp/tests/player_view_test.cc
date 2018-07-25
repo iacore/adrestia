@@ -1,6 +1,5 @@
 #include "../player.h"
 #include "../player_view.h"
-#include "../resources.h"
 #include "catch.hpp"
 
 TEST_CASE("PlayerView") {

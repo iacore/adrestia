@@ -52,6 +52,6 @@ class GameState {
   int players_ready;
   GameStage stage;
 
-  void begin_building(); // Advance stage from CHOOSING_RESOURCES to BUILDING
+  void begin_turn();
   void execute_battle(); // Executes the battle and advances the turn
 };
