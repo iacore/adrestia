@@ -8,7 +8,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE := gdexample
-LOCAL_CPPFLAGS := -std=c++14
+LOCAL_CPPFLAGS := -std=c++17
 LOCAL_CPP_FEATURES := rtti exceptions
 LOCAL_LDLIBS := -llog
 
