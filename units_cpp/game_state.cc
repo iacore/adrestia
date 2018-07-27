@@ -7,26 +7,31 @@
 #include "player_view.h"
 
 Battle::Battle(const std::vector<Player> &players) {
-  for (auto it = players.begin(); it != players.end(); it++) {
-    this->players.push_back(PlayerView(*it));
+  for (auto &&player : players) {
+    this->players.push_back(PlayerView(player));
   }
   for (size_t i = 0; i < players.size(); i++) {
     const Player &player = players[i];
     std::vector<std::pair<int, int>> targets;
     for (size_t j = 0; j < players.size(); j++) {
       if (j == i) continue;
-      for (auto it = players[j].units.begin(); it != players[j].units.end(); it++) {
-        for (int k = 0; k < it->second.kind.get_width(); k++) {
-          targets.push_back(std::make_pair(j, it->first));
+      for (auto &&[unit_id, unit] : players[j].units) {
+        for (int k = 0; k < unit.kind.get_width(); k++) {
+          targets.push_back(std::make_pair(j, unit_id));
         }
       }
     }
-    for (auto it = player.units.begin(); it != player.units.end(); it++) {
-      if (it->second.build_time > 0) continue;
-      const auto &unit_attacks = it->second.kind.get_attack();
-      for (auto dmg = unit_attacks.begin(); dmg != unit_attacks.end(); dmg++) {
+    for (auto &&[unit_id, unit] : player.units) {
+      if (unit.build_time > 0) continue;
+      const auto &unit_attacks = unit.kind.get_attack();
+      for (int dmg : unit_attacks) {
         int target_index = Battle::gen() % targets.size();
-        attacks.push_back(Attack{ (int)i, it->first, targets[target_index].first, targets[target_index].second, *dmg });
+        attacks.push_back(Attack{
+            (int)i, unit_id,
+            targets[target_index].first,
+            targets[target_index].second,
+            dmg
+        });
       }
     }
   }
@@ -47,11 +52,11 @@ const std::vector<Attack> &Battle::get_attacks() const {
 }
 
 void to_json(json &j, const Battle &battle) {
-  for (auto it = battle.players.begin(); it != battle.players.end(); it++) {
-    j["players"].push_back(*it);
+  for (const auto &player : battle.players) {
+    j["players"].push_back(player);
   }
-  for (auto it = battle.attacks.begin(); it != battle.attacks.end(); it++) {
-    j["attacks"].push_back({ it->from_player, it->from_unit, it->to_player, it->to_unit, it->damage });
+  for (const auto &it : battle.attacks) {
+    j["attacks"].push_back({ it.from_player, it.from_unit, it.to_player, it.to_unit, it.damage });
   }
 }
 
@@ -74,11 +79,11 @@ GameState::GameState(const GameState &game_state)
     , turn(game_state.turn) {}
 
 void to_json(json &j, const GameState &game_state) {
-  for (auto it = game_state.players.begin(); it != game_state.players.end(); it++) {
-    j["players"].push_back(*it);
+  for (const auto &player : game_state.players) {
+    j["players"].push_back(player);
   }
-  for (auto it = game_state.battles.begin(); it != game_state.battles.end(); it++) {
-    j["battles"].push_back(**it);
+  for (const auto battle : game_state.battles) {
+    j["battles"].push_back(*battle);
   }
   j["turn"] = game_state.turn;
   j["players_ready"] = game_state.players_ready;
@@ -119,21 +124,21 @@ void GameState::execute_battle() {
   Battle *b = new Battle(players);
   battles.push_back(std::shared_ptr<Battle>(b));
   // Do all the damage from the attacks
-  for (auto it = b->get_attacks().begin(); it != b->get_attacks().end(); it++) {
-    Unit &unit = players[it->to_player].units.at(it->to_unit);
-    unit.shields -= it->damage;
+  for (auto &atk : b->get_attacks()) {
+    Unit &unit = players[atk.to_player].units.at(atk.to_unit);
+    unit.shields -= atk.damage;
     if (unit.shields < 0) {
       unit.health += unit.shields;
       unit.shields = 0;
     }
   }
-  // Kill dead units
-  for (auto player = players.begin(); player != players.end(); player++) {
-    for (auto it = player->units.begin(); it != player->units.end();) {
+  // Kill dead units, restore shields for alive units
+  for (auto &player : players) {
+    for (auto it = player.units.begin(); it != player.units.end();) {
       if (it->second.health <= 0) {
         auto to_delete = it;
         it++;
-        player->units.erase(to_delete);
+        player.units.erase(to_delete);
       } else {
         it->second.shields = it->second.kind.get_shields();
         it++;
@@ -147,7 +152,7 @@ void GameState::execute_battle() {
 
 bool GameState::perform_action(int player, const Action &action) {
   if (get_winners().size() > 0) return false;
-  if (player > (int)players.size()) return false;
+  if ((size_t)player > players.size()) return false;
   Player &p = players[player];
   if (!p.alive) return false;
   int total_tech = p.tech.red + p.tech.green + p.tech.blue;
