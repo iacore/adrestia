@@ -10,10 +10,10 @@ Battle::Battle(const std::vector<Player> &players) {
   for (auto it = players.begin(); it != players.end(); it++) {
     this->players.push_back(PlayerView(*it));
   }
-  for (int i = 0; i < players.size(); i++) {
+  for (size_t i = 0; i < players.size(); i++) {
     const Player &player = players[i];
     std::vector<std::pair<int, int>> targets;
-    for (int j = 0; j < players.size(); j++) {
+    for (size_t j = 0; j < players.size(); j++) {
       if (j == i) continue;
       for (auto it = players[j].units.begin(); it != players[j].units.end(); it++) {
         for (int k = 0; k < it->second.kind.get_width(); k++) {
@@ -26,7 +26,7 @@ Battle::Battle(const std::vector<Player> &players) {
       const auto &unit_attacks = it->second.kind.get_attack();
       for (auto dmg = unit_attacks.begin(); dmg != unit_attacks.end(); dmg++) {
         int target_index = Battle::gen() % targets.size();
-        attacks.push_back(Attack{ i, it->first, targets[target_index].first, targets[target_index].second, *dmg });
+        attacks.push_back(Attack{ (int)i, it->first, targets[target_index].first, targets[target_index].second, *dmg });
       }
     }
   }
@@ -87,7 +87,7 @@ void to_json(json &j, const GameState &game_state) {
 
 std::vector<int> GameState::get_winners() const {
   std::vector<int> winners;
-  for (int i = 0; i < players.size(); i++) {
+  for (size_t i = 0; i < players.size(); i++) {
     for (auto it = players[i].units.begin(); it != players[i].units.end(); it++) {
       if (it->second.kind.get_id() == "general") {
         winners.push_back(i);
@@ -97,7 +97,7 @@ std::vector<int> GameState::get_winners() const {
   if (winners.size() == 1) {
     return winners;
   } else if (winners.size() == 0) {
-    for (int i = 0; i < players.size(); i++) {
+    for (size_t i = 0; i < players.size(); i++) {
       winners.push_back(i);
     }
     return winners;
@@ -110,8 +110,8 @@ void GameState::begin_turn() {
   turn++;
   players_ready = 0;
   stage = BUILDING;
-  for (auto player = players.begin(); player != players.end(); player++) {
-    player->begin_turn();
+  for (auto &player : players) {
+    player.begin_turn();
   }
 }
 
@@ -147,7 +147,7 @@ void GameState::execute_battle() {
 
 bool GameState::perform_action(int player, const Action &action) {
   if (get_winners().size() > 0) return false;
-  if (player > players.size()) return false;
+  if (player > (int)players.size()) return false;
   Player &p = players[player];
   if (!p.alive) return false;
   int total_tech = p.tech.red + p.tech.green + p.tech.blue;
@@ -162,9 +162,9 @@ bool GameState::perform_action(int player, const Action &action) {
     return true;
   } else if (action.get_type() == BUILD_UNITS) {
     if (total_tech < turn) return false; // Haven't selected resources yet this turn
-    if (p.build_order.size() > turn) return false; // Already built units this turn
+    if (p.build_order.size() > (size_t)turn) return false; // Already built units this turn
     const BuildUnitsAction *a = (BuildUnitsAction*)&action;
-    if (a->get_units().size() + p.units.size() > rules.get_unit_cap()) return false;
+    if (a->get_units().size() + p.units.size() > (size_t)rules.get_unit_cap()) return false;
     int total_cost = 0;
     std::vector<const UnitKind*> build_order;
     for (auto it = a->get_units().begin(); it != a->get_units().end(); it++) {
@@ -180,7 +180,7 @@ bool GameState::perform_action(int player, const Action &action) {
     p.coins -= total_cost;
     players_ready++;
     // Perform additional work if all players have submitted action for this stage
-    if (players_ready == players.size()) {
+    if (players_ready == (int)players.size()) {
       execute_battle();
     }
     return true;
