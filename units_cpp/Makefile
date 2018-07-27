@@ -1,13 +1,13 @@
 CXX = g++
 CXXFLAGS = -Wall -MMD -O2 -std=c++11
-OBJECTS = $(patsubst %.cc,%.o,$(wildcard *.cc))
+OBJECTS = $(patsubst %.cc,%.o,$(filter-out main.cc, $(wildcard *.cc)))
 
 MAIN_EXEC = main
 MAIN_OBJS = ${OBJECTS} main.o
 MAIN_DEPS = ${MAIN_OBJS:.o=.d}
 
 TEST_EXEC = test
-TEST_OBJS = ${OBJECTS} $(patsubst %.cc,%.o,$(wildcard tests/*.cc))
+TEST_OBJS = ${OBJECTS} $(patsubst %.cc, %.o, $(wildcard tests/*.cc))
 TEST_DEPS = ${TEST_OBJS:.o=.d}
 
 EXECS = ${MAIN_EXEC} ${TEST_EXEC}
