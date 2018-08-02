@@ -1,21 +1,18 @@
 CXX = g++
-CXXFLAGS = -Wall -MMD -O2 -std=c++11
-OBJECTS = colour.o tech.o unit_kind.o unit.o game_rules.o player.o player_view.o action.o game_state.o
+CXXFLAGS = -Wall -MMD -O2 -std=c++17
+OBJECTS = $(patsubst %.cc,%.o,$(filter-out main.cc, $(wildcard *.cc)))
 
 MAIN_EXEC = main
 MAIN_OBJS = ${OBJECTS} main.o
 MAIN_DEPS = ${MAIN_OBJS:.o=.d}
 
 TEST_EXEC = test
-TEST_OBJS = ${OBJECTS} tests/tech_test.o tests/unit_kind_test.o tests/unit_test.o tests/game_rules_test.o tests/player_test.o tests/player_view_test.o tests/action_test.o tests/game_state_test.o tests/test.o
+TEST_OBJS = ${OBJECTS} $(patsubst %.cc, %.o, $(wildcard tests/*.cc))
 TEST_DEPS = ${TEST_OBJS:.o=.d}
 
 EXECS = ${MAIN_EXEC} ${TEST_EXEC}
 
 all: ${EXECS}
-
-tests/catch.hpp:
-	curl https://github.com/catchorg/Catch2/releases/download/v2.2.3/catch.hpp > tests/catch.hpp
 
 ${MAIN_EXEC}: ${MAIN_OBJS}
 	${CXX} ${CXXFLAGS} $^ -o $@
@@ -26,4 +23,4 @@ ${TEST_EXEC}: ${TEST_OBJS}
 -include ${MAIN_DEPS} ${TEST_DEPS}
 
 clean:
-	rm *.o *.d tests/*.o tests/*.d ${EXECS}
+	rm -f *.o *.d tests/*.o tests/*.d ${EXECS}
