@@ -47,11 +47,12 @@ class GameState {
  private:
   const GameRules &rules;
   std::vector<Player> players;
+  std::vector<std::pair<int, Action>> action_log;
   std::vector<std::shared_ptr<Battle>> battles;
   int turn;
   int players_ready;
   GameStage stage;
 
-  void begin_building(); // Advance stage from CHOOSING_RESOURCES to BUILDING
+  void begin_turn();
   void execute_battle(); // Executes the battle and advances the turn
 };

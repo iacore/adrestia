@@ -15,7 +15,8 @@ TEST_CASE("Unit") {
       "width": 3,
       "build_time": 1,
       "attack": [3, 1],
-      "cost": {"green": 3, "blue": 3},
+      "cost": 6,
+      "tech": {"green": 3, "blue": 3},
       "image": "superturret.png",
       "tiles": [0, 0, 0, 1, 0, 2],
       "label": "S"

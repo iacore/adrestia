@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 #include "game_rules.h"
-#include "resources.h"
+#include "tech.h"
 #include "unit.h"
 #include "unit_kind.h"
 
@@ -19,9 +19,9 @@ class Player {
 
   std::map<int, Unit> units;
   bool alive;
-  Resources production;
-  Resources resources;
+  Tech tech;
   std::vector<std::shared_ptr<const std::vector<const UnitKind*>>> build_order;
+  int coins;
  private:
   int next_unit;
 };

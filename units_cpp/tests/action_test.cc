@@ -1,26 +1,27 @@
-#include "../resources.h"
+#include "../tech.h"
 #include "../action.h"
-#include "../choose_resources_action.h"
-#include "../build_units_action.h"
 #include "../game_rules.h"
+#include "../json.h"
 #include "catch.hpp"
 
+using json = nlohmann::json;
+
 TEST_CASE("Action") {
-  SECTION("ChooseResourcesAction") {
-    Action *a = new ChooseResourcesAction(Resources(1, 2, 3, 4));
-    REQUIRE(a->get_type() == CHOOSE_RESOURCES);
-    ChooseResourcesAction *cra = (ChooseResourcesAction*)a;
-    REQUIRE(cra->get_resources() == Resources(1, 2, 3, 4));
-    delete a;
+  SECTION("choose tech action") {
+    Action a(GREEN);
+    REQUIRE(a.get_type() == CHOOSE_TECH);
+    REQUIRE(a.get_colour() == GREEN);
+    REQUIRE(json(a) == R"({"type":"CHOOSE_TECH","colour":"GREEN"})"_json);
+    REQUIRE(json(a).get<Action>() == a);
   }
 
-  SECTION("BuildUnitsAction") {
+  SECTION("build units action") {
     GameRules rules("rules.json");
-    Action *a = new BuildUnitsAction(std::vector<std::string>({"turret"}));
-    REQUIRE(a->get_type() == BUILD_UNITS);
-    BuildUnitsAction *bua = (BuildUnitsAction*)a;
-    REQUIRE(bua->get_units().size() == 1);
-    REQUIRE(bua->get_units()[0] == "turret");
-    delete a;
+    Action a(std::vector<std::string>({"turret"}));
+    REQUIRE(a.get_type() == BUILD_UNITS);
+    REQUIRE(a.get_units().size() == 1);
+    REQUIRE(a.get_units()[0] == "turret");
+    REQUIRE(json(a) == R"({"type":"BUILD_UNITS","units":["turret"]})"_json);
+    REQUIRE(json(a).get<Action>() == a);
   }
 }

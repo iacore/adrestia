@@ -1,5 +1,5 @@
 #include "../player.h"
-#include "../resources.h"
+#include "../tech.h"
 #include "catch.hpp"
 
 #include <iostream>
@@ -10,8 +10,8 @@ TEST_CASE("Player") {
 
   REQUIRE(p.units.size() == rules.get_starting_units().size());
   REQUIRE(p.alive);
-  REQUIRE(p.production == Resources());
-  REQUIRE(p.resources == Resources());
+  REQUIRE(p.tech == Tech());
+  REQUIRE(p.coins == 0);
   REQUIRE(p.build_order.size() == 0);
 
   SECTION("executing build saves it in build order, builds units") {
@@ -21,11 +21,11 @@ TEST_CASE("Player") {
     REQUIRE(p.build_order[0]->size() == 2);
   }
 
-  SECTION("begin_turn increases resources by production") {
-    p.production = Resources(10, 4, 2, 1);
+  SECTION("begin_turn increases coins by total font") {
     p.begin_turn();
-    REQUIRE(p.resources == p.production);
+    REQUIRE(p.coins == 5);
+    p.execute_build({ &rules.get_unit_kind("worker") });
     p.begin_turn();
-    REQUIRE(p.resources == Resources(20, 8, 4, 2));
+    REQUIRE(p.coins == 11);
   }
 }

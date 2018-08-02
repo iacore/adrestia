@@ -4,8 +4,7 @@
 
 UnitKind::UnitKind() {}
 UnitKind::~UnitKind() {
-  if (cost != nullptr) delete cost;
-  if (font != nullptr) delete font;
+  if (tech != nullptr) delete tech;
 }
 
 void from_json(const json &j, UnitKind &kind) {
@@ -20,8 +19,9 @@ void from_json(const json &j, UnitKind &kind) {
   for (size_t i = 0; i < j["attack"].size(); i++) {
     kind.attack.push_back(j["attack"][i]);
   }
-  kind.cost = !j["cost"].is_null() ? new Resources(j["cost"]) : nullptr;
-  kind.font = j.find("font") != j.end() ? new Resources(j["font"]) : nullptr;
+  kind.cost = j["cost"];
+  kind.tech = j["tech"] != nullptr ? new Tech(j["tech"]) : nullptr;
+  kind.font = j.find("font") != j.end() ? j["font"].get<int>() : 0;
   kind.image = j["image"];
   kind.tiles = std::vector<int>();
   for (size_t i = 0; i < j["tiles"].size(); i++) {
@@ -39,12 +39,13 @@ void to_json(json &j, const UnitKind &kind) {
   j["width"] = kind.width;
   if (kind.build_time > 0) j["build_time"] = kind.build_time;
   j["attack"] = kind.attack;
-  if (kind.cost != nullptr) {
-    j["cost"] = *kind.cost;
+  j["cost"] = kind.cost;
+  if (kind.tech != nullptr) {
+    j["tech"] = *kind.tech;
   } else {
-    j["cost"] = nullptr;
+    j["tech"] = nullptr;
   }
-  if (kind.font != nullptr) j["font"] = *kind.font;
+  if (kind.font != 0) j["font"] = kind.font;
   j["image"] = kind.image;
   j["tiles"] = kind.tiles;
   j["label"] = std::string(1, kind.label);
@@ -82,11 +83,15 @@ const std::vector<int> UnitKind::get_attack() const {
   return attack;
 }
 
-const Resources *UnitKind::get_cost() const {
+int UnitKind::get_cost() const {
   return cost;
 }
 
-const Resources *UnitKind::get_font() const {
+const Tech *UnitKind::get_tech() const {
+  return tech;
+}
+
+int UnitKind::get_font() const {
   return font;
 }
 

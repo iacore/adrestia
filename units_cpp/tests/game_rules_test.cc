@@ -15,7 +15,7 @@ TEST_CASE("GameRules") {
   }
 
   SECTION("starting resources and units") {
-    REQUIRE(rules.get_starting_resources() == 7);
+    REQUIRE(rules.get_unit_cap() == 50);
     REQUIRE(rules.get_starting_units().size() == 6);
   }
 }
