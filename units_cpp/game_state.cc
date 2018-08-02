@@ -1,8 +1,6 @@
 #include "game_state.h"
 #include <vector>
 #include "action.h"
-#include "build_units_action.h"
-#include "choose_tech_action.h"
 #include "player.h"
 #include "player_view.h"
 
@@ -70,6 +68,7 @@ GameState::GameState(const GameRules &rules, int num_players)
 GameState::GameState(const GameState &game_state)
     : rules(game_state.rules)
     , players(game_state.players)
+    , action_log(game_state.action_log)
     , battles(game_state.battles)
     , turn(game_state.turn) {}
 
@@ -154,20 +153,19 @@ bool GameState::perform_action(int player, const Action &action) {
   if (action.get_type() == CHOOSE_TECH) {
     // Check action legality
     if (total_tech >= turn) return false;
-    const ChooseTechAction *a = (ChooseTechAction*)&action;
-    Colour colour = a->get_colour();
+    Colour colour = action.get_colour();
     if (colour == BLACK) return false;
     // Action is valid
+    action_log.push_back(std::make_pair(player, action));
     p.tech.increment(colour);
     return true;
   } else if (action.get_type() == BUILD_UNITS) {
     if (total_tech < turn) return false; // Haven't selected resources yet this turn
     if (p.build_order.size() > turn) return false; // Already built units this turn
-    const BuildUnitsAction *a = (BuildUnitsAction*)&action;
-    if (a->get_units().size() + p.units.size() > rules.get_unit_cap()) return false;
+    if (action.get_units().size() + p.units.size() > rules.get_unit_cap()) return false;
     int total_cost = 0;
     std::vector<const UnitKind*> build_order;
-    for (auto it = a->get_units().begin(); it != a->get_units().end(); it++) {
+    for (auto it = action.get_units().begin(); it != action.get_units().end(); it++) {
       const UnitKind &kind = rules.get_unit_kind(*it);
       if (kind.get_tech() == nullptr) return false;
       if (!p.tech.includes(*kind.get_tech())) return false;
@@ -176,6 +174,7 @@ bool GameState::perform_action(int player, const Action &action) {
     }
     if (p.coins < total_cost) return false;
     // Action is valid
+    action_log.push_back(std::make_pair(player, action));
     p.execute_build(build_order);
     p.coins -= total_cost;
     players_ready++;

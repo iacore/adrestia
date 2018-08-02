@@ -47,6 +47,7 @@ class GameState {
  private:
   const GameRules &rules;
   std::vector<Player> players;
+  std::vector<std::pair<int, Action>> action_log;
   std::vector<std::shared_ptr<Battle>> battles;
   int turn;
   int players_ready;

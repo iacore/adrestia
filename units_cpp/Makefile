@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -MMD -O2 -std=c++11
-OBJECTS = colour.o tech.o unit_kind.o unit.o game_rules.o player.o player_view.o action.o choose_tech_action.o build_units_action.o game_state.o
+OBJECTS = colour.o tech.o unit_kind.o unit.o game_rules.o player.o player_view.o action.o game_state.o
 
 MAIN_EXEC = main
 MAIN_OBJS = ${OBJECTS} main.o
