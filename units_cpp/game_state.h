@@ -34,7 +34,6 @@ class Battle {
   static std::mt19937 gen;
 };
 
-enum GameStage { CHOOSING_RESOURCES = 0, BUILDING };
 class GameState {
  public:
   GameState(const GameRules &rules, int num_players);
@@ -42,16 +41,18 @@ class GameState {
   bool perform_action(int player, const Action &action);
   // const GameView &get_view(int player);
   std::vector<int> get_winners() const; // Empty list indicates that game is still in progress
+  int get_turn() const;
+  const std::vector<std::vector<std::vector<Action>>> &get_action_log() const;
+  const std::vector<std::shared_ptr<Battle>> &get_battles() const;
 
   friend void to_json(json &j, const GameState &game_state);
  private:
   const GameRules &rules;
   std::vector<Player> players;
-  std::vector<std::pair<int, Action>> action_log;
+  std::vector<std::vector<std::vector<Action>>> action_log;
   std::vector<std::shared_ptr<Battle>> battles;
   int turn;
   int players_ready;
-  GameStage stage;
 
   void begin_turn();
   void execute_battle(); // Executes the battle and advances the turn
