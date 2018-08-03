@@ -1,14 +1,16 @@
 extends Node
 
 onready var g = get_node("/root/global")
+onready var tech = preload('res://native/tech.gdns')
 var in_settings
 
 func _ready():
   get_tree().set_auto_accept_quit(true)
   get_tree().set_quit_on_go_back(true)
   print("OS is %s" % [OS.get_name()])
-  $AnimationPlayer.play("LoadingFade");
-  in_settings = false;
+  $AnimationPlayer.play("LoadingFade")
+  in_settings = false
+  print(tech.new())
 
 func _on_button_play_pressed():
   if (!in_settings):
@@ -17,8 +19,8 @@ func _on_button_play_pressed():
 func _on_button_settings_pressed():
   if (!in_settings):
     get_tree().set_auto_accept_quit(false)
-    get_tree().set_quit_on_go_back(false);
-    $AnimationPlayer.play("SettingsLoad");
+    get_tree().set_quit_on_go_back(false)
+    $AnimationPlayer.play("SettingsLoad")
     in_settings = true
     
 func _notification(what):

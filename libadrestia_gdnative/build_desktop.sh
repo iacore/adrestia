@@ -3,4 +3,4 @@ set -e
 
 source ./config.sh
 
-scons platform=${PLATFORM}
+scons platform=${PLATFORM} -j${JOBS}
