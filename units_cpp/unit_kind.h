@@ -19,7 +19,7 @@ class UnitKind {
   int get_build_time() const;
   const std::vector<int> get_attack() const;
   int get_cost() const;
-  const Tech *get_tech() const;
+  const std::shared_ptr<Tech> get_tech() const;
   int get_font() const;
   std::string get_image() const;
   const std::vector<int> get_tiles() const;
@@ -38,7 +38,7 @@ class UnitKind {
   std::vector<int> attack;
   int cost;
   int font;
-  Tech *tech; // nullptr for no tech (not buildable)
+  std::shared_ptr<Tech> tech; // nullptr for no tech (not buildable)
   std::string image;
   std::vector<int> tiles;
   char label;

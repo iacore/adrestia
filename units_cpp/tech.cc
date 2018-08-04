@@ -14,6 +14,8 @@ void from_json(const json &j, Tech &t) {
 }
 
 void to_json(json &j, const Tech &t) {
+  // Empty resources is empty object, not null
+  j = json({});
   if (t.red) j["red"] = t.red;
   if (t.green) j["green"] = t.green;
   if (t.blue) j["blue"] = t.blue;

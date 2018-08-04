@@ -11,6 +11,7 @@ class GameRules {
   GameRules(std::string rules_filename);
   const UnitKind &get_unit_kind(std::string id) const;
   int get_unit_cap() const;
+  const std::map<std::string, UnitKind> &get_unit_kinds() const;
   const std::vector<UnitKind*> &get_starting_units() const;
 
   friend void to_json(json &j, const GameRules &rules);

@@ -42,6 +42,7 @@ class GameState {
   // const GameView &get_view(int player);
   std::vector<int> get_winners() const; // Empty list indicates that game is still in progress
   int get_turn() const;
+  const std::vector<Player> &get_players() const;
   const std::vector<std::vector<std::vector<Action>>> &get_action_log() const;
   const std::vector<std::shared_ptr<Battle>> &get_battles() const;
 
