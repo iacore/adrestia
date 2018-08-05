@@ -6,12 +6,6 @@ Unit::Unit(const UnitKind &kind)
   , shields(kind.get_shields())
   , build_time(kind.get_build_time()) {}
 
-Unit::Unit(const Unit &unit)
-  : kind(unit.kind)
-  , health(unit.health)
-  , shields(unit.shields)
-  , build_time(unit.build_time) {}
-
 void to_json(json &j, const Unit &unit) {
   j["kind"] = unit.kind.get_id();
   j["health"] = unit.health;

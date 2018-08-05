@@ -7,7 +7,6 @@ using json = nlohmann::json;
 class Unit {
  public:
   Unit(const UnitKind &kind);
-  Unit(const Unit &unit);
 
   friend void to_json(json &j, const Unit &unit);
 

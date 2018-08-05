@@ -1,12 +1,33 @@
 #include "player.h"
+#include <algorithm>
 #include "unit_kind.h"
 #include "game_rules.h"
+
+Player::Player() : alive(true), coins(0), next_unit(0) {}
 
 Player::Player(const GameRules &rules) : alive(true), coins(0), next_unit(0) {
   std::vector<UnitKind*> starting_units = rules.get_starting_units();
   for (auto it = starting_units.begin(); it != starting_units.end(); it++) {
     build_unit(**it);
   }
+}
+
+Player::Player(const Player &player)
+    : units(player.units)
+    , alive(player.alive)
+    , tech(player.tech)
+    , build_order(player.build_order)
+    , coins(player.coins)
+    , next_unit(player.next_unit) {}
+
+Player &Player::operator=(Player &player) {
+  std::swap(units, player.units);
+  std::swap(alive, player.alive);
+  std::swap(tech, player.tech);
+  std::swap(build_order, player.build_order);
+  std::swap(coins, player.coins);
+  std::swap(next_unit, player.next_unit);
+  return *this;
 }
 
 void Player::build_unit(const UnitKind &kind) {

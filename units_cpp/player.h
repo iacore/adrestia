@@ -9,7 +9,10 @@
 
 class Player {
  public:
+  Player();
   Player(const GameRules &rules);
+  Player(const Player &player);
+  Player &operator=(Player &player);
 
   void build_unit(const UnitKind &kind);
   void begin_turn();

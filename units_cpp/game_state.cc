@@ -1,62 +1,10 @@
 #include "game_state.h"
 #include <vector>
+#include <cassert>
 #include "action.h"
 #include "player.h"
 #include "player_view.h"
-
-Battle::Battle(const std::vector<Player> &players) {
-  for (auto &&player : players) {
-    this->players.push_back(PlayerView(player));
-  }
-  for (size_t i = 0; i < players.size(); i++) {
-    const Player &player = players[i];
-    std::vector<std::pair<int, int>> targets;
-    for (size_t j = 0; j < players.size(); j++) {
-      if (j == i) continue;
-      for (auto &&[unit_id, unit] : players[j].units) {
-        for (int k = 0; k < unit.kind.get_width(); k++) {
-          targets.push_back(std::make_pair(j, unit_id));
-        }
-      }
-    }
-    for (auto &&[unit_id, unit] : player.units) {
-      if (unit.build_time > 0) continue;
-      const auto &unit_attacks = unit.kind.get_attack();
-      for (int dmg : unit_attacks) {
-        int target_index = Battle::gen() % targets.size();
-        attacks.push_back(Attack{
-            (int)i, unit_id,
-            targets[target_index].first,
-            targets[target_index].second,
-            dmg
-        });
-      }
-    }
-  }
-}
-
-std::mt19937 Battle::gen;
-
-void Battle::set_seed(long seed) {
-  Battle::gen.seed(seed);
-}
-
-const std::vector<PlayerView> &Battle::get_players() const {
-  return players;
-}
-
-const std::vector<Attack> &Battle::get_attacks() const {
-  return attacks;
-}
-
-void to_json(json &j, const Battle &battle) {
-  for (const auto &player : battle.players) {
-    j["players"].push_back(player);
-  }
-  for (const auto &it : battle.attacks) {
-    j["attacks"].push_back({ it.from_player, it.from_unit, it.to_player, it.to_unit, it.damage });
-  }
-}
+#include "battle.h"
 
 GameState::GameState(const GameRules &rules, int num_players)
     : rules(rules)
@@ -68,7 +16,6 @@ GameState::GameState(const GameRules &rules, int num_players)
   begin_turn();
 }
 
-// TODO: charles: Is this just the default copy constructor?
 GameState::GameState(const GameState &game_state)
     : rules(game_state.rules)
     , players(game_state.players)
@@ -77,9 +24,8 @@ GameState::GameState(const GameState &game_state)
     , turn(game_state.turn) {}
 
 void to_json(json &j, const GameState &game_state) {
-  for (const auto &player : game_state.players) {
-    j["players"].push_back(player);
-  }
+  j["players"] = game_state.players;
+  j["action_log"] = game_state.action_log;
   for (const auto battle : game_state.battles) {
     j["battles"].push_back(*battle);
   }
@@ -169,6 +115,19 @@ bool GameState::perform_action(int player, const Action &action) {
   return false;
 }
 
+void GameState::get_view(GameView &view, int player) const {
+  view.rules = &rules;
+  // TODO: charles: What the hell C++?? Why do I have to do this?
+  Player p(players[player]);
+  view.view_player = p;
+  view.players.clear();
+  for (const auto &player : players) {
+    view.players.push_back(PlayerView(player));
+  }
+  view.action_log = &action_log;
+  view.battles = &battles;
+}
+
 std::vector<int> GameState::get_winners() const {
   std::vector<int> winners;
   for (size_t i = 0; i < players.size(); i++) {
@@ -190,8 +149,12 @@ std::vector<int> GameState::get_winners() const {
   }
 }
 
-int GameState::get_turn() const {
-  return turn;
+const GameRules &GameState::get_rules() const {
+  return rules;
+}
+
+const std::vector<Player> &GameState::get_players() const {
+  return players;
 }
 
 const std::vector<std::vector<std::vector<Action>>> &GameState::get_action_log() const {
@@ -200,4 +163,8 @@ const std::vector<std::vector<std::vector<Action>>> &GameState::get_action_log()
 
 const std::vector<std::shared_ptr<Battle>> &GameState::get_battles() const {
   return battles;
+}
+
+int GameState::get_turn() const {
+  return turn;
 }
