@@ -47,13 +47,13 @@ class GameState {
   const std::vector<std::shared_ptr<Battle>> &get_battles() const;
 
   friend void to_json(json &j, const GameState &game_state);
+  int players_ready;
  private:
   const GameRules &rules;
   std::vector<Player> players;
   std::vector<std::vector<std::vector<Action>>> action_log;
   std::vector<std::shared_ptr<Battle>> battles;
   int turn;
-  int players_ready;
 
   void begin_turn();
   void execute_battle(); // Executes the battle and advances the turn

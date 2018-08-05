@@ -8,11 +8,11 @@ using namespace std;
 using json = nlohmann::json;
 
 int main() {
-  cout << " ______ ______ " << endl;
-  cout << "|      T      |" << endl;
-  cout << "A d r e|s t i A" << endl;
-  cout << "       |       " << endl;
-  cout << "      /_\\   " << endl;
+  cout << "  ______ ______ " << endl;
+  cout << " |      T      |" << endl;
+  cout << " A d r e|s t i A" << endl;
+  cout << "        |       " << endl;
+  cout << "       /_\\      " << endl;
   cout << endl;
 
   GameRules rules("rules.json");
@@ -105,8 +105,18 @@ int main() {
         cout << "Failure." << endl;
         return 1;
       }
-
-      // TODO(jim): display battle results
+    }
+    
+    const shared_ptr<Battle> last_battle = *game.get_battles().rbegin();
+    const vector<PlayerView> &player_views = last_battle->get_players();
+    const vector<Attack> &attacks = last_battle->get_attacks();
+    for (const Attack &attack : attacks) {
+      cout
+        << "P" << attack.from_player << "'s "
+        << player_views[attack.from_player].units.find(attack.from_unit)->second.kind.get_name() << " hits " 
+        << "P" << attack.to_player << "'s "
+        << player_views[attack.to_player].units.find(attack.to_unit)->second.kind.get_name() << " for " 
+        << attack.damage << endl;
     }
   }
 }
