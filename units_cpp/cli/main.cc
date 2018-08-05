@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "../action.h"
 #include "../game_state.h"
 #include "../game_rules.h"
@@ -119,4 +120,16 @@ int main() {
         << attack.damage << endl;
     }
   }
+
+  first = true;
+  cout << "Winners: ";
+  for (const int wid : game.get_winners()) {
+    if (first) { first = false; } else { cout << ", "; }
+    cout << "P" << wid;
+  }
+
+  cout << "Saving GameState to game.json" << endl;
+
+  ofstream out("game.json");
+  out << json(game);
 }
