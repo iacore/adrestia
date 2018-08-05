@@ -3,9 +3,7 @@
 #include <array>
 
 UnitKind::UnitKind() {}
-UnitKind::~UnitKind() {
-  if (tech != nullptr) delete tech;
-}
+UnitKind::~UnitKind() {}
 
 void from_json(const json &j, UnitKind &kind) {
   kind.id = j["id"];
@@ -20,7 +18,7 @@ void from_json(const json &j, UnitKind &kind) {
     kind.attack.push_back(j["attack"][i]);
   }
   kind.cost = j["cost"];
-  kind.tech = j["tech"] != nullptr ? new Tech(j["tech"]) : nullptr;
+  kind.tech = j["tech"] != nullptr ? std::shared_ptr<Tech>(new Tech(j["tech"])) : nullptr;
   kind.font = j.find("font") != j.end() ? j["font"].get<int>() : 0;
   kind.image = j["image"];
   kind.tiles = std::vector<int>();
@@ -40,7 +38,7 @@ void to_json(json &j, const UnitKind &kind) {
   if (kind.build_time > 0) j["build_time"] = kind.build_time;
   j["attack"] = kind.attack;
   j["cost"] = kind.cost;
-  if (kind.tech != nullptr) {
+  if (kind.tech) {
     j["tech"] = *kind.tech;
   } else {
     j["tech"] = nullptr;
@@ -87,7 +85,7 @@ int UnitKind::get_cost() const {
   return cost;
 }
 
-const Tech *UnitKind::get_tech() const {
+const std::shared_ptr<Tech> UnitKind::get_tech() const {
   return tech;
 }
 

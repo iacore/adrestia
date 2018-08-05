@@ -10,7 +10,11 @@ TEST_EXEC = test
 TEST_OBJS = ${OBJECTS} $(patsubst %.cc, %.o, $(wildcard tests/*.cc))
 TEST_DEPS = ${TEST_OBJS:.o=.d}
 
-EXECS = ${MAIN_EXEC} ${TEST_EXEC}
+CLI_EXEC = units_cli
+CLI_OBJS = ${OBJECTS} $(patsubst %.cc, %.o, $(wildcard cli/*.cc))
+CLI_DEPS = ${CLI_OBJS:.o=.d}
+
+EXECS = ${MAIN_EXEC} ${TEST_EXEC} ${CLI_EXEC}
 
 all: ${EXECS}
 
@@ -20,7 +24,10 @@ ${MAIN_EXEC}: ${MAIN_OBJS}
 ${TEST_EXEC}: ${TEST_OBJS}
 	${CXX} ${CXXFLAGS} $^ -o $@
 
--include ${MAIN_DEPS} ${TEST_DEPS}
+${CLI_EXEC}: ${CLI_OBJS}
+	${CXX} ${CXXFLAGS} $^ -o $@
+
+-include ${MAIN_DEPS} ${TEST_DEPS} ${CLI_DEPS}
 
 clean:
-	rm -f *.o *.d tests/*.o tests/*.d ${EXECS}
+	rm -f {.,tests,cli}/*.{o,d} ${EXECS}

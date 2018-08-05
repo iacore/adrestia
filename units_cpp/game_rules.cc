@@ -39,6 +39,10 @@ int GameRules::get_unit_cap() const {
   return unit_cap;
 }
 
+const std::map<std::string, UnitKind> &GameRules::get_unit_kinds() const {
+  return unit_kinds;
+}
+
 const std::vector<UnitKind*> &GameRules::get_starting_units() const {
   return starting_units;
 }

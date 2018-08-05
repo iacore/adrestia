@@ -93,8 +93,8 @@ bool GameState::perform_action(int player, const Action &action) {
     if (action.get_units().size() + p.units.size() > (size_t)rules.get_unit_cap()) return false;
     int total_cost = 0;
     std::vector<const UnitKind*> build_order;
-    for (auto it = action.get_units().begin(); it != action.get_units().end(); it++) {
-      const UnitKind &kind = rules.get_unit_kind(*it);
+    for (auto &name : action.get_units()) {
+      const UnitKind &kind = rules.get_unit_kind(name);
       if (kind.get_tech() == nullptr) return false;
       if (!p.tech.includes(*kind.get_tech())) return false;
       total_cost += kind.get_cost();

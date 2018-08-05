@@ -20,10 +20,10 @@ class GameState {
   void get_view(GameView &view, int player) const;
   std::vector<int> get_winners() const; // Empty list indicates that game is still in progress
   const GameRules &get_rules() const;
+  int get_turn() const;
   const std::vector<Player> &get_players() const;
   const std::vector<std::vector<std::vector<Action>>> &get_action_log() const;
   const std::vector<std::shared_ptr<Battle>> &get_battles() const;
-  int get_turn() const;
 
   friend void to_json(json &j, const GameState &game_state);
  private:
