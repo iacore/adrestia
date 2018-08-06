@@ -16,6 +16,28 @@ GameState::GameState(const GameRules &rules, int num_players)
   begin_turn();
 }
 
+GameState::GameState(const GameRules &rules, const json &j) : rules(rules) {
+  for (auto &player : j["players"]) {
+    players.push_back(Player(rules, player));
+  }
+  for (auto &turn_actions : j["action_log"]) {
+    action_log.push_back(std::vector<std::vector<Action>>(players.size()));
+    int i = action_log.size() - 1;
+    int j = 0;
+    for (auto &player_actions : turn_actions) {
+      for (auto &action : player_actions) {
+        action_log[i][j].push_back(action);
+      }
+      j++;
+    }
+  }
+  for (auto &battle : j["battles"]) {
+    battles.push_back(std::shared_ptr<Battle>(new Battle(rules, battle)));
+  }
+  turn = j["turn"];
+  players_ready = j["players_ready"];
+}
+
 GameState::GameState(const GameState &game_state)
     : rules(game_state.rules)
     , players(game_state.players)

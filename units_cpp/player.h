@@ -12,6 +12,7 @@ class Player {
   Player();
   Player(const GameRules &rules);
   Player(const Player &player);
+  Player(const GameRules &rules, const json &j);
   Player &operator=(Player &player);
 
   void build_unit(const UnitKind &kind);

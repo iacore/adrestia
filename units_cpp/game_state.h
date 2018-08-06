@@ -15,6 +15,7 @@ using json = nlohmann::json;
 class GameState {
  public:
   GameState(const GameRules &rules, int num_players);
+  GameState(const GameRules &rules, const json &j);
   GameState(const GameState &game_state);
   bool perform_action(int player, const Action &action);
   void get_view(GameView &view, int player) const;

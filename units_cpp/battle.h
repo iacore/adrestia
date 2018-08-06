@@ -13,7 +13,9 @@ struct Attack {
 
 class Battle {
  public:
+  Battle();
   Battle(const std::vector<Player> &players);
+  Battle(const GameRules &rules, const json &j);
   static void set_seed(long seed);
 
   const std::vector<PlayerView> &get_players() const;

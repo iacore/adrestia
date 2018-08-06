@@ -2,6 +2,8 @@
 #include "player_view.h"
 #include "player.h"
 
+Battle::Battle() {}
+
 Battle::Battle(const std::vector<Player> &players) {
   for (auto &&player : players) {
     this->players.push_back(PlayerView(player));
@@ -30,6 +32,15 @@ Battle::Battle(const std::vector<Player> &players) {
         });
       }
     }
+  }
+}
+
+Battle::Battle(const GameRules &rules, const json &j) {
+  for (auto &p : j["players"]) {
+    players.push_back(PlayerView(rules, p));
+  }
+  for (auto &a : j["attacks"]) {
+    attacks.push_back(Attack{ a[0], a[1], a[2], a[3], a[4] });
   }
 }
 

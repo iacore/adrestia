@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "unit_kind.h"
 #include "game_rules.h"
+#include "json.h"
 
 Player::Player() : alive(true), coins(0), next_unit(0) {}
 
@@ -19,6 +20,18 @@ Player::Player(const Player &player)
     , build_order(player.build_order)
     , coins(player.coins)
     , next_unit(player.next_unit) {}
+
+Player::Player(const GameRules &rules, const json &j)
+    : alive(j["alive"])
+    , tech(j["tech"])
+    , coins(j["coins"])
+    , next_unit(j["next_unit"]) {
+  for (auto it = j["units"].begin(); it != j["units"].end(); it++) {
+    const UnitKind &kind = rules.get_unit_kind(it.value()["kind"]);
+    units.emplace(std::stoi(it.key()), Unit(kind, it.value()));
+  }
+  // TODO: charles: Load build_order
+}
 
 Player &Player::operator=(Player &player) {
   std::swap(units, player.units);
@@ -53,7 +66,9 @@ void Player::execute_build(std::vector<const UnitKind*> builds) {
 }
 
 void to_json(json &j, const Player &player) {
-  j["units"] = player.units;
+  for (auto &&[unit_id, unit] : player.units) {
+    j["units"][std::to_string(unit_id)] = unit;
+  }
   j["alive"] = player.alive;
   j["coins"] = player.coins;
   j["tech"] = player.tech;

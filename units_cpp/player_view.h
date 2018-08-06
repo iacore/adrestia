@@ -4,7 +4,9 @@
 
 class PlayerView {
  public:
+  PlayerView();
   PlayerView(const Player &player);
+  PlayerView(const GameRules &rules, const json &j);
 
   friend void to_json(json &j, const PlayerView &view);
 
@@ -12,4 +14,3 @@ class PlayerView {
   bool alive;
   std::vector<std::shared_ptr<const std::vector<const UnitKind*>>> build_order;
 };
-
