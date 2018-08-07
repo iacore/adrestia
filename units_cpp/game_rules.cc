@@ -1,13 +1,29 @@
 #include "game_rules.h"
 #include <fstream>
 
+GameRules *GameRules::instance;
+
+GameRules &GameRules::get_instance() {
+  if (instance == nullptr) {
+    instance = new GameRules();
+  }
+  return *instance;
+}
+
+void GameRules::load_rules(std::string rules_filename) {
+  if (instance != nullptr) {
+    delete instance;
+  }
+  instance = new GameRules(rules_filename);
+}
+
 GameRules::GameRules() {}
 
 GameRules::GameRules(std::string rules_filename) {
   json j;
   std::ifstream in("rules.json");
   in >> j;
-  *this = j;
+  from_json(j, *this);
 }
 
 void to_json(json &j, const GameRules &rules) {

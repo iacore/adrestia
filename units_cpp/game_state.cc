@@ -5,42 +5,21 @@
 #include "player.h"
 #include "player_view.h"
 #include "battle.h"
+#include "game_rules.h"
 
-GameState::GameState(const GameRules &rules, int num_players)
-    : rules(rules)
-    , turn(0)
+GameState::GameState() {}
+
+GameState::GameState(int num_players)
+    : turn(0)
     , players_ready(0) {
   for (int i = 0; i < num_players; i++) {
-    players.push_back(Player(rules));
+    players.push_back(Player());
   }
   begin_turn();
 }
 
-GameState::GameState(const GameRules &rules, const json &j) : rules(rules) {
-  for (auto &player : j["players"]) {
-    players.push_back(Player(rules, player));
-  }
-  for (auto &turn_actions : j["action_log"]) {
-    action_log.push_back(std::vector<std::vector<Action>>(players.size()));
-    int i = action_log.size() - 1;
-    int j = 0;
-    for (auto &player_actions : turn_actions) {
-      for (auto &action : player_actions) {
-        action_log[i][j].push_back(action);
-      }
-      j++;
-    }
-  }
-  for (auto &battle : j["battles"]) {
-    battles.push_back(std::shared_ptr<Battle>(new Battle(rules, battle)));
-  }
-  turn = j["turn"];
-  players_ready = j["players_ready"];
-}
-
 GameState::GameState(const GameState &game_state)
-    : rules(game_state.rules)
-    , players(game_state.players)
+    : players(game_state.players)
     , action_log(game_state.action_log)
     , battles(game_state.battles)
     , turn(game_state.turn) {}
@@ -53,6 +32,30 @@ void to_json(json &j, const GameState &game_state) {
   }
   j["turn"] = game_state.turn;
   j["players_ready"] = game_state.players_ready;
+}
+
+void from_json(const json &j, GameState &game_state) {
+  for (auto &player : j["players"]) {
+    game_state.players.push_back(player);
+  }
+  for (auto &turn_actions : j["action_log"]) {
+    game_state.action_log.push_back(std::vector<std::vector<Action>>(game_state.players.size()));
+    int i = game_state.action_log.size() - 1;
+    int j = 0;
+    for (auto &player_actions : turn_actions) {
+      for (auto &action : player_actions) {
+        game_state.action_log[i][j].push_back(action);
+      }
+      j++;
+    }
+  }
+  for (auto &battle : j["battles"]) {
+    Battle *b = new Battle();
+    *b = battle;
+    game_state.battles.push_back(std::shared_ptr<Battle>(b));
+  }
+  game_state.turn = j["turn"];
+  game_state.players_ready = j["players_ready"];
 }
 
 void GameState::begin_turn() {
@@ -84,7 +87,7 @@ void GameState::execute_battle() {
         it++;
         player.units.erase(to_delete);
       } else {
-        it->second.shields = it->second.kind.get_shields();
+        it->second.shields = it->second.kind->get_shields();
         it++;
       }
     }
@@ -112,11 +115,11 @@ bool GameState::perform_action(int player, const Action &action) {
   } else if (action.get_type() == BUILD_UNITS) {
     if (total_tech < turn) return false; // Haven't selected resources yet this turn
     if (p.build_order.size() > (size_t)turn) return false; // Already built units this turn
-    if (action.get_units().size() + p.units.size() > (size_t)rules.get_unit_cap()) return false;
+    if (action.get_units().size() + p.units.size() > (size_t)GameRules::get_instance().get_unit_cap()) return false;
     int total_cost = 0;
     std::vector<const UnitKind*> build_order;
     for (auto &name : action.get_units()) {
-      const UnitKind &kind = rules.get_unit_kind(name);
+      const UnitKind &kind = GameRules::get_instance().get_unit_kind(name);
       if (kind.get_tech() == nullptr) return false;
       if (!p.tech.includes(*kind.get_tech())) return false;
       total_cost += kind.get_cost();
@@ -138,7 +141,6 @@ bool GameState::perform_action(int player, const Action &action) {
 }
 
 void GameState::get_view(GameView &view, int player) const {
-  view.rules = &rules;
   // TODO: charles: What the hell C++?? Why do I have to do this?
   Player p(players[player]);
   view.view_player = p;
@@ -154,7 +156,7 @@ std::vector<int> GameState::get_winners() const {
   std::vector<int> winners;
   for (size_t i = 0; i < players.size(); i++) {
     for (auto it = players[i].units.begin(); it != players[i].units.end(); it++) {
-      if (it->second.kind.get_id() == "general") {
+      if (it->second.kind->get_id() == "general") {
         winners.push_back(i);
       }
     }
@@ -169,10 +171,6 @@ std::vector<int> GameState::get_winners() const {
   } else {
     return std::vector<int>();
   }
-}
-
-const GameRules &GameState::get_rules() const {
-  return rules;
 }
 
 const std::vector<Player> &GameState::get_players() const {

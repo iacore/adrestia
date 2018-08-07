@@ -15,13 +15,13 @@ class Battle {
  public:
   Battle();
   Battle(const std::vector<Player> &players);
-  Battle(const GameRules &rules, const json &j);
   static void set_seed(long seed);
 
   const std::vector<PlayerView> &get_players() const;
   const std::vector<Attack> &get_attacks() const;
 
   friend void to_json(json &j, const Battle &battle);
+  friend void from_json(const json &j, Battle &battle);
  private:
   std::vector<PlayerView> players;
   std::vector<Attack> attacks;

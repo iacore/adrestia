@@ -6,9 +6,9 @@ class PlayerView {
  public:
   PlayerView();
   PlayerView(const Player &player);
-  PlayerView(const GameRules &rules, const json &j);
 
   friend void to_json(json &j, const PlayerView &view);
+  friend void from_json(const json &j, PlayerView &view);
 
   std::map<int, Unit> units;
   bool alive;

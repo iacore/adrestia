@@ -16,15 +16,15 @@ int main() {
   cout << "       /_\\      " << endl;
   cout << endl;
 
-  GameRules rules("rules.json");
-  GameState game(rules, 2);
+  GameRules::load_rules("rules.json");
+  GameState game(2);
 
   string input;
 
-  cout << "Unit cap: " << rules.get_unit_cap() << endl;
+  cout << "Unit cap: " << GameRules::get_instance().get_unit_cap() << endl;
   cout << "Units: ";
   bool first = true;
-  for (const auto &[unit_name, unit_kind] : rules.get_unit_kinds()) {
+  for (const auto &[unit_name, unit_kind] : GameRules::get_instance().get_unit_kinds()) {
     if (first) { first = false; } else { cout << ", "; }
     cout << unit_name;
   }
@@ -45,8 +45,8 @@ int main() {
       for (const auto &[unit_id, unit] : player.units) {
         cout
           << "("
-          << unit.health << "/" << unit.kind.get_health() << " "
-          << unit.kind.get_name()
+          << unit.health << "/" << unit.kind->get_health() << " "
+          << unit.kind->get_name()
           << ") " << endl;
       }
     }
@@ -71,7 +71,7 @@ int main() {
         return 1;
       }
       cout << "Time to buy units! 'done' ends turn. You have tech for:" << endl;
-      for (const auto &[unit_name, unit_kind] : rules.get_unit_kinds()) {
+      for (const auto &[unit_name, unit_kind] : GameRules::get_instance().get_unit_kinds()) {
         const auto tech = unit_kind.get_tech();
         if (tech && player.tech.includes(*tech)) {
           cout << unit_kind.get_id() << " (costs " << unit_kind.get_cost() << ")" << endl;
@@ -88,7 +88,7 @@ int main() {
           break;
         }
         try {
-          const UnitKind &kind = rules.get_unit_kind(input);
+          const UnitKind &kind = GameRules::get_instance().get_unit_kind(input);
           if (kind.get_cost() <= coins_left) {
             units_to_buy.push_back(string(input));
             coins_spent += kind.get_cost();
@@ -114,9 +114,9 @@ int main() {
     for (const Attack &attack : attacks) {
       cout
         << "P" << attack.from_player << "'s "
-        << player_views[attack.from_player].units.find(attack.from_unit)->second.kind.get_name() << " hits " 
+        << player_views[attack.from_player].units.find(attack.from_unit)->second.kind->get_name() << " hits " 
         << "P" << attack.to_player << "'s "
-        << player_views[attack.to_player].units.find(attack.to_unit)->second.kind.get_name() << " for " 
+        << player_views[attack.to_player].units.find(attack.to_unit)->second.kind->get_name() << " for " 
         << attack.damage << endl;
     }
   }

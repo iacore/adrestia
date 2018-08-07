@@ -4,10 +4,8 @@
 #include "game_rules.h"
 #include "json.h"
 
-Player::Player() : alive(true), coins(0), next_unit(0) {}
-
-Player::Player(const GameRules &rules) : alive(true), coins(0), next_unit(0) {
-  std::vector<UnitKind*> starting_units = rules.get_starting_units();
+Player::Player() : alive(true), coins(0), next_unit(0) {
+  std::vector<UnitKind*> starting_units = GameRules::get_instance().get_starting_units();
   for (auto it = starting_units.begin(); it != starting_units.end(); it++) {
     build_unit(**it);
   }
@@ -20,18 +18,6 @@ Player::Player(const Player &player)
     , build_order(player.build_order)
     , coins(player.coins)
     , next_unit(player.next_unit) {}
-
-Player::Player(const GameRules &rules, const json &j)
-    : alive(j["alive"])
-    , tech(j["tech"])
-    , coins(j["coins"])
-    , next_unit(j["next_unit"]) {
-  for (auto it = j["units"].begin(); it != j["units"].end(); it++) {
-    const UnitKind &kind = rules.get_unit_kind(it.value()["kind"]);
-    units.emplace(std::stoi(it.key()), Unit(kind, it.value()));
-  }
-  // TODO: charles: Load build_order
-}
 
 Player &Player::operator=(Player &player) {
   std::swap(units, player.units);
@@ -53,7 +39,7 @@ void Player::begin_turn() {
     if (it->second.build_time > 0) {
       it->second.build_time -= 1;
     }
-    coins += it->second.kind.get_font();
+    coins += it->second.kind->get_font();
   }
 }
 
@@ -74,4 +60,17 @@ void to_json(json &j, const Player &player) {
   j["tech"] = player.tech;
   j["next_unit"] = player.next_unit;
   // TODO: charles: Save build_order
+}
+
+void from_json(const json &j, Player &player) {
+  player.alive = j["alive"];
+  player.tech = j["tech"];
+  player.coins = j["coins"];
+  player.next_unit = j["next_unit"];
+  player.units.clear();
+  for (auto it = j["units"].begin(); it != j["units"].end(); it++) {
+    Unit u = it.value();
+    player.units.emplace(std::stoi(it.key()), u);
+  }
+  // TODO: charles: Load build_order
 }
