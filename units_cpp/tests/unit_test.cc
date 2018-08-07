@@ -25,7 +25,7 @@ TEST_CASE("Unit") {
   Unit unit(kind);
 
   SECTION("initial values correct") {
-    REQUIRE(unit.kind == &kind);
+    REQUIRE(&unit.kind == &kind);
     REQUIRE(unit.health == kind.get_health());
     REQUIRE(unit.shields == kind.get_shields());
     REQUIRE(unit.build_time == kind.get_build_time());
@@ -36,7 +36,7 @@ TEST_CASE("Unit") {
     unit.shields -= 1;
     unit.build_time -= 1;
     Unit copy(unit);
-    REQUIRE(copy.kind == &kind);
+    REQUIRE(&copy.kind == &kind);
     REQUIRE(copy.health == kind.get_health() - 1);
     REQUIRE(copy.shields == kind.get_shields() - 1);
     REQUIRE(copy.build_time == kind.get_build_time() - 1);

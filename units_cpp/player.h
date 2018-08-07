@@ -10,7 +10,9 @@
 class Player {
  public:
   Player();
+  Player(const GameRules &rules);
   Player(const Player &player);
+  Player(const GameRules &rules, const json &j);
   Player &operator=(Player &player);
 
   void build_unit(const UnitKind &kind);
@@ -18,7 +20,6 @@ class Player {
   void execute_build(std::vector<const UnitKind*> builds);
 
   friend void to_json(json &j, const Player &player);
-  friend void from_json(const json &j, Player &player);
 
   std::map<int, Unit> units;
   bool alive;

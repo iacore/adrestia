@@ -1,5 +1,6 @@
 #include "../tech.h"
 #include "../action.h"
+#include "../game_rules.h"
 #include "../json.h"
 #include "catch.hpp"
 
@@ -15,6 +16,7 @@ TEST_CASE("Action") {
   }
 
   SECTION("build units action") {
+    GameRules rules("rules.json");
     Action a(std::vector<std::string>({"turret"}));
     REQUIRE(a.get_type() == BUILD_UNITS);
     REQUIRE(a.get_units().size() == 1);
