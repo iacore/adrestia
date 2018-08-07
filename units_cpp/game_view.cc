@@ -8,7 +8,7 @@ void GameView::generate_build_units_actions(std::vector<Action> &actions,
     std::vector<std::string> &units,
     int coins,
     std::map<std::string, UnitKind>::const_iterator begin,
-    std::map<std::string, UnitKind>::const_iterator end) {
+    std::map<std::string, UnitKind>::const_iterator end) const {
   if (begin == end || coins == 0) {
     actions.push_back(Action(units));
     return;
@@ -30,7 +30,7 @@ void GameView::generate_build_units_actions(std::vector<Action> &actions,
 // indicates that this player must wait for other players to act before
 // continuing.
 // All players should have no legal actions iff the game is over.
-std::vector<Action> GameView::legal_actions() {
+std::vector<Action> GameView::legal_actions() const {
   // Determine whether the player has selected their tech for this turn.
   int total_tech = view_player.tech.red + view_player.tech.green + view_player.tech.blue;
   if (total_tech < turn) {

@@ -9,7 +9,7 @@
 class GameView {
  public:
   GameView();
-  std::vector<Action> legal_actions();
+  std::vector<Action> legal_actions() const;
 
   const GameRules *rules;
   int view_index;
@@ -24,5 +24,5 @@ class GameView {
       std::vector<std::string> &units,
       int coins,
       std::map<std::string, UnitKind>::const_iterator begin,
-      std::map<std::string, UnitKind>::const_iterator end);
+      std::map<std::string, UnitKind>::const_iterator end) const;
 };
