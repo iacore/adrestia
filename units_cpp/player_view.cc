@@ -5,8 +5,7 @@ PlayerView::PlayerView() {}
 
 PlayerView::PlayerView(const Player &player)
     : units(player.units)
-    , alive(player.alive)
-    , build_order(player.build_order) {}
+    , alive(player.alive) {}
 
 PlayerView::PlayerView(const GameRules &rules, const json &j) : alive(j["alive"]) {
   for (auto it = j["units"].begin(); it != j["units"].end(); it++) {
@@ -20,5 +19,4 @@ void to_json(json &j, const PlayerView &view) {
     j["units"][std::to_string(unit_id)] = unit;
   }
   j["alive"] = view.alive;
-  // TODO: charles: Save build_order
 }

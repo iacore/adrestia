@@ -111,7 +111,7 @@ bool GameState::perform_action(int player, const Action &action) {
     return true;
   } else if (action.get_type() == BUILD_UNITS) {
     if (total_tech < turn) return false; // Haven't selected resources yet this turn
-    if (p.build_order.size() > (size_t)turn) return false; // Already built units this turn
+    if (action_log[turn - 1][player].size() >= 2) return false; // Already built units this turn
     if (action.get_units().size() + p.units.size() > (size_t)rules.get_unit_cap()) return false;
     int total_cost = 0;
     std::vector<const UnitKind*> build_order;
@@ -125,7 +125,9 @@ bool GameState::perform_action(int player, const Action &action) {
     if (p.coins < total_cost) return false;
     // Action is valid
     action_log[turn - 1][player].push_back(action);
-    p.execute_build(build_order);
+    for (auto &kind : build_order) {
+      p.build_unit(*kind);
+    }
     p.coins -= total_cost;
     players_ready++;
     // Perform additional work if all players have submitted action for this turn
@@ -141,13 +143,24 @@ void GameState::get_view(GameView &view, int player) const {
   view.rules = &rules;
   // TODO: charles: What the hell C++?? Why do I have to do this?
   Player p(players[player]);
+  view.view_index = player;
   view.view_player = p;
   view.players.clear();
   for (const auto &player : players) {
     view.players.push_back(PlayerView(player));
   }
-  view.action_log = &action_log;
+  view.action_log = action_log;
+  // Remove non-visible actions
+  for (auto &turn : view.action_log) {
+    for (int i = 0; i < players.size(); i++) {
+      if (i == player) continue;
+      turn[i].erase(std::remove_if(turn[i].begin(), turn[i].end(),
+            [](const Action &a) { return a.get_type() == CHOOSE_TECH; }),
+          turn[i].end());
+    }
+  }
   view.battles = &battles;
+  view.turn = turn;
 }
 
 std::vector<int> GameState::get_winners() const {

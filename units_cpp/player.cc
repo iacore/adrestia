@@ -17,7 +17,6 @@ Player::Player(const Player &player)
     : units(player.units)
     , alive(player.alive)
     , tech(player.tech)
-    , build_order(player.build_order)
     , coins(player.coins)
     , next_unit(player.next_unit) {}
 
@@ -30,14 +29,12 @@ Player::Player(const GameRules &rules, const json &j)
     const UnitKind &kind = rules.get_unit_kind(it.value()["kind"]);
     units.emplace(std::stoi(it.key()), Unit(kind, it.value()));
   }
-  // TODO: charles: Load build_order
 }
 
 Player &Player::operator=(Player &player) {
   std::swap(units, player.units);
   std::swap(alive, player.alive);
   std::swap(tech, player.tech);
-  std::swap(build_order, player.build_order);
   std::swap(coins, player.coins);
   std::swap(next_unit, player.next_unit);
   return *this;
@@ -57,14 +54,6 @@ void Player::begin_turn() {
   }
 }
 
-void Player::execute_build(std::vector<const UnitKind*> builds) {
-  for (auto it = builds.begin(); it != builds.end(); it++) {
-    build_unit(**it);
-  }
-  build_order.push_back(std::shared_ptr<std::vector<const UnitKind*>>(
-        new std::vector<const UnitKind*>(builds)));
-}
-
 void to_json(json &j, const Player &player) {
   for (auto &&[unit_id, unit] : player.units) {
     j["units"][std::to_string(unit_id)] = unit;
@@ -73,5 +62,4 @@ void to_json(json &j, const Player &player) {
   j["coins"] = player.coins;
   j["tech"] = player.tech;
   j["next_unit"] = player.next_unit;
-  // TODO: charles: Save build_order
 }
