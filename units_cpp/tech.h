@@ -13,6 +13,8 @@ class Tech {
 
   Tech();
   Tech(int red, int green, int blue);
+  std::string to_string() const;
+
   void add(const Tech &r);
   void increment(Colour colour);
   bool includes(const Tech &t) const;
