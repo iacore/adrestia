@@ -13,7 +13,8 @@ namespace godot {
    public:
     static void _register_methods();
     ::Tech _tech;
-    // jim: This works because of some incredible C++ templating magic.
+    // jim: This works because of some incredible C++ templating magic (ArgCast
+    // in Godot.hpp).
     void init(int r, int g, int b);
     void increment(Colour *c);
     void add(Tech *v);

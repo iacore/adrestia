@@ -10,6 +10,7 @@ func _ready():
   print("OS is %s" % [OS.get_name()])
   $AnimationPlayer.play("LoadingFade")
   in_settings = false
+
   var tech1 = tech.new()
   tech1.init(5, 3, 2)
   var tech2 = tech.new()
