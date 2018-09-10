@@ -1,23 +1,30 @@
 #include "unit.h"
-#include "macros.h"
-
-#include <unit_kind.h>
 
 using namespace godot;
 
-namespace godot {
-  // TODO(jim) jim: Terrible hack because UnitKind has no default constructor.
-  // In general, all scripts need a default constructor due to the way
-  // godot-cpp implements _godot_class_instance_func.
-  Unit::Unit() : _unit(UnitKind()) { }
+#define CLASSNAME Unit
 
-  Unit::~Unit() { }
+namespace godot {
+  const char *Unit::resource_path = "res://native/unit.gdns";
+
+  Unit::Unit() {
+    UnitKind_ = ResourceLoader::load(UnitKind::resource_path);
+  }
 
   void Unit::_register_methods() {
-    register_method("as_json", &Unit::as_json);
+    REGISTER_SETGET(kind, Variant())
+    REGISTER_SETGET(health, -1)
+    REGISTER_SETGET(shields, -1)
+    REGISTER_SETGET(build_time, -1)
+    REGISTER_NULLABLE
+    REGISTER_TO_JSONABLE
   }
 
-  Variant Unit::as_json() {
-    return to_godot_json(_unit);
-  }
+  IMPL_SETGET_CONST_REF(UnitKind, kind);
+  IMPL_SETGET(int, health);
+  IMPL_SETGET(int, shields);
+  IMPL_SETGET(int, build_time);
+
+  IMPL_NULLABLE;
+  IMPL_TO_JSONABLE;
 }

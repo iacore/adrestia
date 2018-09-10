@@ -4,6 +4,7 @@
 #include "colour.h"
 #include "game_rules.h"
 #include "game_state.h"
+#include "game_view.h"
 #include "player.h"
 #include "player_view.h"
 #include "tech.h"
@@ -22,10 +23,12 @@ extern "C" void GDN_EXPORT godot_nativescript_init(void *handle) {
   godot::Godot::nativescript_init(handle);
   godot::register_class<godot::gdexample>();
   godot::register_class<godot::Action>();
+  godot::register_class<godot::Attack>();
   godot::register_class<godot::Battle>();
   godot::register_class<godot::Colour>();
   godot::register_class<godot::GameRules>();
   godot::register_class<godot::GameState>();
+  godot::register_class<godot::GameView>();
   godot::register_class<godot::Player>();
   godot::register_class<godot::PlayerView>();
   godot::register_class<godot::Tech>();

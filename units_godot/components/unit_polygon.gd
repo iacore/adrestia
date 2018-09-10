@@ -1,7 +1,7 @@
 tool
 extends Polygon2D
 
-var Colour = preload('res://lib/colour.gd')
+var Colour = preload('res://native/colour.gdns')
 
 export(Color) var outline_color = Color(0,0,0) setget set_color
 export(float) var outline_width = 2.0 setget set_outline_width
@@ -14,7 +14,7 @@ func _init(unit_):
   unit = unit_
 
 func _ready():
-  color = Colour.to_color(unit.kind.colour).lightened(0.6)
+  color = unit.kind.get_colour().to_color().lightened(0.6)
 
 func _draw():
     var poly = get_polygon()

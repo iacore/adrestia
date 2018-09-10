@@ -3,14 +3,28 @@
 #include <Reference.hpp>
 #include <player.h>
 
-namespace godot {
-  class Player : public godot::GodotScript<Reference> {
-    GODOT_CLASS(Player)
-   public:
-    static void _register_methods();
-    ::Player _player;
+#include "tech.h"
+#include "unit.h"
+#include "macros.h"
 
-    String get_id() const;
-    Variant as_json();
+namespace godot {
+  class Player : public godot::GodotScript<Reference>, public OwnerOrPointer<::Player> {
+    GODOT_CLASS(Player)
+   private:
+    godot::Ref<godot::NativeScript> Tech_;
+    godot::Ref<godot::NativeScript> Unit_;
+   public:
+    Player();
+    static const char *resource_path;
+    static void _register_methods();
+
+    INTF_SETGET(Variant, units);
+    INTF_SETGET(bool, alive);
+    INTF_SETGET(int, coins);
+    INTF_SETGET(Variant, tech);
+    INTF_SETGET(int, next_unit);
+
+    INTF_NULLABLE;
+    INTF_TO_JSONABLE;
   };
 }

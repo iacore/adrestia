@@ -1,19 +1,52 @@
 extends Node
 
-const GameState = preload("res://lib/game_state.gd")
-const Resources = preload("res://lib/resources.gd")
-const AiGameManager = preload("res://lib/ai_game_manager.gd")
-onready var units = get_node("/root/UnitKinds").units
+const AiGameManager = preload('res://lib/ai_game_manager.gd')
+const Action = preload('res://native/action.gdns')
+const Colour = preload('res://native/colour.gdns')
+const GameRules = preload('res://native/game_rules.gdns')
+const GameState = preload('res://native/game_state.gdns')
 
-# jim: We initialize man to a good value here so that we can
-# use the Play Scene feature in Godot.
-onready var man = AiGameManager.new(units) # Game manager
+var rules
+var unit_kinds
+var man
+
+# So our naming convention here is apparently:
+# Thing: Thin wrapper over C++ pointer.;
+# Thing_: Object that provides gdscript-level conveniences.
+# Thing__: Class for Thing_.
+class Colour__:
+  var RED = Colour.new()
+  var GREEN = Colour.new()
+  var BLUE = Colour.new()
+
+  func _init():
+    RED.set_RED()
+    GREEN.set_GREEN()
+    BLUE.set_BLUE()
+
+  func of_char(c):
+    match c:
+      'r': return RED
+      'g': return GREEN
+      'b': return BLUE
+
+var Colour_
+
+func _init():
+  Colour_ = Colour__.new()
 
 # Global values for testing individual scenes.
 # Should be overridden when playing the actual game.
 func _ready():
-  man.gs.players[0].resource_gain = Resources.new(20, 20, 20)
+  var file = File.new()
+  file.open('res://data/rules.json', file.READ)
+  rules = GameRules.new()
+  rules.load_json_string(file.get_as_text())
+  unit_kinds = rules.get_unit_kinds()
+  # jim: We initialize man to a good state here so that we can use Godot's play
+  # scene feature.
+  man = AiGameManager.new(rules, self)
 
 func new_ai_game():
-  man = AiGameManager.new(units)
+  man = AiGameManager.new(rules, self)
   get_tree().change_scene("res://scenes/game.tscn")

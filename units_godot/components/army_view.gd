@@ -2,17 +2,28 @@ tool
 extends Control
 
 var data = {} setget set_data
+var polygons = {}
 var max_tile_size = 50
 var UnitPolygon = preload("unit_polygon.gd")
 onready var scale_container = $ScaleContainer
 onready var offset_container = $ScaleContainer/OffsetContainer
 
+# Converts a bunch of squares into a list of vertices.
+# The polygon must not have interior holes.
+# The key insight here is that we are always travelling ccw around the
+# polygon. That means the 2x2 neighborhood around our current vertex is
+# always enough information to determine which way to head.
+#
+#  0-----1-----2
+#  |[0,0] [0,1]| ...
+#  1-----.     |
+#   [1,0]|[1,1]| ...
+#  2     '-----'
+#         ...
+#
+# Example input:  [(0,0), (0,1), (1,1)]
+# Example output: [(0,0), (0,1), (1,1), (1,2), (2,2), (2,0)]
 static func squares_to_polygon(coords):
-  # Converts a bunch of squares into a list of vertices.
-  # The polygon must not have interior holes.
-  # The key insight here is that we are always travelling ccw around the
-  # polygon. That means the 2x2 neighborhood around our current vertex is
-  # always enough information to determine which way to head.
   var square_occupied = {}
   var top_left = [coords[0], coords[1]]
   for i in range(coords.size() / 2):
@@ -62,18 +73,23 @@ static func unit_fits(occupied, blocks, x, y):
 
 class SortUnitsByWidth:
   static func sort(a, b):
-    return (a.kind.width > b.kind.width)
+    return (a[1].kind.get_width() > b[1].kind.get_width())
 
-# Given a list of units, returns a list of [unit, x, y].
+# Dict[int, unit] -> List[List[unit_id, unit, x, y]]
 static func position_units(orig_units):
   var occupied = {}
   var units_and_positions = []
   var goal_aspect = 2.0 # Goal aspect ratio. >1 is wider.
-  var units = [] + orig_units.values()
+  var units = []
+  # dict to list of k-v pairs
+  for unit_id in orig_units:
+    units.append([unit_id, orig_units[unit_id]])
   units.sort_custom(SortUnitsByWidth, "sort")
 
-  for unit in units:
-    var flat_blocks = unit.kind.tiles
+  for pair in units:
+    var unit_id = pair[0]
+    var unit = pair[1]
+    var flat_blocks = unit.kind.get_tiles()
     var blocks = []
     for i in range(flat_blocks.size() / 2):
       blocks.append([flat_blocks[2 * i], flat_blocks[2 * i + 1]])
@@ -109,7 +125,7 @@ static func position_units(orig_units):
     for xy in blocks:
       occupied[[xy[0] + result_x, xy[1] + result_y]] = true
 
-    units_and_positions.append([unit, result_x, result_y])
+    units_and_positions.append([unit_id, unit, result_x, result_y])
     x += 1
   return units_and_positions
 
@@ -121,8 +137,8 @@ func set_data(new_data):
   data = new_data
   redraw()
 
+# This should hopefully be called not-so-often
 func redraw():
-  # This should hopefully be called not-so-often
   var max_x = 0;
   var max_y = 0;
   for child in offset_container.get_children():
@@ -132,15 +148,18 @@ func redraw():
   if not units_and_positions:
     return
 
+  polygons.clear()
+
   for record in units_and_positions:
-    var unit = record[0]
-    var unit_x = record[1]
-    var unit_y = record[2]
+    var unit_id = record[0]
+    var unit = record[1]
+    var unit_x = record[2]
+    var unit_y = record[3]
 
     var polygon = UnitPolygon.new(unit)
     var vertices = PoolVector2Array()
 
-    var poly_coords = squares_to_polygon(unit.kind.tiles)
+    var poly_coords = squares_to_polygon(unit.kind.get_tiles())
 
     var unit_info_pos = null
     var x_ofs = unit_x * 50
@@ -160,7 +179,7 @@ func redraw():
     var unit_info = Node2D.new()
     
     var unit_sprite = Sprite.new()
-    unit_sprite.texture = unit.kind.image
+    unit_sprite.texture = load('res://art/%s' % unit.kind.get_image())
     unit_sprite.centered = false
     unit_sprite.region_enabled = true
     unit_sprite.region_rect = Rect2(0, 0, 256, 256)
@@ -169,33 +188,36 @@ func redraw():
     unit_info.add_child(unit_sprite)
     
     var label = Label.new()
-    label.text = "%s" % [unit.kind.label]
+    label.text = "%s" % [unit.kind.get_label()]
     unit_info.add_child(label)
 
     var health_icons = Node2D.new()
     health_icons.name = 'HealthIcons'
     unit_info.add_child(health_icons)
     
-    for i in range(unit.kind.health):
+    var max_health = unit.kind.get_health()
+    var max_shield = unit.kind.get_shields()
+    for i in range(max_health + max_shield):
       var health_sprite = Sprite.new()
-      # load() should be memoized, so no leak here probably
       if i < unit.health:
         health_sprite.texture = load('res://art/heart.png')
-      else:
+      elif i < max_health:
         health_sprite.texture = load('res://art/heart-empty.png')
+      elif i < max_health + unit.shields:
+        health_sprite.texture = load('res://art/shield.png')
+      else:
+        health_sprite.texture = load('res://art/shield-broken.png')
       health_sprite.centered = false
       health_sprite.scale = Vector2(0.5, 0.5)
       health_sprite.position = Vector2(50-18, i*5)
       health_icons.add_child(health_sprite)
-
-    unit_info.add_child(health_icons)
 
     unit_info.position = unit_info_pos
     unit_info.name = 'UnitInfo'
     polygon.add_child(unit_info)
     offset_container.add_child(polygon)
 
-    unit.polygon = polygon
+    polygons[unit_id] = polygon
 
   offset_container.position = Vector2(-max_x / 2, -max_y / 2)
   scale_container.position = Vector2(rect_size.x / 2, rect_size.y / 2)

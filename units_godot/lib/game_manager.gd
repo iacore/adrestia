@@ -1,6 +1,6 @@
-extends Reference
+extends Node
 
-# Abstract base class for game managers, which accept actions and produce views.
+# Interface for game managers, which accept actions and produce views.
 
 # Performs an action on the underlying game state
 func perform_action(action):
@@ -17,8 +17,4 @@ func get_view():
 
 # Ends the turn for the user. Callback is called when the other player is done their turn.
 func end_turn(callback_obj, callback):
-  pass
-
-# Ends the turn. callback is called with the BattleResult.
-func simulate_battle(callback_obj, callback):
   pass

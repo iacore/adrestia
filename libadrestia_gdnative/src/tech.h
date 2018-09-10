@@ -8,16 +8,24 @@
 // so maybe we should change it.
 
 namespace godot {
-  class Tech : public godot::GodotScript<Reference> {
+  class Tech : public godot::GodotScript<Reference>, public OwnerOrPointer<::Tech> {
     GODOT_CLASS(Tech)
    public:
+    static const char *resource_path;
     static void _register_methods();
-    ::Tech _tech;
     // jim: This works because of some incredible C++ templating magic (ArgCast
     // in Godot.hpp).
+
     void init(int r, int g, int b);
     void increment(Colour *c);
-    void add(Tech *v);
-    Variant as_json();
+    void add(Tech *other);
+    bool includes(Tech *other);
+
+    INTF_SETGET(int, red);
+    INTF_SETGET(int, green);
+    INTF_SETGET(int, blue);
+
+    INTF_NULLABLE
+    INTF_JSONABLE
   };
 }
