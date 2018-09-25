@@ -92,9 +92,6 @@ GameState::GameState(const GameView &view, const std::vector<Tech> &techs):
 // GETTERS AND SETTERS
 //------------------------------------------------------------------------------
 void GameState::get_view(GameView &view, int player) const {
-	/* Returns the GameView form of this GameState, geared for the requested
-	 * player. */
-
 	view.rules = &rules;
 	// TODO: charles: What the hell C++?? Why do I have to do this?
 	Player p(players[player]);
@@ -105,37 +102,29 @@ void GameState::get_view(GameView &view, int player) const {
 		view.players.push_back(PlayerView(player));
 	}
 
-	// We start with the full action log...
 	view.action_log = action_log;
 
-	// Remove all actions not visible to the requested player
-	for (int scanned_turn = 0; scanned_turn < action_log.size(); scanned_turn++) {
-		for (int scanned_player = 0; scanned_player < players.size(); scanned_player++) {
-			// A players' own actions are always visible to themselves
-			if (scanned_player == player) {
-				continue;
-			}
+	// Remove all actions not visible to the requested player.
+	// Gets rid of any enemy action that:
+	// - Happened in the current turn, or
+	// - Was a CHOOSE_TECH.
+	for (size_t i = 0; i < action_log.size(); i++) {
+		for (size_t j = 0; j < players.size(); j++) {
+			if (j == player) continue;
 
-			// If the currently-scanned turn is the last one
-			if (scanned_turn == action_log.size() - 1) {
-				// This last turn contains an enemy's current move orders, and should
-				// be removed entirely.
-				view.action_log[scanned_turn][scanned_player].clear();
-			}
-			else {
-				// Remove all CHOOSE_TECH actions from past turns.
-				auto &actions = view.action_log[scanned_player][scanned_turn];
-				actions.erase(std::remove_if(actions.begin(),
-				                             actions.end(),
-				                             [](const Action &a) { return a.get_type() == CHOOSE_TECH; }
-				                            ),
-				              actions.end()
-				             );
+			auto &actions = view.action_log[i][j];
+			if (i == action_log.size() - 1) {
+				actions.clear();
+			} else {
+				actions.erase(std::remove_if(actions.begin(), actions.end(),
+					[](const Action &a) { return a.get_type() == CHOOSE_TECH; }
+				), actions.end());
 			}
 		}
 	}
 
-	view.battles = &battles;  // All battles are globally visible
+	// Past battles and turn number are always visible.
+	view.battles = &battles;
 	view.turn = turn;
 }
 
