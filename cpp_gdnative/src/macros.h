@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <list>
 
 #include <Godot.hpp>
 #include <NativeScript.hpp>
@@ -32,6 +33,7 @@ godot::Ref<godot::JSONParseResult> to_godot_json(T &t) {
 //
 // Yes, classes can inherit from a template superclass instantiated with the
 // class itself. Turns out this is a technique called CRTP.
+namespace godot {
 template<class T, class Self>
 class Forwarder {
 	private:
@@ -95,6 +97,7 @@ class Forwarder {
 			_owner = godot::Ref<godot::Reference>(r);
 		}
 };
+}
 
 // Instantiates a NativeScript.
 template<class T>
@@ -113,9 +116,17 @@ inline godot::Variant to_godot_variant(T x, godot::Reference *owner) {
 	return x;
 }
 
-// Does std::vector AND std::list LMAO
-template<template<class> class Container, class V>
-inline godot::Variant to_godot_variant(const Container<V> &c, godot::Reference *owner) {
+template<class V>
+inline godot::Variant to_godot_variant(const std::vector<V> &c, godot::Reference *owner) {
+	godot::Array result;
+	for (const auto &x : c) {
+		result.append(to_godot_variant(x, owner));
+	}
+	return result;
+}
+
+template<class V>
+inline godot::Variant to_godot_variant(const std::list<V> &c, godot::Reference *owner) {
 	godot::Array result;
 	for (const auto &x : c) {
 		result.append(to_godot_variant(x, owner));
@@ -140,6 +151,11 @@ inline godot::Variant to_godot_variant(const std::string str, godot::Reference *
 template<>
 inline godot::Variant to_godot_variant(const std::string &str, godot::Reference *owner) {
 	return godot::String(str.c_str());
+}
+
+template<>
+inline godot::Variant to_godot_variant(unsigned long num, godot::Reference *owner) {
+	return (unsigned int) num;
 }
 
 // of_godot_variant<T> "writes" a godot::Variant to the T*.
