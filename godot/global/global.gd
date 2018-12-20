@@ -21,6 +21,7 @@ onready var spell_button_scene = preload('res://components/spell_button.tscn')
 onready var delta_anim_scene = preload('res://components/delta_anim.tscn')
 
 onready var scene_loader = get_node('/root/scene_loader')
+onready var network = get_node('/root/networking')
 onready var drag_drop = get_node('/root/drag_drop')
 var loaded = false
 var rules

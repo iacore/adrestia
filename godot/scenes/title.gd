@@ -18,6 +18,7 @@ func _ready():
 		yield(animation_player, 'animation_finished')
 
 func on_waifu_pressed():
+	print(g.network.floop())
 	g.summon_tooltip($ui/moge_ko, "Hey now, why are you runniiing? No, no, I wanna play!\n... [i]Oooh, I see, it's tag![/i]\n[b]GYAHAHAHAHAHAA!!!![/b]")
 
 func on_play_button_pressed():
