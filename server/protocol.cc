@@ -1,76 +1,56 @@
-#include "protocol.h"
+// File containing client-to-server calls
 
+// Us
+#include "adrestia_networking.h"
+
+// System modules
+#include <string>
+
+// JSON
+#include "../cpp/json.h"
 using json = nlohmann::json;
 
-void write_error(json &j) {
-	j["api_code"] = 400;
-	j["api_message"] = "Invalid request";
+
+void adrestia_networking::create_floop_call(json& client_json) {
+  client_json[adrestia_networking::HANDLER_KEY] = "floop";
 }
 
-void write_missing_key_error(json &j, const std::string &missing_key_name) {
-	j["api_code"] = 400;
-	j["api_message"] = "Missing expected key: |" + missing_key_name + "|.";
+
+void adrestia_networking::create_establish_connection_call(json& client_json) {
+  client_json[adrestia_networking::HANDLER_KEY] = "establish_connection";
 }
 
-void write_floop_request(json &j) {
-	j["api_handler_name"] = "floop";
+
+void adrestia_networking::create_register_new_account_call(json& client_json,
+  const std::string& password
+) {
+  client_json[adrestia_networking::HANDLER_KEY] = "register_new_account";
+  client_json["password"] = password;
 }
 
-void write_floop_response(json &j) {
-	j["api_code"] = 200;
-	j["api_message"] = "You've found the floop function!\n";
+
+void adrestia_networking::create_authenticate_call(json& client_json,
+  const std::string& uuid,
+  const std::string& password
+) {
+  client_json[adrestia_networking::HANDLER_KEY] = "authenticate";
+  client_json["uuid"] = uuid;
+  client_json["password"] = password;
 }
 
-void write_register_new_account_request(json &j, const std::string &password) {
-	j["api_handler_name"] = "register_new_account";
-	j["password"] = password;
+
+void adrestia_networking::create_change_user_name_call(json& client_json,
+  const std::string& user_name
+) {
+  client_json[adrestia_networking::HANDLER_KEY] = "change_user_name";
+  client_json["user_name"] = user_name;
 }
 
-void write_register_new_account_response(json &j,
-	const std::string &uuid,
-	const std::string &user_name,
-	const std::string &tag)
-{
-	j["api_handler_name"] = "register_new_account";
-	j["api_code"] = 201;
-	j["api_message"] = "Created new account.";
-	j["uuid"] = uuid;
-	j["user_name"] = user_name;
-	j["tag"] = tag;
+
+void adrestia_networking::create_matchmake_me_call(json& client_json,
+  const std::vector<std::string>& selected_books
+) {
+  client_json[adrestia_networking::HANDLER_KEY] = "matchmake_me";
+  client_json["selected_books"] = selected_books;
 }
 
-void write_verify_account_request(json &j, 
-	const std::string &uuid,
-	const std::string &password)
-{
-	j["api_handler_name"] = "verify_account";
-	j["uuid"] = uuid;
-	j["password"] = password;
-}
-
-void write_verify_account_response(json &j, bool valid) {
-	j["api_code"] = valid ? 200 : 401;
-	j["api_message"] = valid ? "Authorization OK." : "Authorization NOT OK.";
-}
-
-void write_change_user_name_request(json &j,
-	const std::string &uuid,
-	const std::string &password,
-	const std::string &new_user_name)
-{
-	j["api_handler_name"] = "change_user_name";
-	j["uuid"] = uuid;
-	j["password"] = password;
-	j["new_user_name"] = new_user_name;
-}
-
-void write_change_user_name_response_unauthorized(json &j) {
-	j["api_code"] = 401;
-	j["api_message"] = "Bad uuid/password authorization for this action.";
-}
-
-void write_change_user_name_response(json &j, const std::string &tag) {
-	j["api_code"] = 201;
-	j["api_message"] = "User name as been changed.";
-	j["tag"] = tag;
-}
