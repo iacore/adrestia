@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/conjuration_mana_1.png-23884437ed98de4846f9dd1ed472c7cf.stex"
+path="res://.import/enticement_shield.png-aeb661ab225d19070318944c69c55afb.stex"
 
 [deps]
 
-source_file="res://art-built/spells/conjuration_mana_1.png"
-dest_files=[ "res://.import/conjuration_mana_1.png-23884437ed98de4846f9dd1ed472c7cf.stex" ]
+source_file="res://art-built/spells/enticement_shield.png"
+dest_files=[ "res://.import/enticement_shield.png-aeb661ab225d19070318944c69c55afb.stex" ]
 
 [params]
 

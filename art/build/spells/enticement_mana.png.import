@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/regulation_cancel_1.png-57c18d9084309c0991ef894282257ccf.stex"
+path="res://.import/enticement_mana.png-7c8707674347572a10f0aa3dedc186ce.stex"
 
 [deps]
 
-source_file="res://art-built/spells/regulation_cancel_1.png"
-dest_files=[ "res://.import/regulation_cancel_1.png-57c18d9084309c0991ef894282257ccf.stex" ]
+source_file="res://art-built/spells/enticement_mana.png"
+dest_files=[ "res://.import/enticement_mana.png-7c8707674347572a10f0aa3dedc186ce.stex" ]
 
 [params]
 

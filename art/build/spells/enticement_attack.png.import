@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bloodlust_boost.png-6250bb703dde573e2116ea4a975c7233.stex"
+path="res://.import/enticement_attack.png-a3edc5e5471ebfdc0bc6ca1aa786035e.stex"
 
 [deps]
 
-source_file="res://art-built/spells/bloodlust_boost.png"
-dest_files=[ "res://.import/bloodlust_boost.png-6250bb703dde573e2116ea4a975c7233.stex" ]
+source_file="res://art-built/spells/enticement_attack.png"
+dest_files=[ "res://.import/enticement_attack.png-a3edc5e5471ebfdc0bc6ca1aa786035e.stex" ]
 
 [params]
 

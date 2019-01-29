@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/enticement_mana_1.png-51b56f05887c8d282136811c3cfe58e7.stex"
+path="res://.import/tricks_fury.png-507745cb2f7461348fd0f85c2b07bc02.stex"
 
 [deps]
 
-source_file="res://art-built/spells/enticement_mana_1.png"
-dest_files=[ "res://.import/enticement_mana_1.png-51b56f05887c8d282136811c3cfe58e7.stex" ]
+source_file="res://art-built/spells/tricks_fury.png"
+dest_files=[ "res://.import/tricks_fury.png-507745cb2f7461348fd0f85c2b07bc02.stex" ]
 
 [params]
 

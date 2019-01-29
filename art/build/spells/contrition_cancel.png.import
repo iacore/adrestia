@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/refinement_long_shield.png-4071a73c982a5aa248df81ac74d4113e.stex"
+path="res://.import/contrition_cancel.png-4c61b09ac97c33d58ec9528b6597e2d7.stex"
 
 [deps]
 
-source_file="res://art-built/spells/refinement_long_shield.png"
-dest_files=[ "res://.import/refinement_long_shield.png-4071a73c982a5aa248df81ac74d4113e.stex" ]
+source_file="res://art-built/spells/contrition_cancel.png"
+dest_files=[ "res://.import/contrition_cancel.png-4c61b09ac97c33d58ec9528b6597e2d7.stex" ]
 
 [params]
 
