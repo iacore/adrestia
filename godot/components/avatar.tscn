@@ -15,8 +15,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 200.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 200, 200 )
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
@@ -25,7 +26,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
-_sections_unfolded = [ "Mouse", "Theme" ]
+_sections_unfolded = [ "Mouse", "Rect", "Theme" ]
 flipped = false
 
 [node name="mask" type="Light2D" parent="." index="0"]
@@ -141,7 +142,7 @@ align = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-_sections_unfolded = [ "Mouse" ]
+_sections_unfolded = [ "Mouse", "custom_colors", "custom_constants", "custom_fonts" ]
 
 [node name="mana" type="TextureRect" parent="." index="5"]
 
