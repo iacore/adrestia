@@ -164,15 +164,19 @@ func safe_disconnect(object, signal_, target, method):
 
 # Data to persist between sessions.
 const save_path = 'user://saved_data.json'
-var auth_uuid= null
-var auth_pwd = null
-var first_play = true
+var auth_uuid
+var auth_pwd
+var first_play
+var user_name
+var tag
 
 func save():
 	var data = {
 		'auth_uuid': auth_uuid,
 		'auth_pwd': auth_pwd,
 		'first_play': first_play,
+		'user_name': user_name,
+		'tag': tag,
 	}
 	var file = File.new()
 	file.open(save_path, File.WRITE)
@@ -187,13 +191,20 @@ func dict_has(dict, key, default):
 
 func load():
 	var file = File.new()
-	if not file.file_exists(save_path):
+	var data
+	if file.file_exists(save_path):
+		file.open(save_path, File.READ)
+		data = parse_json(file.get_line())
+	else:
 		print('No save data.')
-		return
+		data = {}
 
-	file.open(save_path, File.READ)
-	var data = parse_json(file.get_line())
+	# Default values for persisted data
 	auth_uuid = dict_has(data, 'auth_uuid', null)
 	auth_pwd = dict_has(data, 'auth_pwd', null)
 	first_play = dict_has(data, 'first_play', true)
-	file.close()
+	user_name = dict_has(data, 'user_name', null)
+	tag = dict_has(data, 'tag', null)
+
+	if file.is_open():
+		file.close()
