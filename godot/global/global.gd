@@ -22,18 +22,20 @@ onready var tooltip_scene = preload('res://components/tooltip.tscn')
 onready var spell_button_scene = preload('res://components/spell_button.tscn')
 onready var delta_anim_scene = preload('res://components/delta_anim.tscn')
 onready var confirm_popup_scene = preload('res://components/confirm_popup.tscn')
+onready var text_entry_popup_scene = preload('res://components/text_entry_popup.tscn')
 
 onready var scene_loader = get_node('/root/scene_loader')
 onready var network = get_node('/root/networking')
 onready var drag_drop = get_node('/root/drag_drop')
 
-const app_version = '1.0.2'
+# Read from rules.json
+var app_version = null # e.g. [1, 0, 0]
 
 var loaded = false
 var backend = null
+var tutorial_overlay = null
 var tooltip = null # Currently displayed tooltip
 var rules = null setget ,get_rules
-var rules_version = '1.0.2'
 
 var health_history
 
@@ -48,9 +50,8 @@ func get_rules():
 func get_default_rules():
 	return rules
 
-func update_rules(json_string, version):
+func update_rules(json_string):
 	rules.load_json_string(json_string)
-	rules_version = version
 	save()
 
 static func sum(list):
@@ -67,6 +68,12 @@ static func clear_children(node):
 static func child(parent, child_name):
 	# Not recursive; not owned.
 	return parent.find_node(child_name, false, false)
+
+static func map(list, f):
+	var result = []
+	for elem in list:
+		result.append(f(elem))
+	return result
 
 static func map_method(list, method):
 	var result = []
@@ -163,6 +170,13 @@ func summon_confirm(text):
 func summon_notification(text):
 	scene_loader.notification.show_notification(text)
 
+func summon_text_entry(text, default_text):
+	var popup = text_entry_popup_scene.instance()
+	popup.text = text
+	popup.default_text = default_text
+	get_node("/root").add_child(popup)
+	return popup
+
 func event_is_pressed(event):
 	return event is InputEventMouseButton \
 		and event.button_index == BUTTON_LEFT \
@@ -177,15 +191,25 @@ func safe_disconnect(object, signal_, target, method):
 	if object.is_connected(signal_, target, method):
 		object.disconnect(signal_, target, method)
 
-func compare_versions(version_1, version_2):
-	var split_1 = version_1.split(".")
-	var split_2 = version_2.split(".")
-	for i in range(len(split_1)):
-		if int(split_1[i]) < int(split_2[i]):
+func remove_tutorial_overlay():
+	if tutorial_overlay != null:
+		tutorial_overlay.get_parent().remove_child(tutorial_overlay)
+		tutorial_overlay = null
+
+func compare_versions(a, b):
+	for i in range(len(a)):
+		if a[i] < b[i]:
 			return -1
-		elif int(split_1[i]) > int(split_2[i]):
+		elif a[i] > b[i]:
 			return 1
 	return 0
+
+func string_to_version(s):
+	var p = s.split('.')
+	return [int(p[0]), int(p[1]), int(p[2])]
+
+func version_to_string(v):
+	return '%d.%d.%d' % [v[0], v[1], v[2]]
 
 # Data to persist between sessions.
 const save_path = 'user://saved_data.json'
@@ -205,7 +229,6 @@ func save():
 		'user_name': user_name,
 		'tag': tag,
 		'rules': rules.as_json().result,
-		'rules_version': rules_version
 	}
 	var file = File.new()
 	file.open(save_path, File.WRITE)
@@ -228,25 +251,31 @@ func load():
 		print('No save data.')
 		data = {}
 
+	# Load rules from file by default.
+	print('hi gg')
+	var rules_file = File.new()
+	rules = GameRules.new()
+	rules_file.open(default_rules_path, File.READ)
+	rules.load_json_string(rules_file.get_as_text())
+	rules_file.close()
+	app_version = rules.get_version()
+
 	# Default values for persisted data
 	auth_uuid = dict_has(data, 'auth_uuid', null)
 	auth_pwd = dict_has(data, 'auth_pwd', null)
 	first_play = dict_has(data, 'first_play', true)
 	user_name = dict_has(data, 'user_name', null)
 	tag = dict_has(data, 'tag', null)
-	var rules_json = dict_has(data, 'rules', null)
-	rules_version = dict_has(data, 'rules_version', '0.0.0')
 
-	if rules_json == null or compare_versions(rules_version, app_version) < 0:
-		var rules_file = File.new()
-		rules_file.open(default_rules_path, File.READ)
-		rules_json = rules_file.get_as_text()
-		rules_file.close()
-		rules_version = app_version
-	else:
-		rules_json = JSON.print(rules_json)
-	rules = GameRules.new()
-	rules.load_json_string(rules_json)
+	# Override rules with those from saved_data if they're newer.
+	print('hello gg')
+	var rules_json = dict_has(data, 'rules', null)
+	if rules_json != null:
+		var rules_saved = GameRules.new()
+		rules_saved.load_json_string(JSON.print(rules_json))
+		if compare_versions(rules.get_version(), rules_saved.get_version()) < 0:
+			rules = rules_saved
+	print('yolo gg')
 
 	if file.is_open():
 		file.close()

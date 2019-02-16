@@ -14,12 +14,16 @@ var do_debug_timer = true
 
 # Public
 var rules
+var forfeited = false
 
 func _init(g_):
 	g = g_
 	rules = g.get_default_rules()
 	ai = g.Strategy.new()
 	ai.init_cfr_strategy(rules)
+
+func get_time_limit():
+	return 30
 
 func get_view():
 	if left_game: return null
