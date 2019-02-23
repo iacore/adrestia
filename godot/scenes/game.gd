@@ -38,8 +38,6 @@ func _ready():
 	player_id = g.backend.get_view().view_player_id
 	ui_state = UiState.CHOOSING_SPELLS
 	g.backend.register_update_callback(funcref(self, 'on_backend_update'))
-	# Hacky method of displaying health in end-of-game history
-	g.health_history = []
 	end_turn_button.connect('pressed', self, 'on_end_turn_button_pressed')
 	my_spell_list.connect('pressed', self, 'on_my_spell_list_pressed')
 	event_timer.connect('timeout', self, 'on_event_timer_timeout')
@@ -59,6 +57,9 @@ func _ready():
 	get_tree().set_auto_accept_quit(false)
 	yield(get_tree(), 'idle_frame')
 	redraw()
+	if g.backend.get_current_move() != null:
+		my_spell_list.spells = g.backend.get_current_move()
+		on_end_turn_button_pressed()
 
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
@@ -72,6 +73,8 @@ func on_back_button_pressed():
 		g.scene_loader.goto_scene('title', true)
 
 func on_spell_enqueue(spell):
+	if ui_state != CHOOSING_SPELLS:
+		return
 	var action = my_spell_list.spells.duplicate()
 	action.append(spell.get_id())
 	if not state.is_valid_action(player_id, action):
@@ -80,13 +83,14 @@ func on_spell_enqueue(spell):
 	redraw()
 
 func on_my_spell_list_pressed(index, spell):
-	if ui_state == CHOOSING_SPELLS:
-		var action = my_spell_list.spells.duplicate()
-		action.remove(index)
-		if not state.is_valid_action(player_id, action):
-			return
-		my_spell_list.spells = action
-		redraw()
+	if ui_state != CHOOSING_SPELLS:
+		return
+	var action = my_spell_list.spells.duplicate()
+	action.remove(index)
+	if not state.is_valid_action(player_id, action):
+		return
+	my_spell_list.spells = action
+	redraw()
 
 # TODO: jim: All the player_* functions duplicate some part of our game logic.
 # Move these to helper functions in C++ and wrap them?
@@ -180,8 +184,6 @@ func on_end_turn_button_pressed():
 	state.of_game_view(g.backend.get_view())
 	redraw()
 
-	g.health_history.append([state.players[0].hp, state.players[1].hp])
-
 	animation_player.play('end_turn')
 	yield(animation_player, 'animation_finished')
 
@@ -195,7 +197,6 @@ func on_backend_update(new_view, update_events):
 	if g.backend == null: return
 	if g.backend.forfeited:
 		print('Game was forfeit')
-		g.health_history.append([state.players[0].hp, state.players[1].hp])
 		g.scene_loader.goto_scene('game_results')
 		return
 
@@ -254,7 +255,6 @@ func on_event_timer_timeout():
 
 			if len(state.winners()) > 0:
 				print('Game is over')
-				g.health_history.append([state.players[0].hp, state.players[1].hp])
 				g.scene_loader.goto_scene('game_results')
 			else:
 				animation_player.play_backwards('end_turn')

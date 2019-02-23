@@ -44,8 +44,6 @@ var tooltip = null # Currently displayed tooltip
 # live.
 var rules = []
 
-var health_history
-
 func _ready():
 	pass
 
@@ -204,6 +202,11 @@ func remove_tutorial_overlay():
 	if tutorial_overlay != null:
 		tutorial_overlay.get_parent().remove_child(tutorial_overlay)
 		tutorial_overlay = null
+
+func remove_backend():
+	if backend != null:
+		backend.free()
+		backend = null
 
 func compare_versions(a, b):
 	for i in range(len(a)):
