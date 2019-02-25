@@ -24,6 +24,7 @@ onready var back_button = $ui/back_button
 var player_id
 var state
 var events = []
+var animate_events = true
 
 enum UiState {
 	CHOOSING_SPELLS,
@@ -236,6 +237,8 @@ func events_compatible(first_event, second_event):
 	return true
 
 func on_event_timer_timeout():
+	if !animate_events:
+		return
 	if events.size() == 0:
 		if ui_state == UiState.SHOWING_SIMULATION:
 			ui_state = UiState.CHOOSING_SPELLS

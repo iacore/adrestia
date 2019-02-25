@@ -231,6 +231,7 @@ var auth_pwd
 var first_play
 var user_name
 var tag
+var multiplayer_wins
 # var rules # (declared above)
 
 func save():
@@ -241,6 +242,7 @@ func save():
 		'user_name': user_name,
 		'tag': tag,
 		'rules': rules.back().as_json().result,
+		'multiplayer_wins': multiplayer_wins,
 	}
 	var file = File.new()
 	file.open(save_path, File.WRITE)
@@ -277,6 +279,7 @@ func load():
 	first_play = dict_has(data, 'first_play', true)
 	user_name = dict_has(data, 'user_name', null)
 	tag = dict_has(data, 'tag', null)
+	multiplayer_wins = dict_has(data, 'multiplayer_wins', null)
 
 	# Override rules with those from saved_data if they're newer.
 	var rules_json = dict_has(data, 'rules', null)
