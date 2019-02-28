@@ -121,7 +121,8 @@ static func get_spell_texture(spell_id):
 static func get_sticky_texture(sticky_id):
 	return get_thing_texture("stickies", sticky_id)
 
-func make_spell_buttons(spells, show_stats = false, display_filter = null, enabled_filter = null, unlocked_filter = null):
+func make_spell_buttons(spells, show_stats = false, display_filter = null,
+		enabled_filter = null, unlocked_filter = null, unlockable_filter = null):
 	var result = []
 	for spell_id in spells:
 		var spell = get_rules().get_spell(spell_id)
@@ -129,9 +130,13 @@ func make_spell_buttons(spells, show_stats = false, display_filter = null, enabl
 			continue
 		var spell_button = spell_button_scene.instance()
 		spell_button.show_stats = show_stats
+		# Padlock
 		spell_button.enabled = enabled_filter == null or enabled_filter.call_func(spell)
-		spell_button.show_unlock = \
-				unlocked_filter == null or not unlocked_filter.call_func(spell)
+		if unlocked_filter != null and unlockable_filter != null:
+			spell_button.locked = not unlocked_filter.call_func(spell)
+			spell_button.unlockable = unlockable_filter.call_func(spell)
+		else:
+			spell_button.locked = false
 		# Set the spell last so that we don't redraw so many times
 		spell_button.spell = spell
 		result.append(spell_button)
@@ -148,7 +153,7 @@ func summon_tooltip(target, text):
 	tooltip = tooltip_scene.instance()
 	tooltip.text = text
 	var pos = target.get_global_rect().position
-	var above = pos.y > 20
+	var above = pos.y > 100
 	var y = pos.y if above else (pos.y + target.rect_size.y)
 	tooltip.set_target(pos.x + target.rect_size.x / 2, y, above)
 	get_node("/root").add_child(tooltip)
