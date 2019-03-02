@@ -17,15 +17,21 @@ onready var play_button = $ui/play_button
 onready var selected_books_hbox = $ui/selected_books_hbox
 onready var back_button = $ui/back_button
 
+var forced_book = null  # for tutorial
 var chosen_books = [null, null, null]
 var book_buttons = {}
 
+# Constant ordering of books for rainbow
+const book_ids = ['bloodlust', 'conjuration', 'contrition', 'refinement', 'regulation', 'tricks', 'enticement']
+
 func _ready():
 	g.clear_children(books_hbox)
-	for book in g.get_rules().get_books().values():
+	for book_id in book_ids:
+		var book = g.get_rules().get_book(book_id)
 		var book_button = book_button_scene.instance()
 		books_hbox.add_child(book_button)
 		book_button.book = book
+		book_button.button.connect('pressed', self, 'show_book_detail', [book_button.book])
 		book_button.button.connect('button_down', self, 'on_book_down', [book_button])
 		book_buttons[book.get_id()] = book_button
 	play_button.connect('pressed', self, 'on_play_button_pressed')
@@ -57,23 +63,25 @@ func on_drop(drag_image):
 	var button = g.drag_drop.payload
 	var book = button.book
 	var i = chosen_books.find(null)
-	if g.drag_drop.drag_end.y > spells_panel.get_global_position().y or chosen_books.find(book) >= 0 or i == -1:
+	if ((forced_book != null and book.get_id() != forced_book)
+			or g.drag_drop.drag_end.y > spells_panel.get_global_position().y
+			or chosen_books.find(book) >= 0
+			or i == -1):
 		yield(g.tween(drag_image, button.button.get_global_position(), 0.3), 'done')
 		button.button.texture_normal = drag_image.texture
 		drag_image.queue_free()
 		return
-	emit_signal('chose_book', i, book)
 	chosen_books[i] = book
 	var chosen_slot = selected_books_hbox.get_child(i)
 	yield(g.tween(drag_image, chosen_slot.button.get_global_position(), 0.3), 'done')
 	chosen_slot.label.text = book.get_name()
 	drag_image.queue_free()
 	selected_books_hbox.get_child(i).button.texture_normal = g.get_book_texture(book.get_id())
+	emit_signal('chose_book', i, book)
 
 func on_book_down(book_button):
 	if chosen_books.find(book_button.book) >= 0:
 		return
-	show_book_detail(book_button.book)
 	g.drag_drop.set_dead_zone(20, null, null, null)
 	g.drag_drop.on_lift = funcref(self, 'on_lift')
 	g.drag_drop.on_drop = funcref(self, 'on_drop')
