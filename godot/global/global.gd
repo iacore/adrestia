@@ -149,14 +149,15 @@ func close_tooltip(force=false):
 		return
 	if tooltip != null:
 		var content = tooltip.label.bbcode_text
-		var disappear = tooltip.animation_player.get_animation('disappear')
-		disappear.track_set_key_value(1, 0, tooltip.background.rect_position)
-		disappear.track_set_key_value(1, 1, tooltip.background.rect_position - Vector2(0.0, 20.0))
-		tooltip.animation_player.play('disappear')
-		yield(tooltip.animation_player, 'animation_finished')
-		tooltip.get_parent().remove_child(tooltip)
-		tooltip = null
-		emit_signal('tooltip_closed', content)
+		#var disappear = tooltip.animation_player.get_animation('disappear')
+		#disappear.track_set_key_value(1, 0, tooltip.background.rect_position)
+		#disappear.track_set_key_value(1, 1, tooltip.background.rect_position - Vector2(0.0, 20.0))
+		#tooltip.animation_player.play('disappear')
+		#yield(tooltip.animation_player, 'animation_finished')
+		if tooltip != null:
+			tooltip.get_parent().remove_child(tooltip)
+			tooltip = null
+			emit_signal('tooltip_closed', content)
 
 func summon_tooltip(target, text):
 	close_tooltip(true)
