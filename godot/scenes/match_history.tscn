@@ -12,7 +12,7 @@
 [ext_resource path="res://fonts/Amaranth-Bold-24.tres" type="DynamicFont" id=10]
 [ext_resource path="res://art-built/button-view.png" type="Texture" id=11]
 
-[node name="root" type="Node"]
+[node name="root" type="Node" index="0"]
 
 script = ExtResource( 1 )
 
@@ -209,11 +209,11 @@ margin_bottom = 289.0
 rect_min_size = Vector2( 486, 100 )
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
-mouse_filter = 0
+mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-_sections_unfolded = [ "Rect", "Size Flags" ]
+_sections_unfolded = [ "Mouse", "Rect", "Size Flags" ]
 
 [node name="title_label" type="RichTextLabel" parent="ui/template_row" index="0"]
 
@@ -224,7 +224,7 @@ anchor_bottom = 0.0
 margin_bottom = 56.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = true
-mouse_filter = 0
+mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
@@ -241,7 +241,7 @@ scroll_active = true
 scroll_following = false
 selection_enabled = false
 override_selected_font_color = false
-_sections_unfolded = [ "Anchor", "BBCode", "custom_fonts" ]
+_sections_unfolded = [ "Anchor", "BBCode", "Mouse", "custom_fonts" ]
 
 [node name="date_label" type="Label" parent="ui/template_row" index="1"]
 
@@ -263,6 +263,7 @@ text = "2019-03-14"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Mouse", "Size Flags" ]
 
 [node name="view_button" type="TextureButton" parent="ui/template_row" index="2"]
 
