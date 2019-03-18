@@ -174,11 +174,11 @@ margin_bottom = -144.0
 [node name="done_button" type="TextureButton" parent="ui/game_history_panel" index="1"]
 
 anchor_left = 0.5
-anchor_top = 0.0
+anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -106.0
-margin_top = 835.0
+margin_top = -125.0
 margin_right = 109.0
 margin_bottom = -48.0
 rect_pivot_offset = Vector2( 0, 0 )
