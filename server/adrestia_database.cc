@@ -174,7 +174,8 @@ void adrestia_database::conclude_game_in_database(
       run_query(logger, work,
                 R"sql(
                   UPDATE adrestia_games
-                    SET activity_state = 1
+                    SET activity_state = 1,
+                        winner_id = 2
                     WHERE game_uid = %s
                 )sql",
                 work.quote(game_uid).c_str()
