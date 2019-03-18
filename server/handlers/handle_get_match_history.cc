@@ -20,7 +20,6 @@ int adrestia_networking::handle_get_match_history(const Logger& logger, const js
     WHERE p1.user_uid = ?
       AND p2.user_uid != ?
       AND g.activity_state != 0
-      AND g.winner_id != null
       AND NOT EXISTS (SELECT r.id FROM adrestia_rules r WHERE r.id > g.game_rules_id)
     ORDER BY g.creation_time DESC
     LIMIT 10
@@ -33,7 +32,8 @@ int adrestia_networking::handle_get_match_history(const Logger& logger, const js
       {"game_state", json::parse(row["game_state"].as<string>())},
       {"creation_time", row["creation_time"].as<string>()},
       {"player_id", row["player_id"].as<int>()},
-      {"winner_id", row["winner_id"].as<int>()},
+      // jim: For a while we had a bug where tied games have null winner_id. Hence -2.
+      {"winner_id", row["winner_id"].is_null() ? -2 : row["winner_id"].as<int>()},
       {"opponent_user_name", row["user_name"].as<string>()},
       {"opponent_friend_code", row["friend_code"].as<string>()}
     });
