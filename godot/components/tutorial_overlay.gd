@@ -191,7 +191,7 @@ func play_tutorial():
 	yield(show_tooltip(spell_button, 'Tap the [color=#DC0000][b]Frenzy[/b][/color] spell to see what it does.', true), 'completed')
 	spell_button.on_long_press()
 	yield(g, 'tooltip_closed')
-	var mana_indicator = spell_button.get_node('cost/mp_icon')
+	var mana_indicator = spell_button.get_node('ui/cost/mp_icon')
 	yield(show_tooltip(mana_indicator, "The spell's mana cost is shown in this corner."), 'completed')
 
 	var book_slots = yield(self.acquire_node('ui/selected_books_hbox'), 'completed')
