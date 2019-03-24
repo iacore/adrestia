@@ -15,7 +15,7 @@ class socket_error {};
 extern std::map<std::string, adrestia_networking::request_handler> handler_map;
 
 class Babysitter {
-  static const long long DISCONNECT_TIMEOUT_MS = 120000;
+  static const long long DISCONNECT_TIMEOUT_MS = 180000;
 
   // key: uuid
   // value: pointer to the current Babysitter for that user
