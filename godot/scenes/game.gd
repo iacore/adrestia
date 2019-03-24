@@ -46,7 +46,6 @@ func _ready():
 	event_timer.connect('timeout', self, 'on_event_timer_timeout')
 	my_spell_list.spells = []
 	enemy_spell_list.immediately_show_tooltip = true
-	spell_select.display_filter = funcref(self, 'is_not_tech_spell')
 	spell_select.enabled_filter = funcref(self, 'player_can_cast')
 	spell_select.unlocked_filter = funcref(self, 'player_has_unlocked_spell')
 	spell_select.unlockable_filter = funcref(self, 'player_can_unlock_spell')
@@ -64,12 +63,14 @@ func _ready():
 	if g.backend.get_current_move() != null:
 		my_spell_list.spells = g.backend.get_current_move()
 		on_end_turn_button_pressed()
+	g.sound.set_music('battle')
 
 func _notification(what):
 	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
 		self.call_deferred('on_back_button_pressed')
 
 func on_back_button_pressed():
+	g.sound.play_sound('button')
 	var confirmed = yield(g.summon_confirm('[center]Are you sure you want to forfeit?[/center]'), 'popup_closed')
 	if confirmed:
 		g.backend.leave_game()
@@ -174,9 +175,6 @@ func player_can_cast(spell):
 		return false
 	return player_has_unlocked_spell(spell) && player_can_afford(spell)
 
-func is_not_tech_spell(spell):
-	return not spell.is_tech_spell()
-
 func redraw():
 	var me = state.players[player_id]
 	var them = state.players[1 - player_id]
@@ -198,6 +196,7 @@ func redraw():
 func on_end_turn_button_pressed():
 	if ui_state != UiState.CHOOSING_SPELLS:
 		return
+	g.sound.play_sound('button')
 	spell_select.on_close_book()
 	var action = my_spell_list.spells
 
@@ -310,6 +309,7 @@ func on_event_timer_timeout():
 		var them = state.players[1 - player_id]
 		# Do UI effects for event
 		if event['type'] == 'fire_spell':
+			g.sound.play_sound('fire_spell')
 			var player_spell_list = my_spell_list if event['player'] == player_id else enemy_spell_list
 			player_spell_list.flash_spell(event['index'])
 			# We need to update mana here because spells cost mana

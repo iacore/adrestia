@@ -31,7 +31,7 @@ func _ready():
 		var book_button = book_button_scene.instance()
 		books_hbox.add_child(book_button)
 		book_button.book = book
-		book_button.button.connect('pressed', self, 'show_book_detail', [book_button.book])
+		#book_button.button.connect('pressed', self, 'show_book_detail', [book_button.book])
 		book_button.button.connect('button_down', self, 'on_book_down', [book_button])
 		book_buttons[book.get_id()] = book_button
 	play_button.connect('pressed', self, 'on_play_button_pressed')
@@ -43,6 +43,7 @@ func _ready():
 		slot.label.text = ''
 		slot.button.connect('pressed', self, 'on_top_book_down', [i, slot.button])
 		slot.button.connect('button_down', self, 'on_remove_book_down', [i, slot.button])
+	spell_button_list.appear_anim = true
 	spell_button_list.immediately_show_tooltip = true
 
 func _notification(what):
@@ -60,8 +61,7 @@ func show_book_detail(book):
 	emit_signal('show_book_detail', book)
 	# set spell list
 	spell_button_list.show_stats = true
-	spell_button_list.spells = book.get_spells()
-	spell_button_list.display_filter = funcref(self, 'is_not_tech_spell')
+	spell_button_list.spells = g.filter(book.get_spells(), funcref(g, 'is_not_tech_spell'))
 
 func on_lift():
 	g.drag_drop.payload.button.texture_normal = book_placeholder_texture
@@ -125,6 +125,7 @@ func on_remove_book_down_drop(image):
 			image.queue_free()
 
 func on_play_button_pressed():
+	g.sound.play_sound('button')
 	var selected_books = []
 	for book in chosen_books:
 		if book != null:
@@ -139,10 +140,8 @@ func on_play_button_pressed():
 		g.scene_loader.goto_scene('game_waiting')
 
 func on_back_button_pressed():
+	g.sound.play_sound('button')
 	var confirmed = yield(g.summon_confirm('[center]Are you sure you want to go back?[/center]'), 'popup_closed')
 	if confirmed:
 		g.backend = null
 		g.scene_loader.goto_scene('title', true)
-
-func is_not_tech_spell(spell):
-	return not spell.is_tech_spell()

@@ -28,6 +28,7 @@ func _notification(what):
 		self.call_deferred('on_back_button_pressed')
 
 func on_add_friend_button_pressed():
+	g.sound.play_sound('button')
 	var friend_code = yield(g.summon_text_entry('Friend Code (FC):', ''), 'popup_closed')
 	if friend_code:
 		g.network.follow_user(friend_code, funcref(self, 'on_friend_added'))
@@ -36,6 +37,8 @@ func on_friend_added(response):
 	if response.api_code == 200:
 		g.summon_notification("You are now following %s. Make sure they add you too." % [response.user_name])
 		g.network.get_friends(funcref(self, 'on_get_friends_list'))
+	elif response.api_code == 400:
+		g.summon_notification("You can't add yourself as a friend!")
 	else:
 		g.summon_notification("Can't find that friend code.")
 
@@ -67,6 +70,7 @@ func on_challenge_friend(friend):
 		g.scene_loader.goto_scene('game_book_select')
 
 func on_back_button_pressed():
+	g.sound.play_sound('button')
 	g.scene_loader.goto_scene('title', true)
 
 func on_connected():

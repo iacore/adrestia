@@ -25,9 +25,17 @@ func _ready():
 		g.loaded = true
 		initialize()
 		animation_player.play('fade_in')
-		yield(animation_player, 'animation_finished')
+	g.sound.set_music('title')
 	g.network.register_handler('push_active_games', funcref(self, 'on_push_active_games'))
 	g.network.register_handlers(self, 'on_connected', 'on_disconnected', 'on_out_of_date')
+	g.network.get_stats(funcref(self, 'on_get_stats'))
+
+# TODO: jim: Retrieve your own profile in a more principled way
+func on_get_stats(response):
+	if response.has('wins'):
+		g.multiplayer_wins = response.wins
+		g.save()
+		on_connected()
 
 func initialize():
 	print('User data dir is %s' % [OS.get_user_data_dir()])
@@ -69,6 +77,7 @@ func on_push_active_games(response):
 	return true
 
 func on_play_button_pressed():
+	g.sound.play_sound('button')
 	if g.first_play:
 		g.first_play = false
 		g.save()
@@ -78,15 +87,19 @@ func on_play_button_pressed():
 	g.scene_loader.goto_scene('game_mode_select')
 
 func on_match_history_button_pressed():
+	g.sound.play_sound('button')
 	g.scene_loader.goto_scene('match_history')
 
 func on_settings_button_pressed():
+	g.sound.play_sound('button')
 	g.scene_loader.goto_scene('settings')
 
 func on_friends_button_pressed():
+	g.sound.play_sound('button')
 	g.scene_loader.goto_scene('friends')
 
 func on_tutorial_button_pressed():
+	g.sound.play_sound('button')
 	g.backend = TutorialBackend.new(g)
 	var tutorial_overlay = TutorialOverlay.instance()
 	get_node('/root').add_child(tutorial_overlay)

@@ -7,8 +7,6 @@ onready var back_button = $ui/back_button
 func _ready():
 	g.backend.register_started_callback(funcref(self, 'on_game_started'))
 	back_button.connect('pressed', self, 'on_back_button_pressed')
-	if g.backend.get_view() != null:
-		on_game_started()
 
 func on_game_started():
 	g.backend.register_started_callback(null)
@@ -16,6 +14,7 @@ func on_game_started():
 	g.scene_loader.goto_scene('game')
 
 func on_back_button_pressed():
+	g.sound.play_sound('button')
 	var confirmed = yield(g.summon_confirm('[center]Are you sure you want to cancel the game?[/center]'), 'popup_closed')
 	if confirmed:
 		g.backend.leave_game()
