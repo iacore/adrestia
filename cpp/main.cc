@@ -80,23 +80,22 @@ int main() {
 				cls();
 				std::cout << "It's Player " << player_id << "'s Turn" << std::endl << std::endl;
 				std::cout << state << std::endl;
-				for (size_t book_idx = 0; book_idx < player.books.size(); book_idx++) {
-					const auto &book = *player.books[book_idx];
-					const int tech = player.tech[book_idx];
-					std::cout << book.get_name() << " (Level " << tech << ")" << std::endl;
-					printf(spell_tbl_hdr, "ID", "Name", "Mp", "Tch", "Lvl");
-					for (const auto &spell_id : book.get_spells()) {
-						const auto &spell = rules.get_spell(spell_id);
-						action.push_back(spell_id);
-						if (state.is_valid_action(player_id, action)) {
-							printf(spell_tbl_row, spell.get_id().c_str(), spell.get_name().c_str(), spell.get_cost(), spell.get_tech(), spell.get_level());
-						} else {
-							printf(spell_tbl_row_locked, spell.get_id().c_str(), spell.get_name().c_str(), spell.get_cost(), spell.get_tech(), spell.get_level());
-						}
-						action.pop_back();
+				auto spell_ids = state.available_spells(player_id, action);
+				if (spell_ids.has_value()) {
+					for (size_t book_idx = 0; book_idx < player.books.size(); book_idx++) {
+						const auto &book = *player.books[book_idx];
+						const int tech = player.tech[book_idx];
+						std::cout << book.get_name() << " (Level " << tech << ")" << std::endl;
 					}
-					std::cout << std::endl;
+					printf(spell_tbl_hdr, "ID", "Name", "Mp", "Tch", "Lvl");
+					for (auto spell_id : *spell_ids) {
+						const auto &spell = rules.get_spell(spell_id);
+						printf(spell_tbl_row, spell.get_id().c_str(), spell.get_name().c_str(), spell.get_cost(), spell.get_tech(), spell.get_level());
+					}
+				} else {
+					std::cout << "Current turn is invalid!" << std::endl;
 				}
+
 				std::cout << "Spells to cast:";
 				if (action.empty()) {
 					std::cout << " [none!]";

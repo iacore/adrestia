@@ -1,11 +1,14 @@
 #include "game_state.h"
 #include "effect_instance.h"
+#include "game_action.h"
 #include "spell.h"
 #include "game_view.h"
 
 #include <deque>
+#include <optional>
 #include <ostream>
 #include <iostream>
+#include <vector>
 
 //------------------------------------------------------------------------------
 // C++ SEMANTICS
@@ -408,19 +411,15 @@ void GameState::apply_event(const json &event) {
 	}
 }
 
-bool GameState::is_valid_action(size_t player_id, GameAction action) const {
-	// TODO: Return code or list of codes for why action isn't valid.
-	if (action.size() > rules.get_spell_cap()) {
-		//std::cout << "too many actions" << std::endl;
-		return false;
-	}
-	const Player &player = players[player_id];
-	int mp_left = player.mp;
+struct InnerTurnState {
+	int mp_left;
+
 	// After the player has a cast a tech spell this turn, this is set to the
 	// tech they increased. This prevents the player from casting multiple tech
 	// spells in a turn, and allows them to use the tech immediately.
 	int turn_tech = -1;
-	for (const auto &spell_id : action) {
+
+	bool can_cast_spell(const Player& player, const std::string& spell_id) {
 		auto [spell, book_idx] = player.find_spell(spell_id);
 		if (spell == nullptr) {
 			return false;
@@ -445,8 +444,43 @@ bool GameState::is_valid_action(size_t player_id, GameAction action) const {
 		if (spell->is_tech_spell()) {
 			turn_tech = book_idx;
 		}
+		return true;
 	}
-	return true;
+};
+
+std::optional<std::vector<std::string>> GameState::available_spells(size_t player_id, const GameAction& action) const {
+	// TODO: Return code or list of codes for why action isn't valid.
+	if (action.size() > rules.get_spell_cap()) {
+		//std::cout << "too many actions" << std::endl;
+		return std::nullopt;
+	}
+	const Player &player = players[player_id];
+	InnerTurnState s = { player.mp };
+
+	for (const auto &spell_id : action) {
+		if (!s.can_cast_spell(player, spell_id)) {
+			return std::nullopt;
+		}
+	}
+
+	std::vector<std::string> result;
+
+	if (action.size() < rules.get_spell_cap()) {
+		for (const auto book : player.books) {
+			for (const auto spell : book->get_spells()) {
+				InnerTurnState s_next = s;
+				if (s_next.can_cast_spell(player, spell)) {
+					result.push_back(spell);
+				}
+			}
+		}
+	}
+
+	return result;
+}
+
+bool GameState::is_valid_action(size_t player_id, const GameAction& action) const {
+	return this->available_spells(player_id, action).has_value();
 }
 
 int GameState::turn_number() const {
