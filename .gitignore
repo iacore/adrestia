@@ -6,3 +6,5 @@ units_android
 *.d
 .aider*
 .godot
+.cache/
+compile_commands.json

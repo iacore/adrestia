@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <list>
+#include <type_traits>
 
 #include <godot_cpp/godot.hpp>
 // #include <godot-cpp/gdextension/gdextension_interface.h>
@@ -11,7 +12,9 @@
 #include "godot_cpp/classes/gd_script.hpp"
 
 #include "../../cpp/json.h"
+#include "godot_cpp/classes/object.hpp"
 #include "godot_cpp/core/class_db.hpp"
+#include "godot_cpp/variant/variant.hpp"
 
 // Work around a peculiarity in the macro replacement algorithm.
 // https://stackoverflow.com/questions/12648988/converting-a-defined-constant-number-to-a-string
@@ -127,9 +130,9 @@ class Forwarder {
 // TODO: jim: This guy (https://stackoverflow.com/questions/39250545/) says
 // template specialization is a trap. Is there a better way to achieve this
 // effect?
-template<class T>
-inline godot::Variant to_godot_variant(T x) {
-	return x;
+template<>
+inline godot::Variant to_godot_variant(const godot::GDScript &x) {
+	return godot::Variant(&x);
 }
 
 template<class V>
