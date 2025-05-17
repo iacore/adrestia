@@ -1,13 +1,13 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <game_view.h>
 
 #include "macros.h"
 
 namespace godot {
-	class GameView : public godot::GodotScript<Reference>, public Forwarder<::GameView, GameView> {
-			GODOT_CLASS(GameView)
+	class GameView : public godot::GDScript, public Forwarder<::GameView, GameView> {
+			GDCLASS(GameView, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

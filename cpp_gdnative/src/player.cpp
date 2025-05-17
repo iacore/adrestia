@@ -40,15 +40,15 @@ namespace godot {
 	FORWARD_AUTO_GETTER(level)
 
 	Variant Player::pipe_effect(EffectInstance *effect, bool inbound) {
-		return to_godot_variant(_ptr->pipe_effect(*effect->_ptr, inbound), owner);
+		return to_godot_variant(_ptr->pipe_effect(*effect->_ptr, inbound));
 	}
 
 	Variant Player::pipe_spell(Spell *spell) {
-		return to_godot_variant(_ptr->pipe_spell(*spell->_ptr), owner);
+		return to_godot_variant(_ptr->pipe_spell(*spell->_ptr));
 	}
 
 	Variant Player::pipe_turn() {
-		return to_godot_variant(_ptr->pipe_turn(), owner);
+		return to_godot_variant(_ptr->pipe_turn());
 	}
 
 	FORWARD_VOID(subtract_step)

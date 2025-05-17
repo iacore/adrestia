@@ -1,6 +1,6 @@
 #include "game_state.h"
 
-#include "player.h"
+#include "godot_cpp/variant/variant.hpp"
 #include "game_rules.h"
 #include "game_view.h"
 
@@ -31,7 +31,7 @@ namespace godot {
 
 	void CLASSNAME::init(Variant rules, Variant player_books) {
 		Array a = player_books;
-		auto *_rules = godot::as<GameRules>(rules);
+		auto *_rules = dynamic_cast<GameRules*>(rules.get_validated_object());
 		std::vector<std::vector<std::string>> _books;
 		of_godot_variant(player_books, &_books);
 
@@ -42,24 +42,24 @@ namespace godot {
 		// TODO: this is still a bit flaky, so let's keep all rules alive forever
 		// anyway. take a look at this later
 		set_ptr(new ::GameState(*_rules->_ptr, _books));
-		_deps.push_back(godot::Ref<godot::Reference>(_rules));
+		_deps.push_back(godot::Ref<godot::RefCounted>(_rules));
 	}
 
 	void CLASSNAME::init_json(Variant rules, Variant json) {
 		nlohmann::json j;
-		auto *_rules = godot::as<GameRules>(rules);
+		auto *_rules = dynamic_cast<GameRules*>(rules.get_validated_object());
 		of_godot_variant(json, &j);
 		set_ptr(new ::GameState(*_rules->_ptr, j));
-		_deps.push_back(godot::Ref<godot::Reference>(_rules));
+		_deps.push_back(godot::Ref<godot::RefCounted>(_rules));
 	}
 
 	void CLASSNAME::clone(Variant state) {
-		auto *_state = godot::as<GameState>(state);
+		auto *_state = dynamic_cast<GameState*>(state.get_validated_object());
 		set_ptr(new ::GameState(*_state->_ptr));
 	}
 
 	void CLASSNAME::of_game_view(Variant view) {
-		auto *_view = godot::as<GameView>(view);
+		auto *_view = dynamic_cast<GameView*>(view.get_validated_object());
 		::GameView &v = *_view->_ptr;
 		size_t i = v.view_player_id;
 		set_ptr(new ::GameState(v, v.players[i].tech, v.players[i].books));
@@ -82,7 +82,7 @@ namespace godot {
 		std::vector<nlohmann::json> events_out;
 		of_godot_variant(actions, &actions_);
 		_ptr->simulate(actions_, events_out);
-		return to_godot_variant(events_out, owner);
+		return to_godot_variant(events_out);
 	}
 
 	void CLASSNAME::apply_event(Variant event) {

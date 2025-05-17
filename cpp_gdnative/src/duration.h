@@ -1,13 +1,13 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include "godot_cpp/classes/gd_script.hpp"
 #include <duration.h>
 
 #include "macros.h"
 
 namespace godot {
-	class Duration : public godot::GodotScript<Reference>, public Forwarder<::Duration, Duration> {
-			GODOT_CLASS(Duration)
+	class Duration : public godot::GDScript, public Forwarder<::Duration, Duration> {
+			GDCLASS(Duration, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

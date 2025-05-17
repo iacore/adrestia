@@ -1,6 +1,6 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <selector.h>
 
 #include "macros.h"
@@ -9,8 +9,8 @@ namespace godot {
 	class Spell;
 	class EffectInstance;
 
-	class Selector : public godot::GodotScript<Reference>, public Forwarder<::Selector, Selector> {
-			GODOT_CLASS(Selector)
+	class Selector : public godot::GDScript, public Forwarder<::Selector, Selector> {
+			GDCLASS(Selector, godot::GDScript)
 		private:
 			godot::Ref<godot::NativeScript> Spell_;
 			godot::Ref<godot::NativeScript> EffectInstance_;

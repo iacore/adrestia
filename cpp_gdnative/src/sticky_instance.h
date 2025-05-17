@@ -1,6 +1,6 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <sticky_instance.h>
 
 #include "macros.h"
@@ -11,9 +11,9 @@ namespace godot {
 	class Duration;
 	class GameRules;
 
-	class StickyInstance : public godot::GodotScript<Reference>,
+	class StickyInstance : public godot::GDScript,
 			public Forwarder<::StickyInstance, StickyInstance> {
-			GODOT_CLASS(StickyInstance)
+			GDCLASS(StickyInstance, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

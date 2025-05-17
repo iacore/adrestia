@@ -1,5 +1,5 @@
 #pragma once
-#include <godot.hpp>
+#include <godot_cpp/godot.hpp>
 #include <Sprite.hpp>
 
 // Example gdscript that can be attached to a sprite, and that moves the sprite
@@ -7,7 +7,7 @@
 
 namespace godot {
   class gdexample : public godot::GodotScript<Sprite> {
-    GODOT_CLASS(gdexample)
+    GDCLASS(gdexample, godot::GDScript)
    private:
     float time_passed;
    public:

@@ -1,14 +1,14 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <game_state.h>
 #include <game_action.h>
 
 #include "macros.h"
 
 namespace godot {
-	class GameState : public godot::GodotScript<Reference>, public Forwarder<::GameState, GameState> {
-			GODOT_CLASS(GameState)
+	class GameState : public godot::GDScript, public Forwarder<::GameState, GameState> {
+			GDCLASS(GameState, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

@@ -1,6 +1,6 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <player.h>
 
 #include "macros.h"
@@ -9,8 +9,8 @@ namespace godot {
 	class EffectInstance;
 	class Spell;
 
-	class Player : public godot::GodotScript<Reference>, public Forwarder<::Player, Player> {
-			GODOT_CLASS(Player)
+	class Player : public godot::GDScript, public Forwarder<::Player, Player> {
+			GDCLASS(Player, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

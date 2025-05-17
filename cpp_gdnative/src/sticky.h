@@ -1,6 +1,6 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <sticky.h>
 
 #include "macros.h"
@@ -10,8 +10,8 @@ namespace godot {
 	class EffectInstance;
 	class Spell;
 
-	class Sticky : public godot::GodotScript<Reference>, public Forwarder<::Sticky, Sticky> {
-			GODOT_CLASS(Sticky)
+	class Sticky : public godot::GDScript, public Forwarder<::Sticky, Sticky> {
+			GDCLASS(Sticky, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

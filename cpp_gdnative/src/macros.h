@@ -3,24 +3,31 @@
 #include <vector>
 #include <list>
 
-#include <godot.hpp>
-#include <NativeScript.hpp>
-#include <ResourceLoader.hpp>
-#include <JSONParseResult.hpp>
-#include <JSON.hpp>
+#include <godot_cpp/godot.hpp>
+// #include <godot-cpp/gdextension/gdextension_interface.h>
+// #include <NativeScript.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/json.hpp>
+#include "godot_cpp/classes/gd_script.hpp"
 
 #include "../../cpp/json.h"
+#include "godot_cpp/core/class_db.hpp"
 
 // Work around a peculiarity in the macro replacement algorithm.
 // https://stackoverflow.com/questions/12648988/converting-a-defined-constant-number-to-a-string
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
 
+template<class T>
+void register_method(godot::StringName method_name, T method) {
+	godot::ClassDB::bind_method(godot::D_METHOD(method_name), method);
+}
+
 template<typename T>
-godot::Ref<godot::JSONParseResult> to_godot_json(T &t) {
+godot::Variant to_godot_json(T &t) {
 	nlohmann::json j = t;
 	godot::String str = j.dump().c_str();
-	return godot::JSON::parse(str);
+	return godot::JSON::parse_string(str);
 }
 
 // A Forwarder<T, Self> provides two capabilities:
@@ -38,25 +45,25 @@ template<class T, class Self>
 class Forwarder {
 	private:
 		static const char *_resource_path;
-		static godot::Ref<godot::NativeScript> _native_script;
+		static godot::Ref<godot::GDScript> _native_script;
 	public:
 		inline static std::pair<godot::Variant, Self*> make_instance() {
 			if (_native_script.is_null()) {
-				_native_script = godot::ResourceLoader::load(_resource_path);
+				_native_script = godot::ResourceLoader::get_singleton()->load(_resource_path);
 			}
 			godot::Variant v = _native_script->call("new");
-			Self *t = godot::as<Self>(v);
+			Self *t = dynamic_cast<Self*>(v.get_validated_object());
 			return std::make_pair(v, t);
 		}
 
 	private:
 		// Owner of the data. If null, I own the data and must free it.
-		godot::Ref<godot::Reference> _owner;
+		godot::Ref<godot::RefCounted> _owner;
 
 	public:
 		T *_ptr; // Pointer to the underlying data.
 		// Additional godot objects that own data we depend upon.
-		std::vector<godot::Ref<godot::Reference>> _deps;
+		std::vector<godot::Ref<godot::RefCounted>> _deps;
 		inline void del_ptr() {
 			if (_ptr != nullptr && _owner.is_null()) {
 				//std::cout << "deleting object at " << size_t(_ptr) << std::endl;
@@ -91,7 +98,7 @@ class Forwarder {
 		}
 
 		// Don't own it and depend on things.
-		void set_ptr(T *u, godot::Reference *r, const std::vector<godot::Reference*> &deps) {
+		void set_ptr(T *u, godot::RefCounted *r, const std::vector<godot::RefCounted*> &deps) {
 			//std::cout << "set_ptr";
 			//if (r != nullptr) std::cout << " (borrowed)";
 			//if (!deps.empty()) std::cout << " (with deps)";
@@ -100,19 +107,19 @@ class Forwarder {
 			_ptr = u;
 			//std::cout << "_ptr set to " << size_t(_ptr) << std::endl;
 			if (r != nullptr) {
-				_owner = godot::Ref<godot::Reference>(r);
+				_owner = godot::Ref<godot::RefCounted>(r);
 			}
 			for (auto r : deps) {
-				_deps.push_back(godot::Ref<godot::Reference>(r));
+				_deps.push_back(godot::Ref<godot::RefCounted>(r));
 			}
 		}
 
 		// Own it.
 		void set_ptr(T *u) { set_ptr(u, nullptr, {}); }
 		// Don't own it.
-		void set_ptr(T *u, godot::Reference *r) { set_ptr(u, r, {}); }
+		void set_ptr(T *u, godot::RefCounted *r) { set_ptr(u, r, {}); }
 		// Own it and depend on things.
-		void set_ptr(T *u, const std::vector<godot::Reference*> &deps) { set_ptr(u, nullptr, deps); }
+		void set_ptr(T *u, const std::vector<godot::RefCounted*> &deps) { set_ptr(u, nullptr, deps); }
 };
 }
 
@@ -121,55 +128,55 @@ class Forwarder {
 // template specialization is a trap. Is there a better way to achieve this
 // effect?
 template<class T>
-inline godot::Variant to_godot_variant(T x, godot::Reference *owner) {
+inline godot::Variant to_godot_variant(T x) {
 	return x;
 }
 
 template<class V>
-inline godot::Variant to_godot_variant(const std::vector<V> &c, godot::Reference *owner) {
+inline godot::Variant to_godot_variant(const std::vector<V> &c) {
 	godot::Array result;
 	for (const auto &x : c) {
-		result.append(to_godot_variant(x, owner));
+		result.append(to_godot_variant(x));
 	}
 	return result;
 }
 
 template<class V>
-inline godot::Variant to_godot_variant(const std::list<V> &c, godot::Reference *owner) {
+inline godot::Variant to_godot_variant(const std::list<V> &c) {
 	godot::Array result;
 	for (const auto &x : c) {
-		result.append(to_godot_variant(x, owner));
+		result.append(to_godot_variant(x));
 	}
 	return result;
 }
 
 template<class K, class V>
-inline godot::Variant to_godot_variant(const std::map<K, V> &m, godot::Reference *owner) {
+inline godot::Variant to_godot_variant(const std::map<K, V> &m) {
 	godot::Dictionary result;
 	for (auto &[k, v] : m) {
-		result[to_godot_variant(k, owner)] = to_godot_variant(v, owner);
+		result[to_godot_variant(k)] = to_godot_variant(v);
 	}
 	return result;
 }
 
 template<>
-inline godot::Variant to_godot_variant(const std::string str, godot::Reference *owner) {
+inline godot::Variant to_godot_variant(const std::string str) {
 	return godot::String(str.c_str());
 }
 
 template<>
-inline godot::Variant to_godot_variant(const std::string &str, godot::Reference *owner) {
+inline godot::Variant to_godot_variant(const std::string &str) {
 	return godot::String(str.c_str());
 }
 
 template<>
-inline godot::Variant to_godot_variant(unsigned long num, godot::Reference *owner) {
+inline godot::Variant to_godot_variant(unsigned long num) {
 	return (unsigned int) num;
 }
 
 template<>
-inline godot::Variant to_godot_variant(nlohmann::json j, godot::Reference *owner) {
-	return godot::JSON::parse(j.dump().c_str())->get_result();
+inline godot::Variant to_godot_variant(nlohmann::json j) {
+	return godot::JSON::parse_string(j.dump().c_str());
 }
 
 // of_godot_variant<T> "writes" a godot::Variant to the T*.
@@ -199,7 +206,7 @@ template<>
 inline void of_godot_variant(godot::Variant v, nlohmann::json *j) {
 	if (v.get_type() == godot::Variant::DICTIONARY || v.get_type() == godot::Variant::ARRAY) {
 		std::string s;
-		of_godot_variant(godot::JSON::print(v), &s);
+		of_godot_variant(godot::JSON::from_native(v), &s);
 		*j = nlohmann::json::parse(s);
 	} else {
 		abort();
@@ -208,34 +215,34 @@ inline void of_godot_variant(godot::Variant v, nlohmann::json *j) {
 
 // jim: These cases are covered by the base template. However, I'm not sure the
 // base template is a great idea, so I'm keeping this around just in case.
-//template<> inline godot::Variant to_godot_variant(int x, godot::Reference *owner) { return x; }
-//template<> inline godot::Variant to_godot_variant(bool x, godot::Reference *owner) { return x; }
+//template<> inline godot::Variant to_godot_variant(int x) { return x; }
+//template<> inline godot::Variant to_godot_variant(bool x) { return x; }
 
 #define SCRIPT_AT(path)\
 	const char *CLASSNAME::resource_path = path;\
 	template<> const char *Forwarder<::CLASSNAME, CLASSNAME>::_resource_path = path;\
-	template<> Ref<NativeScript> Forwarder<::CLASSNAME, CLASSNAME>::_native_script = nullptr;
+	template<> Ref<godot::GDScript> Forwarder<::CLASSNAME, CLASSNAME>::_native_script = nullptr;
 
 // TODO: jim: This may do unnecessary copying of things that could be passed as
 // references. See if this is the case and fix it if so.
 // (This can be extended to support wrapping smart pointers.)
 #define MAKE_INSTANCEABLE(CLASSNAME)\
 	template<>\
-	inline godot::Variant to_godot_variant(const CLASSNAME *x, godot::Reference *owner) {\
+	inline godot::Variant to_godot_variant(const CLASSNAME *x) {\
 		auto [w, o] = godot::CLASSNAME::make_instance();\
-		o->set_ptr(const_cast<CLASSNAME*>(x), owner);\
+		o->set_ptr(const_cast<CLASSNAME*>(x)); /* caution: owner deleted */\
 		return w;\
 	}\
 	template<>\
-	inline godot::Variant to_godot_variant(const CLASSNAME x, godot::Reference *owner) {\
+	inline godot::Variant to_godot_variant(const CLASSNAME x) {\
 		auto [w, o] = godot::CLASSNAME::make_instance();\
 		o->set_ptr(new ::CLASSNAME(x));\
 		return w;\
 	}\
 	template<>\
-	inline godot::Variant to_godot_variant(const CLASSNAME &x, godot::Reference *owner) {\
+	inline godot::Variant to_godot_variant(const CLASSNAME &x) {\
 		auto [w, o] = godot::CLASSNAME::make_instance();\
-		o->set_ptr(const_cast<CLASSNAME*>(&x), owner);\
+		o->set_ptr(const_cast<CLASSNAME*>(&x)); /* caution: owner deleted */\
 		return w;\
 	}
 
@@ -249,27 +256,29 @@ inline void of_godot_variant(godot::Variant v, nlohmann::json *j) {
 
 #define FORWARD_AUTO_GETTER(getter)\
 	Variant CLASSNAME::getter() const {\
-		return to_godot_variant(_ptr->getter(), owner);\
+		return to_godot_variant(_ptr->getter());\
 	}
 
 // jim: Using this MAY improve performance over the non-_REF version by not
 // using the copying version of the template, but I'm not entirely sure
 #define FORWARD_AUTO_GETTER_REF(getter)\
 	Variant CLASSNAME::getter() const {\
-		return to_godot_variant(&_ptr->getter(), owner);\
+		return to_godot_variant(&_ptr->getter());\
 	}
 
 #define FORWARD_REF_BY_ID_GETTER(Kind, getter)\
 	Variant CLASSNAME::getter(String id) const {\
 		const std::string key(id.ascii().get_data());\
-		return to_godot_variant(&_ptr->getter(key), owner);\
+		return to_godot_variant(&_ptr->getter(key));\
 	}
 
 // SETGET(Type, member):
 // Type get_member()
 // void set_member(Type x)
 #define REGISTER_SETGET(member, default_value)\
-	register_property(#member, &CLASSNAME::set_ ## member, &CLASSNAME::get_ ## member, default_value);
+	register_method("get_" #member, &CLASSNAME::get_ ## member);\
+	register_method("set_" #member, &CLASSNAME::set_ ## member);\
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, #member), "set_" #member, "get_" #member);
 
 #define INTF_SETGET(Type, member)\
 	Type get_ ## member() const;\
@@ -294,16 +303,16 @@ inline void of_godot_variant(godot::Variant v, nlohmann::json *j) {
 // TODO: jim: Can we define a totally automatic mutable version of this?
 #define IMPL_SETGET_CONST_AUTO(member)\
 	Variant CLASSNAME::get_ ## member() const {\
-		return to_godot_variant(_ptr->member, owner);\
+		return to_godot_variant(_ptr->member);\
 	}\
 	void CLASSNAME::set_ ## member(Variant value) {\
-		Godot::print("Error: Called " STRINGIZE(CLASSNAME) "::set_" #member " (setter for a const auto member)");\
+		godot::print_line("Error: Called " STRINGIZE(CLASSNAME) "::set_" #member " (setter for a const auto member)");\
 		assert(false);\
 	}
 
 #define IMPL_SETGET_REF(Type, member)\
 	Type CLASSNAME::get_ ## member() const {\
-		return to_godot_variant(_ptr->member, owner);\
+		return to_godot_variant(_ptr->member);\
 	}\
 	void CLASSNAME::set_ ## member(Variant value) {\
 		_ptr->member = *thing->_ptr;\

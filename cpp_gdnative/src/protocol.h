@@ -1,11 +1,11 @@
 #pragma once
-#include <godot.hpp>
+#include <godot_cpp/godot.hpp>
 
-#include "macros.h"
+#include "godot_cpp/classes/gd_script.hpp"
 
 namespace godot {
-  class Protocol : public godot::GodotScript<Reference> {
-      GODOT_CLASS(Protocol)
+  class Protocol : public godot::GDScript {
+      GDCLASS(Protocol, godot::GDScript)
     public:
       static void _register_methods();
       Protocol();

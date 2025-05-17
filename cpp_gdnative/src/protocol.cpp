@@ -78,7 +78,7 @@ namespace godot {
   String Protocol::create_matchmake_me_call(Variant rules, Variant selected_books, String target_friend_code) {
     nlohmann::json j;
     std::vector<std::string> selected_books_; of_godot_variant(selected_books, &selected_books_);
-    auto *_rules = godot::as<GameRules>(rules);
+    auto *_rules = dynamic_cast<GameRules*>(rules);
     std::string target_friend_code_; of_godot_variant(target_friend_code, &target_friend_code_);
     adrestia_networking::create_matchmake_me_call(j, *_rules->_ptr, selected_books_, target_friend_code_);
     return String(j.dump().c_str());

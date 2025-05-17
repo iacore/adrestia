@@ -1,13 +1,13 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <spell.h>
 
 #include "macros.h"
 
 namespace godot {
-	class Spell : public godot::GodotScript<Reference>, public Forwarder<::Spell, Spell> {
-			GODOT_CLASS(Spell)
+	class Spell : public godot::GDScript, public Forwarder<::Spell, Spell> {
+			GDCLASS(Spell, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

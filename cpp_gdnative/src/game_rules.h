@@ -1,6 +1,6 @@
 #pragma once
-#include <godot.hpp>
-#include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <game_rules.h>
 
 #include "macros.h"
@@ -10,8 +10,8 @@ namespace godot {
 	class Spell;
 	class Sticky;
 
-	class GameRules : public godot::GodotScript<Reference>, public Forwarder<::GameRules, GameRules> {
-			GODOT_CLASS(GameRules)
+	class GameRules : public godot::GDScript, public Forwarder<::GameRules, GameRules> {
+			GDCLASS(GameRules, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

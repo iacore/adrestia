@@ -1,9 +1,5 @@
 #include "game_rules.h"
 
-#include "book.h"
-#include "spell.h"
-#include "sticky.h"
-
 #define CLASSNAME GameRules
 
 using namespace godot;
@@ -26,7 +22,7 @@ namespace godot {
 
 	Variant CLASSNAME::get_version() const {
 		json j = _ptr->get_version();
-		return to_godot_variant(j, owner);
+		return to_godot_variant(j);
 	}
 	FORWARD_REF_BY_ID_GETTER(Sticky, get_sticky)
 	FORWARD_REF_BY_ID_GETTER(Spell, get_spell)

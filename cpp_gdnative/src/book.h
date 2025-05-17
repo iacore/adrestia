@@ -1,13 +1,13 @@
 #pragma once
-#include <godot.hpp>
-// #include <Reference.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/gd_script.hpp>
 #include <book.h>
 
 #include "macros.h"
 
 namespace godot {
-	class Book : public godot::GodotScript<Reference>, public Forwarder<::Book, Book> {
-			GODOT_CLASS(Book)
+	class Book : public godot::GDScript, public Forwarder<::Book, Book> {
+			GDCLASS(Book, godot::GDScript)
 		public:
 			static const char *resource_path;
 			static void _register_methods();

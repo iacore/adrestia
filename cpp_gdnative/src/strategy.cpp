@@ -23,13 +23,13 @@ namespace godot {
 	}
 
 	void CLASSNAME::init_cfr_strategy(Variant rules) {
-		auto *_rules = godot::as<GameRules>(rules);
+		auto *_rules = dynamic_cast<GameRules*>(rules);
 		set_ptr(new ::CfrStrategy(*_rules->_ptr));
 	}
 
 	Variant CLASSNAME::get_action(Variant view) {
-		auto *_view = godot::as<GameView>(view);
-		return to_godot_variant(_ptr->get_action(*_view->_ptr), owner);
+		auto *_view = dynamic_cast<GameView*>(view);
+		return to_godot_variant(_ptr->get_action(*_view->_ptr));
 	}
 
 	IMPL_NULLABLE
