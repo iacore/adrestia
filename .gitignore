@@ -4,3 +4,5 @@ units_android
 *.o
 *.os
 *.d
+.aider*
+.godot

@@ -2,9 +2,9 @@
 
 [ext_resource path="res://theme-default.tres" type="Theme" id=1]
 [ext_resource path="res://components/text_entry_popup.gd" type="Script" id=2]
-[ext_resource path="res://art-built/9patch/panel-9patch.png" type="Texture" id=3]
-[ext_resource path="res://art-built/button-done.png" type="Texture" id=4]
-[ext_resource path="res://fonts/Amaranth-Regular-24.tres" type="DynamicFont" id=5]
+[ext_resource path="res://art-built/9patch/panel-9patch.png" type="Texture2D" id=3]
+[ext_resource path="res://art-built/button-done.png" type="Texture2D" id=4]
+[ext_resource path="res://fonts/Amaranth-Regular-24.tres" type="FontFile" id=5]
 
 [node name="text_entry_popup" type="Control"]
 
@@ -12,8 +12,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -28,8 +28,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -43,12 +43,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -61,12 +61,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -213.0
-margin_top = -261.0
-margin_right = 213.0
-margin_bottom = -45.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = -213.0
+offset_top = -261.0
+offset_right = 213.0
+offset_bottom = -45.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -84,12 +84,12 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -196.0
-margin_top = -202.0
-margin_right = 196.0
-margin_bottom = -137.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = -196.0
+offset_top = -202.0
+offset_right = 196.0
+offset_bottom = -137.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 focus_mode = 2
 mouse_filter = 0
 mouse_default_cursor_shape = 1
@@ -100,8 +100,8 @@ focus_mode = 2
 context_menu_enabled = true
 placeholder_alpha = 0.6
 caret_blink = false
-caret_blink_speed = 0.65
-caret_position = 0
+caret_blink_interval = 0.65
+caret_column = 0
 _sections_unfolded = [ "custom_fonts" ]
 
 [node name="done_button" type="TextureButton" parent="ui" index="2"]
@@ -110,19 +110,19 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = 5.0
-margin_top = -149.0
-margin_right = 202.0
-margin_bottom = -83.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = 5.0
+offset_top = -149.0
+offset_right = 202.0
+offset_bottom = -83.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 focus_mode = 2
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
 toggle_mode = false
-enabled_focus_mode = 2
+focus_mode = 2
 shortcut = null
 group = null
 texture_normal = ExtResource( 4 )
@@ -136,17 +136,17 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = -166.0
-margin_top = -229.0
-margin_right = 130.0
-margin_bottom = -189.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = -166.0
+offset_top = -229.0
+offset_right = 130.0
+offset_bottom = -189.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( 5 )
 text = "Enter new username:"
 percent_visible = 1.0
 lines_skipped = 0

@@ -18,16 +18,16 @@ const Tweener = preload('res://global/tweener.gd')
 
 signal tooltip_closed(content)
 
-onready var tooltip_scene = preload('res://components/tooltip.tscn')
-onready var spell_button_scene = preload('res://components/spell_button.tscn')
-onready var delta_anim_scene = preload('res://components/delta_anim.tscn')
-onready var confirm_popup_scene = preload('res://components/confirm_popup.tscn')
-onready var text_entry_popup_scene = preload('res://components/text_entry_popup.tscn')
+@onready var tooltip_scene = preload('res://components/tooltip.tscn')
+@onready var spell_button_scene = preload('res://components/spell_button.tscn')
+@onready var delta_anim_scene = preload('res://components/delta_anim.tscn')
+@onready var confirm_popup_scene = preload('res://components/confirm_popup.tscn')
+@onready var text_entry_popup_scene = preload('res://components/text_entry_popup.tscn')
 
-onready var scene_loader = get_node('/root/scene_loader')
-onready var network = get_node('/root/networking')
-onready var drag_drop = get_node('/root/drag_drop')
-onready var sound = get_node('/root/sound')
+@onready var scene_loader = get_node('/root/scene_loader')
+@onready var network = get_node('/root/networking')
+@onready var drag_drop = get_node('/root/drag_drop')
+@onready var sound = get_node('/root/sound')
 
 # Read from rules.json
 var app_version = null # e.g. [1, 0, 0]
@@ -75,7 +75,7 @@ static func clear_children(node):
 # Gets child by name rather than index.
 static func child(parent, child_name):
 	# Not recursive; not owned.
-	return parent.find_node(child_name, false, false)
+	return parent.find_child(child_name, false, false)
 
 static func map_method(list, method):
 	var result = []
@@ -128,7 +128,7 @@ func make_spell_buttons(spells, show_stats = false, appear_anim = false,
 	var result = []
 	for spell_id in spells:
 		var spell = get_rules().get_spell(spell_id)
-		result.append(spell_button_scene.instance())
+		result.append(spell_button_scene.instantiate())
 	update_spell_buttons(result, spells, show_stats, appear_anim, enabled_filter, unlocked_filter, unlockable_filter)
 	return result
 
@@ -160,41 +160,41 @@ func is_not_tech_spell(spell_id):
 var tooltip_min_open_time = 0
 var tooltip_open_time = 0
 func close_tooltip(force=false):
-	if not force and OS.get_ticks_msec() - tooltip_open_time < tooltip_min_open_time:
+	if not force and Time.get_ticks_msec() - tooltip_open_time < tooltip_min_open_time:
 		return
 	var old_tooltip = tooltip
 	tooltip = null
 	if old_tooltip != null:
-		var content = old_tooltip.label.bbcode_text
+		var content = old_tooltip.label.text
 		emit_signal('tooltip_closed', content)
 		var disappear = old_tooltip.animation_player.get_animation('disappear')
-		disappear.track_set_key_value(1, 0, old_tooltip.background.rect_position)
-		disappear.track_set_key_value(1, 1, old_tooltip.background.rect_position - Vector2(0.0, 20.0))
+		disappear.track_set_key_value(1, 0, old_tooltip.background.position)
+		disappear.track_set_key_value(1, 1, old_tooltip.background.position - Vector2(0.0, 20.0))
 		old_tooltip.animation_player.play('disappear')
-		yield(old_tooltip.animation_player, 'animation_finished')
+		await old_tooltip.animation_player.animation_finished
 		if old_tooltip != null:
 			old_tooltip.get_parent().remove_child(old_tooltip)
 
 func summon_tooltip(target, text):
 	close_tooltip(true)
-	tooltip = tooltip_scene.instance()
+	tooltip = tooltip_scene.instantiate()
 	tooltip.text = text
 	var pos = target.get_global_rect().position
 	var above = pos.y > 100
-	var y = pos.y if above else (pos.y + target.rect_size.y)
-	tooltip.set_target(pos.x + target.rect_size.x / 2, y, above)
-	tooltip_open_time = OS.get_ticks_msec()
+	var y = pos.y if above else (pos.y + target.size.y)
+	tooltip.set_target(pos.x + target.size.x / 2, y, above)
+	tooltip_open_time = Time.get_ticks_msec()
 	get_node("/root").add_child(tooltip)
 	tooltip.background.modulate = Color(1.0, 1.0, 1.0, 0.0)
-	yield(tooltip.redraw(), 'completed')
+	await tooltip.redraw().completed
 	# tooltip may have been dismissed before finish redraw
 	if not tooltip:
 		return
 	var appear = tooltip.animation_player.get_animation('appear')
-	appear.track_set_key_value(1, 0, tooltip.background.rect_position + Vector2(0.0, 20.0))
-	appear.track_set_key_value(1, 1, tooltip.background.rect_position)
+	appear.track_set_key_value(1, 0, tooltip.background.position + Vector2(0.0, 20.0))
+	appear.track_set_key_value(1, 1, tooltip.background.position)
 	tooltip.animation_player.play('appear')
-	yield(tooltip.animation_player, 'animation_finished')
+	await tooltip.animation_player.animation_finished
 
 func summon_spell_tooltip(target, spell):
 	summon_tooltip(target, "[b]%s[/b]\n%s" % [spell.get_name(), spell.get_text()])
@@ -203,16 +203,16 @@ func summon_sticky_tooltip(target, sticky):
 	summon_tooltip(target, "[b]%s[/b]\n%s" % [sticky.get_name(), sticky.get_text()])
 
 func summon_delta(target, value, color):
-	var delta = delta_anim_scene.instance()
+	var delta = delta_anim_scene.instantiate()
 	var pos = target.get_global_rect().position
 	var fadeup = pos.y >= 80
-	delta.margin_top = pos.y - 80 if fadeup else (pos.y + target.rect_size.y)
-	delta.margin_left = pos.x + (target.rect_size.x / 2) - 25
+	delta.offset_top = pos.y - 80 if fadeup else (pos.y + target.size.y)
+	delta.offset_left = pos.x + (target.size.x / 2) - 25
 	get_node("/root").add_child(delta)
 	delta.play_text_and_color(("+" if value > 0 else "") + str(value), color, fadeup)
 
 func summon_confirm(text):
-	var confirm = confirm_popup_scene.instance()
+	var confirm = confirm_popup_scene.instantiate()
 	confirm.text = text
 	get_node("/root").add_child(confirm)
 	return confirm
@@ -221,7 +221,7 @@ func summon_notification(text, sticky=false, on_click=null):
 	scene_loader.notification.push_notification(text, sticky, on_click)
 
 func summon_text_entry(text, default_text):
-	var popup = text_entry_popup_scene.instance()
+	var popup = text_entry_popup_scene.instantiate()
 	popup.text = text
 	popup.default_text = default_text
 	get_node("/root").add_child(popup)
@@ -229,12 +229,12 @@ func summon_text_entry(text, default_text):
 
 func event_is_pressed(event):
 	return event is InputEventMouseButton \
-		and event.button_index == BUTTON_LEFT \
+		and event.button_index == MOUSE_BUTTON_LEFT \
 		and event.pressed
 
 func event_is_release(event):
 	return event is InputEventMouseButton \
-		and event.button_index == BUTTON_LEFT \
+		and event.button_index == MOUSE_BUTTON_LEFT \
 		and not event.pressed
 
 func tween(thing, to_pos, time):
@@ -243,8 +243,8 @@ func tween(thing, to_pos, time):
 	return tw
 
 func safe_disconnect(object, signal_, target, method):
-	if object.is_connected(signal_, target, method):
-		object.disconnect(signal_, target, method)
+	if object.is_connected(signal_, Callable(target, method)):
+		object.disconnect(signal_, Callable(target, method))
 
 func remove_tutorial_overlay():
 	if tutorial_overlay != null && tutorial_overlay.get_parent() != null:
@@ -301,7 +301,7 @@ func save():
 	}
 	var file = File.new()
 	file.open(save_path, File.WRITE)
-	file.store_line(to_json(data))
+	file.store_line(JSON.new().stringify(data))
 	file.close()
 
 func dict_has(dict, key, default):
@@ -315,7 +315,9 @@ func load():
 	var data
 	if file.file_exists(save_path):
 		file.open(save_path, File.READ)
-		data = parse_json(file.get_line())
+		var test_json_conv = JSON.new()
+		test_json_conv.parse(file.get_line())
+		data = test_json_conv.get_data()
 	else:
 		print('No save data.')
 		data = {}
@@ -343,7 +345,7 @@ func load():
 	var rules_json = dict_has(data, 'rules', null)
 	if rules_json != null:
 		var rules_saved = GameRules.new()
-		rules_saved.load_json_string(JSON.print(rules_json))
+		rules_saved.load_json_string(JSON.stringify(rules_json))
 		if compare_versions(rules.back().get_version(), rules_saved.get_version()) < 0:
 			rules.append(rules_saved)
 

@@ -3,63 +3,63 @@
 [ext_resource path="res://theme-default.tres" type="Theme" id=1]
 [ext_resource path="res://components/avatar_profile.gd" type="Script" id=2]
 [ext_resource path="res://components/avatar.tscn" type="PackedScene" id=3]
-[ext_resource path="res://fonts/Amaranth-Regular-15.tres" type="DynamicFont" id=4]
-[ext_resource path="res://art-built/challenge-button.png" type="Texture" id=5]
+[ext_resource path="res://fonts/Amaranth-Regular-15.tres" type="FontFile" id=4]
+[ext_resource path="res://art-built/challenge-button.png" type="Texture2D" id=5]
 
 [node name="avatar_profile" type="Control"]
-margin_right = 482.0
-margin_bottom = 147.0
-rect_min_size = Vector2( 0, 147 )
+offset_right = 482.0
+offset_bottom = 147.0
+custom_minimum_size = Vector2( 0, 147 )
 mouse_filter = 2
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="avatar" parent="." instance=ExtResource( 3 )]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 182.0
-margin_bottom = 182.0
-rect_scale = Vector2( 0.8, 0.8 )
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 182.0
+offset_bottom = 182.0
+scale = Vector2( 0.8, 0.8 )
 
 [node name="name_label" type="Label" parent="."]
-margin_left = 156.0
-margin_top = 3.0
-margin_right = 318.0
-margin_bottom = 33.0
+offset_left = 156.0
+offset_top = 3.0
+offset_right = 318.0
+offset_bottom = 33.0
 text = "Neyntronomous"
 
 [node name="fc_label" type="Label" parent="."]
-margin_left = 156.0
-margin_top = 28.0
-margin_right = 318.0
-margin_bottom = 58.0
-custom_fonts/font = ExtResource( 4 )
+offset_left = 156.0
+offset_top = 28.0
+offset_right = 318.0
+offset_bottom = 58.0
+theme_override_fonts/font = ExtResource( 4 )
 text = "#5248"
 
 [node name="wins_label" type="Label" parent="."]
-margin_left = 156.0
-margin_top = 49.0
-margin_right = 318.0
-margin_bottom = 79.0
+offset_left = 156.0
+offset_top = 49.0
+offset_right = 318.0
+offset_bottom = 79.0
 text = "56 Wins"
 
 [node name="online_label" type="Label" parent="."]
-margin_left = 157.0
-margin_top = 116.0
-margin_right = 435.0
-margin_bottom = 146.0
-custom_fonts/font = ExtResource( 4 )
+offset_left = 157.0
+offset_top = 116.0
+offset_right = 435.0
+offset_bottom = 146.0
+theme_override_fonts/font = ExtResource( 4 )
 text = "Last online 1 day ago"
 
 [node name="buttons" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="challenge" type="TextureButton" parent="buttons"]
-margin_left = 416.0
-margin_top = 11.0
-margin_right = 469.0
-margin_bottom = 60.0
+offset_left = 416.0
+offset_top = 11.0
+offset_right = 469.0
+offset_bottom = 60.0
 texture_normal = ExtResource( 5 )
 expand = true
 stretch_mode = 5

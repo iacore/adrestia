@@ -1,141 +1,152 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=3 uid="uid://c58ny2tsvdiqr"]
 
-[ext_resource path="res://scenes/title.gd" type="Script" id=1]
-[ext_resource path="res://theme-default.tres" type="Theme" id=2]
-[ext_resource path="res://art-built/9patch/background-title.png" type="Texture" id=3]
-[ext_resource path="res://scripts/background.gd" type="Script" id=4]
-[ext_resource path="res://art-built/logo.png" type="Texture" id=5]
-[ext_resource path="res://art-built/button-play.png" type="Texture" id=6]
-[ext_resource path="res://art-built/button-match-history.png" type="Texture" id=7]
-[ext_resource path="res://art-built/button-settings.png" type="Texture" id=8]
-[ext_resource path="res://art-built/button-friends.png" type="Texture" id=9]
-[ext_resource path="res://components/avatar_profile.tscn" type="PackedScene" id=10]
-[ext_resource path="res://sound/title.ogg" type="AudioStream" id=11]
+[ext_resource type="Script" uid="uid://cbrngtm87dcm3" path="res://scenes/title.gd" id="1"]
+[ext_resource type="Theme" path="res://theme-default.tres" id="2"]
+[ext_resource type="Texture2D" uid="uid://bmgd25tng0its" path="res://art-built/9patch/background-title.png" id="3"]
+[ext_resource type="Script" uid="uid://dwa2ht0hk30wn" path="res://scripts/background.gd" id="4"]
+[ext_resource type="Texture2D" uid="uid://6t38agqp0bqb" path="res://art-built/logo.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://d02nmdkr6g3p4" path="res://art-built/button-play.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://dt3fagmqh4q7c" path="res://art-built/button-match-history.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://blilg5usi634k" path="res://art-built/button-settings.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dac3lroovagqi" path="res://art-built/button-friends.png" id="9"]
+[ext_resource type="PackedScene" path="res://components/avatar_profile.tscn" id="10"]
+[ext_resource type="AudioStream" uid="uid://d0qrembotpyxw" path="res://sound/title.ogg" id="11"]
 
-[sub_resource type="Animation" id=1]
+[sub_resource type="Animation" id="1"]
 resource_name = "fade_in"
 tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("fade_in_rect:color")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.5, 1 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("fade_in_rect:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [ true, false ]
+"values": [true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ygloa"]
+_data = {
+&"fade_in": SubResource("1")
 }
 
 [node name="root" type="Node"]
-script = ExtResource( 1 )
+script = ExtResource("1")
 __meta__ = {
-"_edit_vertical_guides_": [  ]
+"_edit_vertical_guides_": []
 }
 
 [node name="ui" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 2 )
+theme = ExtResource("2")
 
-[node name="bg" type="Sprite" parent="ui"]
-texture = ExtResource( 3 )
+[node name="bg" type="Sprite2D" parent="ui"]
+texture = ExtResource("3")
 centered = false
 region_enabled = true
-region_rect = Rect2( 0, 0, 540, 960 )
-script = ExtResource( 4 )
+region_rect = Rect2(0, 0, 540, 960)
+script = ExtResource("4")
 
 [node name="logo" type="TextureRect" parent="ui"]
+layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -223.0
-margin_top = 91.0
-margin_right = 223.0
-margin_bottom = 202.0
-texture = ExtResource( 5 )
-expand = true
+offset_left = -223.0
+offset_top = 91.0
+offset_right = 223.0
+offset_bottom = 202.0
+texture = ExtResource("5")
+expand_mode = 1
 stretch_mode = 6
 
 [node name="play_button" type="TextureButton" parent="ui"]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -195.0
-margin_top = -375.0
-margin_right = 195.0
-margin_bottom = -259.0
-texture_normal = ExtResource( 6 )
-expand = true
+offset_left = -195.0
+offset_top = -375.0
+offset_right = 195.0
+offset_bottom = -259.0
+texture_normal = ExtResource("6")
 
 [node name="match_history_button" type="TextureButton" parent="ui"]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -195.0
-margin_top = -241.0
-margin_right = 195.0
-margin_bottom = -167.0
-texture_normal = ExtResource( 7 )
-expand = true
+offset_left = -195.0
+offset_top = -241.0
+offset_right = 195.0
+offset_bottom = -167.0
+texture_normal = ExtResource("7")
 
 [node name="settings_button" type="TextureButton" parent="ui"]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -195.0
-margin_top = -149.0
-margin_right = -9.0
-margin_bottom = -75.0
-texture_normal = ExtResource( 8 )
-expand = true
+offset_left = -195.0
+offset_top = -149.0
+offset_right = -9.0
+offset_bottom = -75.0
+texture_normal = ExtResource("8")
 stretch_mode = 5
 
 [node name="friends_button" type="TextureButton" parent="ui"]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = 9.0
-margin_top = -149.0
-margin_right = 195.0
-margin_bottom = -75.0
-texture_normal = ExtResource( 9 )
-expand = true
+offset_left = 9.0
+offset_top = -149.0
+offset_right = 195.0
+offset_bottom = -75.0
+texture_normal = ExtResource("9")
 stretch_mode = 5
 
-[node name="avatar_profile" parent="ui" instance=ExtResource( 10 )]
+[node name="avatar_profile" parent="ui" instance=ExtResource("10")]
+anchors_preset = 0
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -241.0
-margin_top = 316.0
-margin_right = 241.0
-margin_bottom = 463.0
+offset_left = -241.0
+offset_top = 316.0
+offset_right = 241.0
+offset_bottom = 463.0
 
 [node name="fade_in_rect" type="ColorRect" parent="."]
 visible = false
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color( 1, 1, 1, 0 )
+color = Color(1, 1, 1, 0)
 
 [node name="animation_player" type="AnimationPlayer" parent="."]
-anims/fade_in = SubResource( 1 )
+libraries = {
+&"": SubResource("AnimationLibrary_ygloa")
+}
 
 [node name="audio_stream_player" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 11 )
-
+stream = ExtResource("11")

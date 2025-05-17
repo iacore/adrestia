@@ -2,17 +2,17 @@
 
 [ext_resource path="res://scenes/game.gd" type="Script" id=1]
 [ext_resource path="res://theme-default.tres" type="Theme" id=2]
-[ext_resource path="res://art-built/9patch/background-game.png" type="Texture" id=3]
+[ext_resource path="res://art-built/9patch/background-game.png" type="Texture2D" id=3]
 [ext_resource path="res://scripts/background.gd" type="Script" id=4]
 [ext_resource path="res://components/game_avatar.tscn" type="PackedScene" id=5]
-[ext_resource path="res://fonts/Amaranth-Regular-24.tres" type="DynamicFont" id=6]
+[ext_resource path="res://fonts/Amaranth-Regular-24.tres" type="FontFile" id=6]
 [ext_resource path="res://components/sticky_list.tscn" type="PackedScene" id=7]
 [ext_resource path="res://components/spell_button_list.tscn" type="PackedScene" id=8]
 [ext_resource path="res://components/mana_bar.tscn" type="PackedScene" id=9]
-[ext_resource path="res://art-built/button-cast.png" type="Texture" id=10]
+[ext_resource path="res://art-built/button-cast.png" type="Texture2D" id=10]
 [ext_resource path="res://components/countdown_timer.tscn" type="PackedScene" id=11]
 [ext_resource path="res://components/spell_select.tscn" type="PackedScene" id=12]
-[ext_resource path="res://art-built/close-x.png" type="Texture" id=13]
+[ext_resource path="res://art-built/close-x.png" type="Texture2D" id=13]
 
 [sub_resource type="StyleBoxFlat" id=1]
 
@@ -49,74 +49,74 @@ length = 0.5
 loop = false
 step = 0.05
 tracks/0/type = "value"
-tracks/0/path = NodePath("end_turn_button:margin_left")
+tracks/0/path = NodePath("end_turn_button:offset_left")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array( 0, 0.1, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
 "update": 0,
 "values": [ -124.0, -130.0, 64.0 ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("end_turn_button:margin_right")
+tracks/1/path = NodePath("end_turn_button:offset_right")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.1, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array( 0, 0.1, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
 "update": 0,
 "values": [ 57.0, 51.0, 245.0 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("spell_select:margin_top")
+tracks/2/path = NodePath("spell_select:offset_top")
 tracks/2/interp = 2
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = false
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ -173.0, 72.0 ]
 }
 tracks/3/type = "value"
-tracks/3/path = NodePath("spell_select:margin_bottom")
+tracks/3/path = NodePath("spell_select:offset_bottom")
 tracks/3/interp = 2
 tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = false
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ -13.0, 232.0 ]
 }
 tracks/4/type = "value"
-tracks/4/path = NodePath("countdown_timer:margin_left")
+tracks/4/path = NodePath("countdown_timer:offset_left")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0, 0.1, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array( 0, 0.1, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
 "update": 0,
 "values": [ 16.0, 26.0, -134.0 ]
 }
 tracks/5/type = "value"
-tracks/5/path = NodePath("countdown_timer:margin_right")
+tracks/5/path = NodePath("countdown_timer:offset_right")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/imported = false
 tracks/5/enabled = true
 tracks/5/keys = {
-"times": PoolRealArray( 0, 0.1, 0.5 ),
-"transitions": PoolRealArray( 1, 1, 1 ),
+"times": PackedFloat32Array( 0, 0.1, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
 "update": 0,
 "values": [ 80.0, 90.0, -70.0 ]
 }
@@ -131,8 +131,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -140,7 +140,7 @@ size_flags_vertical = 1
 theme = ExtResource( 2 )
 _sections_unfolded = [ "Margin", "Mouse", "Theme" ]
 
-[node name="bg" type="Sprite" parent="ui" index="0"]
+[node name="bg" type="Sprite2D" parent="ui" index="0"]
 
 position = Vector2( -1.70459, 1.70459 )
 texture = ExtResource( 3 )
@@ -156,25 +156,25 @@ anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -177.0
-margin_bottom = 15.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_top = -177.0
+offset_bottom = 15.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_styles/panel = SubResource( 1 )
+theme_override_styles/panel = SubResource( 1 )
 _sections_unfolded = [ "Anchor", "Rect", "custom_styles" ]
 
 [node name="enemy_avatar" parent="ui" index="2" instance=ExtResource( 5 )]
 
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -214.0
-margin_top = 39.0
-margin_right = -174.0
-margin_bottom = 79.0
+offset_left = -214.0
+offset_top = 39.0
+offset_right = -174.0
+offset_bottom = 79.0
 
 [node name="enemy_name" type="Label" parent="ui" index="3"]
 
@@ -182,17 +182,17 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 17.0
-margin_top = 15.0
-margin_right = 354.0
-margin_bottom = 55.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = 17.0
+offset_top = 15.0
+offset_right = 354.0
+offset_bottom = 55.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 4
-custom_fonts/font = ExtResource( 6 )
+theme_override_fonts/font = ExtResource( 6 )
 text = "EnemyName"
 align = 1
 percent_visible = 1.0
@@ -202,49 +202,49 @@ _sections_unfolded = [ "custom_fonts" ]
 
 [node name="enemy_stickies" parent="ui" index="4" instance=ExtResource( 7 )]
 
-margin_left = 10.0
-margin_top = 81.0
-margin_right = -217.0
-margin_bottom = 215.0
+offset_left = 10.0
+offset_top = 81.0
+offset_right = -217.0
+offset_bottom = 215.0
 _sections_unfolded = [ "Anchor", "Margin", "Mouse", "Rect", "Theme" ]
 
 [node name="enemy_spell_list" parent="ui" index="5" instance=ExtResource( 8 )]
 
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -185.0
-margin_top = 232.0
-margin_right = 185.0
-margin_bottom = 382.0
+offset_left = -185.0
+offset_top = 232.0
+offset_right = 185.0
+offset_bottom = 382.0
 _sections_unfolded = [ "Anchor", "Margin", "Mouse", "Rect", "Theme" ]
 
 [node name="my_mana_bar" parent="ui" index="6" instance=ExtResource( 9 )]
 
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 224.0
-margin_top = -245.0
-margin_right = 264.0
-margin_bottom = -205.0
+offset_left = 224.0
+offset_top = -245.0
+offset_right = 264.0
+offset_bottom = -205.0
 
 [node name="my_avatar" parent="ui" index="7" instance=ExtResource( 5 )]
 
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 21.0
-margin_top = -382.0
-margin_right = 61.0
-margin_bottom = -342.0
+offset_left = 21.0
+offset_top = -382.0
+offset_right = 61.0
+offset_bottom = -342.0
 flipped = true
 
 [node name="my_stickies" parent="ui" index="8" instance=ExtResource( 7 )]
 
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = 221.0
-margin_top = -385.0
-margin_right = -21.0
-margin_bottom = -251.0
+offset_left = 221.0
+offset_top = -385.0
+offset_right = -21.0
+offset_bottom = -251.0
 _sections_unfolded = [ "Anchor", "Margin", "Mouse", "Rect", "Theme" ]
 
 [node name="my_spell_list" parent="ui" index="9" instance=ExtResource( 8 )]
@@ -253,10 +253,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -185.0
-margin_top = -537.0
-margin_right = 185.0
-margin_bottom = -387.0
+offset_left = -185.0
+offset_top = -537.0
+offset_right = 185.0
+offset_bottom = -387.0
 _sections_unfolded = [ "Anchor", "Margin", "Mouse", "Rect", "Theme" ]
 slots_to_show = 3
 
@@ -273,19 +273,19 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -124.0
-margin_top = -162.0
-margin_right = 57.0
-margin_bottom = -74.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = -124.0
+offset_top = -162.0
+offset_right = 57.0
+offset_bottom = -74.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 focus_mode = 2
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 toggle_mode = false
-enabled_focus_mode = 2
+focus_mode = 2
 shortcut = null
 group = null
 texture_normal = ExtResource( 10 )
@@ -297,21 +297,21 @@ _sections_unfolded = [ "Anchor", "Margin", "Rect", "Textures" ]
 
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_left = 16.0
-margin_top = -151.0
-margin_right = 80.0
-margin_bottom = -87.0
+offset_left = 16.0
+offset_top = -151.0
+offset_right = 80.0
+offset_bottom = -87.0
 
 [node name="spell_select" parent="ui" index="13" instance=ExtResource( 12 )]
 
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
-margin_left = -270.0
-margin_top = -173.0
-margin_right = 270.0
-margin_bottom = -13.0
-rect_min_size = Vector2( 540, 160 )
+offset_left = -270.0
+offset_top = -173.0
+offset_right = 270.0
+offset_bottom = -13.0
+custom_minimum_size = Vector2( 540, 160 )
 _sections_unfolded = [ "Anchor", "Margin", "Theme" ]
 
 [node name="animation_player" type="AnimationPlayer" parent="ui" index="14"]
@@ -330,19 +330,19 @@ anchor_left = 1.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
-margin_left = -50.0
-margin_top = 10.0
-margin_right = -10.0
-margin_bottom = 50.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = -50.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 50.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 focus_mode = 2
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
 toggle_mode = false
-enabled_focus_mode = 2
+focus_mode = 2
 shortcut = null
 group = null
 texture_normal = ExtResource( 13 )
@@ -356,12 +356,12 @@ anchor_left = 0.5
 anchor_top = 0.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -185.0
-margin_top = 233.0
-margin_right = 187.0
-margin_bottom = -384.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+offset_left = -185.0
+offset_top = 233.0
+offset_right = 187.0
+offset_bottom = -384.0
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1

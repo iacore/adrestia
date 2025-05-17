@@ -2,13 +2,13 @@
 
 [ext_resource path="res://scenes/friends.gd" type="Script" id=1]
 [ext_resource path="res://theme-default.tres" type="Theme" id=2]
-[ext_resource path="res://art-built/9patch/background-title.png" type="Texture" id=3]
+[ext_resource path="res://art-built/9patch/background-title.png" type="Texture2D" id=3]
 [ext_resource path="res://scripts/background.gd" type="Script" id=4]
-[ext_resource path="res://fonts/Amaranth-Regular-60.tres" type="DynamicFont" id=5]
-[ext_resource path="res://fonts/Amaranth-Regular-24.tres" type="DynamicFont" id=6]
+[ext_resource path="res://fonts/Amaranth-Regular-60.tres" type="FontFile" id=5]
+[ext_resource path="res://fonts/Amaranth-Regular-24.tres" type="FontFile" id=6]
 [ext_resource path="res://components/avatar_profile.tscn" type="PackedScene" id=7]
-[ext_resource path="res://art-built/button-back-small.png" type="Texture" id=8]
-[ext_resource path="res://art-built/button-add-friend.png" type="Texture" id=9]
+[ext_resource path="res://art-built/button-back-small.png" type="Texture2D" id=8]
+[ext_resource path="res://art-built/button-add-friend.png" type="Texture2D" id=9]
 
 [node name="root" type="Node"]
 script = ExtResource( 1 )
@@ -18,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 
-[node name="bg" type="Sprite" parent="ui"]
+[node name="bg" type="Sprite2D" parent="ui"]
 texture = ExtResource( 3 )
 centered = false
 region_enabled = true
@@ -27,25 +27,25 @@ script = ExtResource( 4 )
 
 [node name="title_label" type="Label" parent="ui"]
 anchor_right = 1.0
-margin_top = 50.0
-margin_bottom = 124.0
-custom_fonts/font = ExtResource( 5 )
+offset_top = 50.0
+offset_bottom = 124.0
+theme_override_fonts/font = ExtResource( 5 )
 text = "Friends"
 align = 1
 
 [node name="fc_label" type="Label" parent="ui"]
 anchor_right = 1.0
-margin_top = 125.0
-margin_bottom = 199.0
+offset_top = 125.0
+offset_bottom = 199.0
 text = "Your Friend Code: 31415926"
 align = 1
 
 [node name="offline_warning" type="Label" parent="ui"]
 visible = false
 anchor_right = 1.0
-margin_top = 164.0
-margin_bottom = 238.0
-custom_fonts/font = ExtResource( 6 )
+offset_top = 164.0
+offset_bottom = 238.0
+theme_override_fonts/font = ExtResource( 6 )
 text = "offline"
 align = 1
 
@@ -53,35 +53,35 @@ align = 1
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -244.0
-margin_top = 172.0
-margin_right = 242.0
-margin_bottom = -231.0
+offset_left = -244.0
+offset_top = 172.0
+offset_right = 242.0
+offset_bottom = -231.0
 
 [node name="v_box_container" type="VBoxContainer" parent="ui/scroll_container"]
-margin_bottom = 501.0
-custom_constants/separation = 30
+offset_bottom = 501.0
+theme_override_constants/separation = 30
 
 [node name="avatar_profile" parent="ui/scroll_container/v_box_container" instance=ExtResource( 7 )]
-margin_right = 0.0
+offset_right = 0.0
 
 [node name="avatar_profile2" parent="ui/scroll_container/v_box_container" instance=ExtResource( 7 )]
-margin_top = 177.0
-margin_right = 0.0
-margin_bottom = 324.0
+offset_top = 177.0
+offset_right = 0.0
+offset_bottom = 324.0
 
 [node name="avatar_profile3" parent="ui/scroll_container/v_box_container" instance=ExtResource( 7 )]
-margin_top = 354.0
-margin_right = 0.0
-margin_bottom = 501.0
+offset_top = 354.0
+offset_right = 0.0
+offset_bottom = 501.0
 
 [node name="back_button" type="TextureButton" parent="ui"]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = -30.0
-margin_top = -100.0
-margin_right = 151.0
-margin_bottom = -12.0
+offset_left = -30.0
+offset_top = -100.0
+offset_right = 151.0
+offset_bottom = -12.0
 texture_normal = ExtResource( 8 )
 expand = true
 stretch_mode = 5
@@ -91,10 +91,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -196.0
-margin_top = -208.0
-margin_right = 196.0
-margin_bottom = -134.0
+offset_left = -196.0
+offset_top = -208.0
+offset_right = 196.0
+offset_bottom = -134.0
 texture_normal = ExtResource( 9 )
 expand = true
 stretch_mode = 5

@@ -14,8 +14,8 @@ extends Node
 # See
 # http://docs.godotengine.org/en/latest/tutorials/io/background_loading.html
 
-onready var g = get_node('/root/global')
-onready var root = get_tree().get_root()
+@onready var g = get_node('/root/global')
+@onready var root = get_tree().get_root()
 const transition_scene = preload('res://components/transition_bg.tscn')
 const notification_scene = preload('res://components/notification.tscn')
 var scene_holder
@@ -26,8 +26,8 @@ var current_scene
 var playing_backwards = false
 
 func _ready():
-	transition = transition_scene.instance()
-	notification = notification_scene.instance()
+	transition = transition_scene.instantiate()
+	notification = notification_scene.instantiate()
 	current_scene = root.get_child(root.get_child_count() - 1)
 	scene_holder = Node.new()
 	add_child(scene_holder)
@@ -45,8 +45,8 @@ func _process(time):
 		return
 
 	# Busy loop for a frame (maybe this is bad)
-	var t = OS.get_ticks_msec()
-	while OS.get_ticks_msec() < t + 16:
+	var t = Time.get_ticks_msec()
+	while Time.get_ticks_msec() < t + 16:
 		var err = loader.poll()
 		if err == ERR_FILE_EOF: # Load finished.
 			# Don't advance scene until animation is done.
@@ -63,9 +63,9 @@ func _process(time):
 
 func goto_scene(scene_name, backwards=false):
 	if transition and transition.animation_player and transition.animation_player.is_playing():
-		yield(transition.animation_player, 'animation_finished')
+		await transition.animation_player.animation_finished
 	g.close_tooltip()
-	loader = ResourceLoader.load_interactive('res://scenes/%s.tscn' % [scene_name])
+	loader = ResourceLoader.load_threaded_request('res://scenes/%s.tscn' % [scene_name])
 	set_process(true)
 	transition.visible = true
 	root.add_child(transition)
@@ -82,10 +82,10 @@ func update_progress():
 
 func set_new_scene(scene_resource):
 	if transition and transition.animation_player and transition.animation_player.is_playing():
-		yield(transition.animation_player, 'animation_finished')
+		await transition.animation_player.animation_finished
 
 	current_scene.queue_free()
-	current_scene = scene_resource.instance()
+	current_scene = scene_resource.instantiate()
 	scene_holder.add_child(current_scene)
 	notification.get_parent().remove_child(notification)
 	current_scene.add_child(notification)
@@ -94,5 +94,5 @@ func set_new_scene(scene_resource):
 		transition.animation_player.play('slide_out')
 	else:
 		transition.animation_player.play_backwards('slide_in')
-	yield(transition.animation_player, 'animation_finished')
+	await transition.animation_player.animation_finished
 	root.remove_child(transition)

@@ -1,10 +1,10 @@
 extends Control
 
-onready var sticky_display_scene = preload('res://components/sticky_display.tscn')
+@onready var sticky_display_scene = preload('res://components/sticky_display.tscn')
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var stickies_hbox = $grid
+@onready var stickies_hbox = $grid
 
 var sticky_displays = []
 
@@ -16,7 +16,7 @@ func redraw(stickies):
 	g.clear_children(stickies_hbox)
 	sticky_displays = []
 	for sticky in stickies:
-		var sticky_display = sticky_display_scene.instance()
+		var sticky_display = sticky_display_scene.instantiate()
 		sticky_display.set_sticky_instance(sticky)
 		stickies_hbox.add_child(sticky_display)
 		sticky_display.appear()
@@ -30,7 +30,7 @@ func flash_sticky(index):
 func redraw_append(stickies):
 	if stickies_hbox == null: return
 	var sticky = stickies[-1]
-	var sticky_display = sticky_display_scene.instance()
+	var sticky_display = sticky_display_scene.instantiate()
 	sticky_display.set_sticky_instance(sticky)
 	stickies_hbox.add_child(sticky_display)
 	sticky_display.fadein()

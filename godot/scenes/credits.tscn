@@ -2,13 +2,13 @@
 
 [ext_resource path="res://scenes/credits.gd" type="Script" id=1]
 [ext_resource path="res://theme-default.tres" type="Theme" id=2]
-[ext_resource path="res://art-built/9patch/background-title.png" type="Texture" id=3]
+[ext_resource path="res://art-built/9patch/background-title.png" type="Texture2D" id=3]
 [ext_resource path="res://scripts/background.gd" type="Script" id=4]
-[ext_resource path="res://art-built/button-back-small.png" type="Texture" id=5]
-[ext_resource path="res://fonts/Amaranth-Bold-15.tres" type="DynamicFont" id=6]
-[ext_resource path="res://fonts/Amaranth-Regular-15.tres" type="DynamicFont" id=7]
-[ext_resource path="res://fonts/Amaranth-Regular-60.tres" type="DynamicFont" id=8]
-[ext_resource path="res://art-built/godot_logo.png" type="Texture" id=9]
+[ext_resource path="res://art-built/button-back-small.png" type="Texture2D" id=5]
+[ext_resource path="res://fonts/Amaranth-Bold-15.tres" type="FontFile" id=6]
+[ext_resource path="res://fonts/Amaranth-Regular-15.tres" type="FontFile" id=7]
+[ext_resource path="res://fonts/Amaranth-Regular-60.tres" type="FontFile" id=8]
+[ext_resource path="res://art-built/godot_logo.png" type="Texture2D" id=9]
 
 [node name="root" type="Node"]
 script = ExtResource( 1 )
@@ -18,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 2 )
 
-[node name="bg" type="Sprite" parent="ui"]
+[node name="bg" type="Sprite2D" parent="ui"]
 texture = ExtResource( 3 )
 centered = false
 region_enabled = true
@@ -28,10 +28,10 @@ script = ExtResource( 4 )
 [node name="back_button" type="TextureButton" parent="ui"]
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_left = -30.0
-margin_top = -100.0
-margin_right = 151.0
-margin_bottom = -12.0
+offset_left = -30.0
+offset_top = -100.0
+offset_right = 151.0
+offset_bottom = -12.0
 texture_normal = ExtResource( 5 )
 expand = true
 stretch_mode = 5
@@ -39,14 +39,14 @@ stretch_mode = 5
 [node name="content" type="RichTextLabel" parent="ui"]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -220.0
-margin_top = 150.0
-margin_right = 220.0
-margin_bottom = 409.0
-custom_fonts/bold_font = ExtResource( 6 )
-custom_fonts/normal_font = ExtResource( 7 )
+offset_left = -220.0
+offset_top = 150.0
+offset_right = 220.0
+offset_bottom = 409.0
+theme_override_fonts/bold_font = ExtResource( 6 )
+theme_override_fonts/normal_font = ExtResource( 7 )
 bbcode_enabled = true
-bbcode_text = "Copyright © 2019 Team Adrestia
+text = "Copyright © 2019 Team Adrestia
 (Dmitri Sclear, Jim Zhang, and Charles Zinn)
 
 Adrestia is licenced under the [url=https://adrestia.neynt.ca]MIT License[/url].
@@ -68,19 +68,19 @@ scroll_active = false
 
 [node name="title_label" type="Label" parent="ui"]
 anchor_right = 1.0
-margin_top = 50.0
-margin_bottom = 124.0
-custom_fonts/font = ExtResource( 8 )
+offset_top = 50.0
+offset_bottom = 124.0
+theme_override_fonts/font = ExtResource( 8 )
 text = "Credits"
 align = 1
 
 [node name="godot_logo" type="TextureRect" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -205.954
-margin_top = 423.685
-margin_right = 194.046
-margin_bottom = 573.685
+offset_left = -205.954
+offset_top = 423.685
+offset_right = 194.046
+offset_bottom = 573.685
 texture = ExtResource( 9 )
 expand = true
 stretch_mode = 6

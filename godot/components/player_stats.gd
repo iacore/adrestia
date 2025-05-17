@@ -1,12 +1,12 @@
 extends Control
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var hp_label = $hp_label
-onready var mp_label = $mp_label
-onready var mp_gain_label = $mp_gain_label
-onready var mp_icons = $mp_icons
-onready var mp_icon_template = $mp_icons/mp_icon_template
+@onready var hp_label = $hp_label
+@onready var mp_label = $mp_label
+@onready var mp_gain_label = $mp_gain_label
+@onready var mp_icons = $mp_icons
+@onready var mp_icon_template = $mp_icons/mp_icon_template
 
 var old_hp = null
 var old_mp = null
@@ -32,7 +32,7 @@ func redraw(player, mp_left = null):
 		for i in range(mp_max):
 			var mp_icon = mp_icon_template.duplicate()
 			mp_icon.visible = true
-			mp_icon.rect_position.x += 20 * (mp_max - i - 1)
+			mp_icon.position.x += 20 * (mp_max - i - 1)
 			mp_icons.add_child(mp_icon)
 	for i in range(mp_max):
 		var mp_icon = mp_icons.get_child(mp_max - i - 1)

@@ -12,7 +12,7 @@ enum {
 	#STATE_SNAPPED,
 }
 
-onready var root = get_node('/root')
+@onready var root = get_node('/root')
 var state = STATE_IDLE
 var drag_start = null
 var drag_end = null
@@ -30,7 +30,7 @@ var on_drop = null # funcref()
 func _input(event):
 	match state:
 		STATE_TRACKING:
-			if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 				state = STATE_IDLE
 			elif event is InputEventMouseMotion:
 				var pos = event.position
@@ -41,14 +41,14 @@ func _input(event):
 					self.on_lift.call_func()
 					state = STATE_DRAGGING
 		STATE_DRAGGING:
-			if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and not event.pressed:
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 				var drag_image = self.drag_image
 				end_drag()
 				self.on_drop.call_func(drag_image)
 				state = STATE_IDLE
 			elif event is InputEventMouseMotion:
 				var pos = event.position
-				self.drag_image.rect_position = pos + self.drag_image_ofs
+				self.drag_image.position = pos + self.drag_image_ofs
 	
 func clone_image(node):
 	var image = TextureRect.new()
@@ -56,8 +56,8 @@ func clone_image(node):
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	if node is TextureButton:
 		image.texture = node.texture_normal
-		image.rect_size = node.rect_size
-		image.rect_position = node.get_global_position()
+		image.size = node.size
+		image.position = node.get_global_position()
 	else:
 		print('Warning: Attempted to clone unsupported type %s' % node.get_type())
 		return

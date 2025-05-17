@@ -1,4 +1,4 @@
-extends Sprite
+extends Sprite2D
 
 var ofs = Vector2(0.0, 0.0)
 var texture_size = Vector2(1.0, 1.0)
@@ -16,5 +16,5 @@ func _process(time):
 func _ready():
 	texture_size = self.texture.get_size()
 	on_resize()
-	get_tree().get_root().connect('size_changed', self, 'on_resize')
+	get_tree().get_root().connect('size_changed', Callable(self, 'on_resize'))
 	set_process(true)

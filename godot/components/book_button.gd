@@ -2,14 +2,14 @@ extends Control
 
 signal pressed
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var button = $vbox/button
-onready var label = $vbox/label
-var book = null setget set_book
+@onready var button = $vbox/button
+@onready var label = $vbox/label
+var book = null: set = set_book
 
 func _ready():
-	button.connect('pressed', self, 'on_pressed')
+	button.connect('pressed', Callable(self, 'on_pressed'))
 	redraw()
 
 func on_pressed():

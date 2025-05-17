@@ -26,7 +26,7 @@ const timeout_ms = 10000
 const floop_interval_ms = 2000
 const retry_sec = 3.0
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
 var peer
 var data_buffer
@@ -49,9 +49,9 @@ var status = OFFLINE
 func _ready():
 	connect_timer = Timer.new()
 	connect_timer.set_one_shot(true)
-	connect_timer.set_timer_process_mode(0)
+	connect_timer.set_timer_process_callback(0)
 	connect_timer.set_wait_time(retry_sec)
-	connect_timer.connect('timeout', self, 'reconnect')
+	connect_timer.connect('timeout', Callable(self, 'reconnect'))
 	handlers['push_notifications'] = funcref(self, 'on_notification')
 	handlers['push_challenge'] = funcref(self, 'on_challenge')
 	handlers['disconnect_old_login'] = funcref(self, 'on_disconnect_old_login')
@@ -63,7 +63,7 @@ func _ready():
 func _process(time):
 	if peer.get_status() == StreamPeerTCP.STATUS_CONNECTING: return
 	if (peer.get_status() != StreamPeerTCP.STATUS_CONNECTED
-			|| OS.get_ticks_msec() - last_recv_ms > timeout_ms):
+			|| Time.get_ticks_msec() - last_recv_ms > timeout_ms):
 		status = OFFLINE
 		emit_signal('disconnected')
 		print('Disconnected. Will retry in %.1f seconds.' % [retry_sec])
@@ -76,12 +76,12 @@ func _process(time):
 		print('Connecting...')
 		establish_connection(g.version_to_string(g.app_version), funcref(self, 'on_network_ready'))
 
-	if OS.get_ticks_msec() - last_send_ms > floop_interval_ms:
+	if Time.get_ticks_msec() - last_send_ms > floop_interval_ms:
 		floop(funcref(self, 'on_floop'))
 
 	var bytes = self.peer.get_available_bytes()
 	if bytes > 0:
-		last_recv_ms = OS.get_ticks_msec()
+		last_recv_ms = Time.get_ticks_msec()
 		match self.peer.get_partial_data(bytes):
 			[var err, var data]:
 				self.data_buffer.append_array(data)
@@ -93,7 +93,9 @@ func _process(time):
 		while i < self.data_buffer.size():
 			if self.data_buffer[i] == 10: # newline
 				var message = self.data_buffer.subarray(0, i - 1).get_string_from_utf8()
-				var json = JSON.parse(message).result
+				var test_json_conv = JSON.new()
+				test_json_conv.parse(message).result
+				var json = test_json_conv.get_data()
 				if not json or not json.has(handler_key):
 					print('Networking: Got a message with no handler_key.')
 					break
@@ -122,10 +124,12 @@ func _process(time):
 			self.data_buffer = self.data_buffer.subarray(i + 1, -1)
 
 func to_packet(s):
-	return (s + '\n').to_utf8()
+	return (s + '\n').to_utf8_buffer()
 
 func get_handler_name(request):
-	return JSON.parse(request).result[handler_key]
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(request).result[handler_key]
+	return test_json_conv.get_data()
 
 func reconnect():
 	if old_login:
@@ -134,14 +138,14 @@ func reconnect():
 	print('Attempting to reconnect.')
 	self.peer.connect_to_host(host, port)
 	self.peer.set_no_delay(true)
-	self.data_buffer = PoolByteArray()
-	last_send_ms = OS.get_ticks_msec()
-	last_recv_ms = OS.get_ticks_msec()
+	self.data_buffer = PackedByteArray()
+	last_send_ms = Time.get_ticks_msec()
+	last_recv_ms = Time.get_ticks_msec()
 	set_process(true)
 
 func on_network_ready(response):
 	if response[code_key] == 200:
-		g.update_rules(JSON.print(response.game_rules))
+		g.update_rules(JSON.stringify(response.game_rules))
 		if g.auth_uuid != null and not always_register_new_account:
 			authenticate(g.auth_uuid, g.auth_pwd, funcref(self, 'on_authenticated'))
 		else:
@@ -189,9 +193,9 @@ func is_online():
 	return status == ONLINE
 
 func register_handlers(obj, on_connected, on_disconnected, on_out_of_date):
-	self.connect('connected', obj, on_connected)
-	self.connect('disconnected', obj, on_disconnected)
-	self.connect('out_of_date', obj, on_out_of_date)
+	self.connect('connected', Callable(obj, on_connected))
+	self.connect('disconnected', Callable(obj, on_disconnected))
+	self.connect('out_of_date', Callable(obj, on_out_of_date))
 	if status == ONLINE:
 		obj.call(on_connected)
 	elif status == OUT_OF_DATE:
@@ -216,7 +220,7 @@ func on_disconnect_old_login(message):
 	g.summon_notification("It looks like you logged in from somewhere else.", true, funcref(self, 'renew_login'))
 
 func renew_login():
-	var confirmed = yield(g.summon_confirm('It looks like you logged in from somewhere else. Reconnect?'), 'popup_closed')
+	var confirmed = await g.summon_confirm('It looks like you logged in from somewhere else. Reconnect?').popup_closed
 	if confirmed:
 		old_login = false
 		reconnect()
@@ -228,7 +232,7 @@ var latest_duel_message
 func on_challenge_pressed():
 	var message = latest_duel_message
 	if g.backend == null:
-		var confirmed = yield(g.summon_confirm('Accept duel request from %s?' % [message.user_name]), 'popup_closed')
+		var confirmed = await g.summon_confirm('Accept duel request from %s?' % [message.user_name]).popup_closed
 		if confirmed:
 			g.backend = OnlineBackend.new(g, message.friend_code)
 			g.scene_loader.goto_scene('game_book_select')
@@ -253,7 +257,7 @@ func register_handler(handler_name, callback):
 				break
 
 func api_call_base(name, args, callback):
-	last_send_ms = OS.get_ticks_msec()
+	last_send_ms = Time.get_ticks_msec()
 	if status == OFFLINE:
 		print('Network call %s failed because disconnected.' % [name])
 		return false

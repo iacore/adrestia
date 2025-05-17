@@ -1,11 +1,11 @@
 extends Control
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var texture = $texture
-onready var glow_texture = $texture/glow_texture
-onready var duration_label = $duration_label
-onready var animation_player = $animation_player
+@onready var texture = $texture
+@onready var glow_texture = $texture/glow_texture
+@onready var duration_label = $duration_label
+@onready var animation_player = $animation_player
 
 var sticky = null
 var sticky_amount = 0

@@ -2,21 +2,21 @@ extends Control
 
 signal pressed
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var texture_button = $ui/vbox/texture_button
-onready var glow_texture = $ui/vbox/texture_button/glow_texture
-onready var label = $ui/vbox/label
-onready var timer = $timer
-onready var cost = $ui/cost
-onready var mp_icon = $ui/cost/mp_icon
-onready var mp_label = $ui/cost/mp_label
-onready var unlock = $ui/unlock
-onready var padlock = $ui/unlock/padlock
-onready var animation_player = $animation_player
+@onready var texture_button = $ui/vbox/texture_button
+@onready var glow_texture = $ui/vbox/texture_button/glow_texture
+@onready var label = $ui/vbox/label
+@onready var timer = $timer
+@onready var cost = $ui/cost
+@onready var mp_icon = $ui/cost/mp_icon
+@onready var mp_label = $ui/cost/mp_label
+@onready var unlock = $ui/unlock
+@onready var padlock = $ui/unlock/padlock
+@onready var animation_player = $animation_player
 
-var spell = null setget set_spell
-var enabled = true setget set_enabled
+var spell = null: set = set_spell
+var enabled = true: set = set_enabled
 var locked = false
 var show_stats = false
 var unlockable = false
@@ -26,9 +26,9 @@ var appear_anim = false
 var was_long_pressed = false
 
 func _ready():
-	texture_button.connect('button_down', self, 'on_down')
-	texture_button.connect('button_up', self, 'on_up')
-	timer.connect('timeout', self, 'on_long_press')
+	texture_button.connect('button_down', Callable(self, 'on_down'))
+	texture_button.connect('button_up', Callable(self, 'on_up'))
+	timer.connect('timeout', Callable(self, 'on_long_press'))
 	redraw()
 	if appear_anim:
 		animation_player.play('appear')
@@ -82,7 +82,7 @@ func redraw():
 	texture_button.material = material_
 	mp_icon.material = material_
 
-	label.set('custom_colors/font_color', null if enabled else Color(0.75, 0.75, 0.75))
+	label.set('theme_override_colors/font_color', null if enabled else Color(0.75, 0.75, 0.75))
 	label.text = spell.get_name()
 	cost.visible = show_stats
 	mp_label.text = str(spell.get_cost())

@@ -1,12 +1,12 @@
 extends Control
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var background = $mover/background
-onready var ninepatch = $mover/background/nine_patch_rect
-onready var label = $mover/background/nine_patch_rect/rich_text_label
-onready var animation_player = $animation_player
-onready var timer = $timer
+@onready var background = $mover/background
+@onready var ninepatch = $mover/background/nine_patch_rect
+@onready var label = $mover/background/nine_patch_rect/rich_text_label
+@onready var animation_player = $animation_player
+@onready var timer = $timer
 
 const line_height = 26
 
@@ -22,7 +22,7 @@ var on_click = null
 
 func _ready():
 	redraw()
-	timer.connect('timeout', self, 'exit_notification')
+	timer.connect('timeout', Callable(self, 'exit_notification'))
 
 func _gui_event(event):
 	if g.event_is_pressed(event) && !animation_player.is_playing():
@@ -34,7 +34,7 @@ func exit_notification():
 		on_click.call_func()
 		on_click = null
 	animation_player.play_backwards('slide_in')
-	yield(animation_player, 'animation_finished')
+	await animation_player.animation_finished
 	if len(future_notifications) > 0:
 		callv('show_notification', future_notifications.pop_front())
 	else:
@@ -60,8 +60,8 @@ func push_notification(text_, sticky_=false, on_click_=null):
 func redraw():
 	if text == null: return
 
-	label.bbcode_text = text
-	var margin = label.margin_top - label.margin_bottom + ninepatch.margin_top - ninepatch.margin_bottom + 2
+	label.text = text
+	var margin = label.offset_top - label.offset_bottom + ninepatch.offset_top - ninepatch.offset_bottom + 2
 	var old_lines = null
 	for _unused in range(3):
 		var lines = label.get_line_count() + max(label.get_visible_line_count(), 1) - 1
@@ -69,5 +69,5 @@ func redraw():
 			break
 		old_lines = lines
 		var height = lines * line_height + margin
-		background.margin_bottom = height
-		get_tree() && yield(get_tree(), 'idle_frame')
+		background.offset_bottom = height
+		get_tree() && await get_tree().idle_frame

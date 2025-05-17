@@ -1,23 +1,23 @@
 extends Node
 
-onready var g = get_node('/root/global')
-onready var online_status = $ui/online_status
-onready var reset_account_button = $ui/reset_account_button
-onready var change_name_button = $ui/change_name_button
-onready var credits_button = $ui/credits_button
-onready var back_button = $ui/back_button
-onready var checkbox_music = $ui/checkbox_music
-onready var checkbox_sound = $ui/checkbox_sound
+@onready var g = get_node('/root/global')
+@onready var online_status = $ui/online_status
+@onready var reset_account_button = $ui/reset_account_button
+@onready var change_name_button = $ui/change_name_button
+@onready var credits_button = $ui/credits_button
+@onready var back_button = $ui/back_button
+@onready var checkbox_music = $ui/checkbox_music
+@onready var checkbox_sound = $ui/checkbox_sound
 
 func _ready():
-	credits_button.connect('pressed', self, 'on_credits_button_pressed')
-	back_button.connect('pressed', self, 'on_back_button_pressed')
-	reset_account_button.connect('pressed', self, 'on_reset_account_button_pressed')
-	change_name_button.connect('pressed', self, 'on_change_name_button_pressed')
-	checkbox_music.pressed = not g.music_muted
-	checkbox_sound.pressed = not g.sfx_muted
-	checkbox_music.connect('pressed', self, 'on_music_toggled')
-	checkbox_sound.connect('pressed', self, 'on_sound_toggled')
+	credits_button.connect('pressed', Callable(self, 'on_credits_button_pressed'))
+	back_button.connect('pressed', Callable(self, 'on_back_button_pressed'))
+	reset_account_button.connect('pressed', Callable(self, 'on_reset_account_button_pressed'))
+	change_name_button.connect('pressed', Callable(self, 'on_change_name_button_pressed'))
+	checkbox_music.button_pressed = not g.music_muted
+	checkbox_sound.button_pressed = not g.sfx_muted
+	checkbox_music.connect('pressed', Callable(self, 'on_music_toggled'))
+	checkbox_sound.connect('pressed', Callable(self, 'on_sound_toggled'))
 	g.network.register_handlers(self, 'on_connected', 'on_disconnected', 'on_out_of_date')
 
 func _notification(what):
@@ -62,7 +62,7 @@ func on_reset_account_button_pressed():
 	if not g.network.is_online():
 		g.summon_notification('Not online.')
 		return
-	if yield(g.summon_confirm('This will clear all of your in-game progress. Are you sure?'), 'popup_closed') == true:
+	if await g.summon_confirm('This will clear all of your in-game progress. Are you sure?').popup_closed == true:
 		g.network.deactivate_account(funcref(self, 'on_account_deactivated'))
 
 func on_account_deactivated(response):
@@ -78,7 +78,7 @@ func on_change_name_button_pressed():
 	if not g.network.is_online():
 		g.summon_notification('Not online.')
 		return
-	var new_name = yield(g.summon_text_entry('New name:', g.user_name), 'popup_closed')
+	var new_name = await g.summon_text_entry('New name:', g.user_name).popup_closed
 	if new_name and new_name != g.user_name:
 		g.network.change_user_name(new_name, funcref(self, 'on_username_changed'))
 	else:

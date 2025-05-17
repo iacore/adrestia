@@ -2,19 +2,19 @@ extends Control
 
 signal redrawn
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var background = $background
-onready var ninepatch = $background/nine_patch_rect
-onready var label = $background/nine_patch_rect/rich_text_label
-onready var triangle = $background/triangle
-onready var animation_player = $animation_player
+@onready var background = $background
+@onready var ninepatch = $background/nine_patch_rect
+@onready var label = $background/nine_patch_rect/rich_text_label
+@onready var triangle = $background/triangle
+@onready var animation_player = $animation_player
 
 # TODO: jim: I tried to make tooltips editable in the editor but couldn't
 # figure out how to make them update their appearance.
-export(String, MULTILINE) var text = '' setget set_text
-export(int) var x = 0
-export(int) var y = 0
+@export var text = '': set = set_text
+@export var x: int = 0
+@export var y: int = 0
 var point_down = true
 
 # reasoning: triangle height is 20
@@ -44,24 +44,24 @@ func redraw():
 	if triangle == null: return
 	if label == null: return
 
-	label.bbcode_text = text
-	var margin = label.margin_top + ninepatch.margin_top + 2
+	label.text = text
+	var margin = label.offset_top + ninepatch.offset_top + 2
 
-	var triangle_size = triangle.rect_size
+	var triangle_size = triangle.size
 	var desired_margin_left = x - floor(triangle_size.x / 2)
-	triangle.margin_left = min(get_viewport_rect().size.x - triangle_size.x - 25, max(25, desired_margin_left))
-	triangle.margin_right = triangle.margin_left + triangle_size.x
+	triangle.offset_left = min(get_viewport_rect().size.x - triangle_size.x - 25, max(25, desired_margin_left))
+	triangle.offset_right = triangle.offset_left + triangle_size.x
 	if point_down:
 		triangle.anchor_top = 1
 		triangle.anchor_bottom = 1
-		triangle.margin_top = -triangle_shift
-		triangle.rect_scale.y = 1
+		triangle.offset_top = -triangle_shift
+		triangle.scale.y = 1
 	else:
 		triangle.anchor_top = 0
 		triangle.anchor_bottom = 0
-		triangle.margin_top = triangle_shift
-		triangle.rect_scale.y = -1
-	triangle.margin_bottom = triangle.margin_top + triangle_size.y
+		triangle.offset_top = triangle_shift
+		triangle.scale.y = -1
+	triangle.offset_bottom = triangle.offset_top + triangle_size.y
 
 	# XTODO: charles: This doesn't work if any lines wrap. We want to use
 	# get_visible_line_count() instead, but there's a bug where it always returns
@@ -82,10 +82,10 @@ func redraw():
 		old_lines = lines
 		var height = lines * line_height + margin * 2
 		if point_down:
-			background.margin_top = y - height
-			background.margin_bottom = y
+			background.offset_top = y - height
+			background.offset_bottom = y
 		else:
-			background.margin_top = y
-			background.margin_bottom = y + height
-		if is_inside_tree(): yield(get_tree(), 'idle_frame')
+			background.offset_top = y
+			background.offset_bottom = y + height
+		if is_inside_tree(): await get_tree().idle_frame
 	emit_signal('redrawn')

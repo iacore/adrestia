@@ -1,15 +1,19 @@
 [remap]
 
-importer="ogg_vorbis"
-type="AudioStreamOGGVorbis"
-path="res://.import/battle.ogg-3189c8abab094d1b4584e095631f5b34.oggstr"
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dgaedklr2o24v"
+path="res://.godot/imported/battle.ogg-3189c8abab094d1b4584e095631f5b34.oggvorbisstr"
 
 [deps]
 
 source_file="res://sound/battle.ogg"
-dest_files=[ "res://.import/battle.ogg-3189c8abab094d1b4584e095631f5b34.oggstr" ]
+dest_files=["res://.godot/imported/battle.ogg-3189c8abab094d1b4584e095631f5b34.oggvorbisstr"]
 
 [params]
 
 loop=true
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

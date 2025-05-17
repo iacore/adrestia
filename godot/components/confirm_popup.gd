@@ -2,20 +2,20 @@ extends Control
 
 signal popup_closed(confirmed)
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var mouse_blocker = $mouse_blocker
-onready var big_text_wnd = $nine_patch_rect
-onready var big_text = $nine_patch_rect/rich_text_label
-onready var yes_button = $nine_patch_rect/yes_button
-onready var no_button = $nine_patch_rect/no_button
+@onready var mouse_blocker = $mouse_blocker
+@onready var big_text_wnd = $nine_patch_rect
+@onready var big_text = $nine_patch_rect/rich_text_label
+@onready var yes_button = $nine_patch_rect/yes_button
+@onready var no_button = $nine_patch_rect/no_button
 
-var text = "" setget set_text
+var text = "": set = set_text
 
 func _ready():
-	mouse_blocker.connect('gui_input', self, 'blocker_input')
-	yes_button.connect('pressed', self, 'yes_button_pressed')
-	no_button.connect('pressed', self, 'no_button_pressed')
+	mouse_blocker.connect('gui_input', Callable(self, 'blocker_input'))
+	yes_button.connect('pressed', Callable(self, 'yes_button_pressed'))
+	no_button.connect('pressed', Callable(self, 'no_button_pressed'))
 	redraw()
 
 func set_text(text_):
@@ -38,4 +38,4 @@ func blocker_input(event):
 
 func redraw():
 	if big_text == null: return
-	big_text.bbcode_text = text
+	big_text.text = text

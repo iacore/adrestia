@@ -1,7 +1,7 @@
 extends Control
 
-onready var animation_player = $animation_player
-onready var texture_rect = $texture_rect
+@onready var animation_player = $animation_player
+@onready var texture_rect = $texture_rect
 
 const margin = 40
 
@@ -20,11 +20,11 @@ func on_resize():
 	var dx = window_size.x / 2.0 + w / 2.0 + 2.0 * margin
 	var y = - (h - window_size.y) / 2.0
 
-	texture_rect.margin_top = y
-	texture_rect.margin_bottom = y + h
-	texture_rect.margin_left = x
-	texture_rect.margin_right = x + w
-	texture_rect.rect_pivot_offset = texture_rect.rect_size / 2.0
+	texture_rect.offset_top = y
+	texture_rect.offset_bottom = y + h
+	texture_rect.offset_left = x
+	texture_rect.offset_right = x + w
+	texture_rect.pivot_offset = texture_rect.size / 2.0
 
 	var pos_0 = Vector2(x, y)
 	var pos_1 = Vector2(x - dx, y)

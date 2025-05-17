@@ -1,5 +1,5 @@
 #pragma once
-#include <Godot.hpp>
+#include <godot.hpp>
 #include <Reference.hpp>
 #include <sticky_invoker.h>
 

@@ -2,15 +2,15 @@ extends Control
 
 signal finished
 
-onready var timer = $timer
-onready var label = $label
-onready var bang = $bang
-onready var animation_player = $animation_player
+@onready var timer = $timer
+@onready var label = $label
+@onready var bang = $bang
+@onready var animation_player = $animation_player
 
-var seconds = 60 setget set_seconds
+var seconds = 60: set = set_seconds
 
 func _ready():
-	timer.connect('timeout', self, 'on_tick')
+	timer.connect('timeout', Callable(self, 'on_tick'))
 
 func set_seconds(seconds_):
 	seconds = seconds_

@@ -1,13 +1,13 @@
 extends Control
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var avatar = $avatar
-onready var hp_label = $hp_label
-onready var mp_label = $mana_box/mp_label
-onready var mp_regen_label = $mana_box/mp_regen_label
+@onready var avatar = $avatar
+@onready var hp_label = $hp_label
+@onready var mp_label = $mana_box/mp_label
+@onready var mp_regen_label = $mana_box/mp_regen_label
 
-export var flipped = false
+@export var flipped = false
 
 var old_hp = null
 var old_mp = null

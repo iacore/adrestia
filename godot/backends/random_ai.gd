@@ -61,12 +61,12 @@ func submit_books(selected_book_ids):
 	if do_debug_timer:
 		var timer = Timer.new()
 		timer.set_one_shot(true)
-		timer.set_timer_process_mode(0)
+		timer.set_timer_process_callback(0)
 		timer.set_wait_time(2.0)
-		timer.connect('timeout', self, 'emit_debug_timer')
+		timer.connect('timeout', Callable(self, 'emit_debug_timer'))
 		g.get_node('/root').add_child(timer)
 		timer.start()
-		yield(self, 'debug_timer')
+		await self.debug_timer
 
 	var ai_books = []
 	var rules_books = g.get_rules().get_books().keys()

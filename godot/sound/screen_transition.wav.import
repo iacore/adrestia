@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/screen_transition.wav-e261c6f5e4ec1623607d720381510c8f.sample"
+type="AudioStreamWAV"
+uid="uid://b5l4luux0omvl"
+path="res://.godot/imported/screen_transition.wav-e261c6f5e4ec1623607d720381510c8f.sample"
 
 [deps]
 
 source_file="res://sound/screen_transition.wav"
-dest_files=[ "res://.import/screen_transition.wav-e261c6f5e4ec1623607d720381510c8f.sample" ]
+dest_files=["res://.godot/imported/screen_transition.wav-e261c6f5e4ec1623607d720381510c8f.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

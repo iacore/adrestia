@@ -2,25 +2,25 @@ extends Node
 
 signal turn_animation_finished
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var spell_button_list_scene = preload('res://components/spell_button_list.tscn')
+@onready var spell_button_list_scene = preload('res://components/spell_button_list.tscn')
 
-onready var game = $ui
-onready var spell_select = $ui/spell_select
-onready var end_turn_button = $ui/end_turn_button
-onready var countdown_timer = $ui/countdown_timer
-onready var my_mana_bar = $ui/my_mana_bar
-onready var my_spell_list = $ui/my_spell_list
-onready var my_avatar = $ui/my_avatar
-onready var my_stickies = $ui/my_stickies
-onready var enemy_avatar = $ui/enemy_avatar
-onready var enemy_name = $ui/enemy_name
-onready var enemy_spell_list = $ui/enemy_spell_list
-onready var enemy_stickies = $ui/enemy_stickies
-onready var event_timer = $ui/event_timer
-onready var animation_player = $ui/animation_player
-onready var back_button = $ui/back_button
+@onready var game = $ui
+@onready var spell_select = $ui/spell_select
+@onready var end_turn_button = $ui/end_turn_button
+@onready var countdown_timer = $ui/countdown_timer
+@onready var my_mana_bar = $ui/my_mana_bar
+@onready var my_spell_list = $ui/my_spell_list
+@onready var my_avatar = $ui/my_avatar
+@onready var my_stickies = $ui/my_stickies
+@onready var enemy_avatar = $ui/enemy_avatar
+@onready var enemy_name = $ui/enemy_name
+@onready var enemy_spell_list = $ui/enemy_spell_list
+@onready var enemy_stickies = $ui/enemy_stickies
+@onready var event_timer = $ui/event_timer
+@onready var animation_player = $ui/animation_player
+@onready var back_button = $ui/back_button
 
 var player_id
 var state
@@ -41,24 +41,24 @@ func _ready():
 	player_id = g.backend.get_view().view_player_id
 	ui_state = UiState.CHOOSING_SPELLS
 	g.backend.register_update_callback(funcref(self, 'on_backend_update'))
-	end_turn_button.connect('pressed', self, 'on_end_turn_button_pressed')
-	my_spell_list.connect('pressed', self, 'on_my_spell_list_pressed')
-	event_timer.connect('timeout', self, 'on_event_timer_timeout')
+	end_turn_button.connect('pressed', Callable(self, 'on_end_turn_button_pressed'))
+	my_spell_list.connect('pressed', Callable(self, 'on_my_spell_list_pressed'))
+	event_timer.connect('timeout', Callable(self, 'on_event_timer_timeout'))
 	my_spell_list.spells = []
 	enemy_spell_list.immediately_show_tooltip = true
 	spell_select.enabled_filter = funcref(self, 'player_can_cast')
 	spell_select.unlocked_filter = funcref(self, 'player_has_unlocked_spell')
 	spell_select.unlockable_filter = funcref(self, 'player_can_unlock_spell')
 	spell_select.books = state.players[player_id].books
-	spell_select.connect('spell_press', self, 'on_spell_enqueue')
-	back_button.connect('pressed', self, 'on_back_button_pressed')
+	spell_select.connect('spell_press', Callable(self, 'on_spell_enqueue'))
+	back_button.connect('pressed', Callable(self, 'on_back_button_pressed'))
 	if g.backend.get_time_limit() == 0:
 		countdown_timer.visible = false
 	else:
 		countdown_timer.seconds = g.backend.get_time_limit()
-		countdown_timer.connect('finished', self, 'on_end_turn_button_pressed')
+		countdown_timer.connect('finished', Callable(self, 'on_end_turn_button_pressed'))
 	get_tree().set_auto_accept_quit(false)
-	yield(get_tree(), 'idle_frame')
+	await get_tree().idle_frame
 	redraw()
 	if g.backend.get_current_move() != null:
 		my_spell_list.spells = g.backend.get_current_move()
@@ -71,7 +71,7 @@ func _notification(what):
 
 func on_back_button_pressed():
 	g.sound.play_sound('button')
-	var confirmed = yield(g.summon_confirm('[center]Are you sure you want to forfeit?[/center]'), 'popup_closed')
+	var confirmed = await g.summon_confirm('[center]Are you sure you want to forfeit?[/center]').popup_closed
 	if confirmed:
 		g.backend.leave_game()
 		# TODO: charles: Possibly go to game-end screen instead.
@@ -207,7 +207,7 @@ func on_end_turn_button_pressed():
 	redraw()
 
 	animation_player.play('end_turn')
-	yield(animation_player, 'animation_finished')
+	await animation_player.animation_finished
 
 	my_spell_list.immediately_show_tooltip = true
 

@@ -3,27 +3,27 @@ extends Control
 signal spell_press(spell)
 signal book_opened(i, book)
 
-onready var spell_button_scene = preload('res://components/spell_button.tscn')
+@onready var spell_button_scene = preload('res://components/spell_button.tscn')
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-var tech_levels = null setget set_tech_levels
-var books = null setget set_books
+var tech_levels = null: set = set_tech_levels
+var books = null: set = set_books
 var spell_buttons = []
 var enabled_filter = null
 var unlocked_filter = null
 var unlockable_filter = null
 var current_book = null
 
-onready var book_buttons_vbox = $book_buttons
-onready var spell_panel = $spell_panel
-onready var spell_panel_close_button = $spell_panel/ninepatch/close_button
-onready var spell_grid = $spell_panel/ninepatch/hbox
-onready var template_book_button = $templates/book_button
-onready var animation_player = $animation_player
+@onready var book_buttons_vbox = $book_buttons
+@onready var spell_panel = $spell_panel
+@onready var spell_panel_close_button = $spell_panel/ninepatch/close_button
+@onready var spell_grid = $spell_panel/ninepatch/hbox
+@onready var template_book_button = $templates/book_button
+@onready var animation_player = $animation_player
 
 func _ready():
-	spell_panel_close_button.connect('pressed', self, 'on_close_book')
+	spell_panel_close_button.connect('pressed', Callable(self, 'on_close_book'))
 	$templates.visible = false
 	redraw()
 
@@ -52,7 +52,7 @@ func redraw():
 	if book_buttons_vbox == null: return
 
 	# Prevent the book buttons from getting confused by the old book buttons??
-	yield(get_tree(), 'idle_frame')
+	await get_tree().idle_frame
 
 	print('Regenerating books')
 	for index in range(len(books)):
@@ -63,8 +63,8 @@ func redraw():
 		var btn_upgrade = g.child(btn, 'upgrade_arrow')
 		btn_upgrade.visible = false
 		btn_book.texture_normal = g.get_book_texture(book.get_id())
-		btn_book.connect('pressed', self, 'on_open_book', [index, book])
-		btn_upgrade.connect('pressed', self, 'on_book_upgrade', [index, book])
+		btn_book.connect('pressed', Callable(self, 'on_open_book').bind(index, book))
+		btn_upgrade.connect('pressed', Callable(self, 'on_book_upgrade').bind(index, book))
 
 	redraw_tech_levels()
 
@@ -82,7 +82,7 @@ func redraw_spells():
 	for i in range(len(spell_buttons)):
 		var spell_button = spell_buttons[i]
 		var spell = spell_button.spell
-		spell_button.connect('pressed', self, 'on_spell_pressed', [i, spell])
+		spell_button.connect('pressed', Callable(self, 'on_spell_pressed').bind(i, spell))
 		spell_grid.add_child(spell_button)
 
 func on_open_book(index, book):

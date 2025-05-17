@@ -1,5 +1,5 @@
 #pragma once
-#include <Godot.hpp>
+#include <godot.hpp>
 #include <Sprite.hpp>
 
 // Example gdscript that can be attached to a sprite, and that moves the sprite

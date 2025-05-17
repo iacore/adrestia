@@ -2,23 +2,23 @@
 
 [ext_resource path="res://theme-default.tres" type="Theme" id=1]
 [ext_resource path="res://components/game_history.gd" type="Script" id=2]
-[ext_resource path="res://art-built/9patch/panel-9patch.png" type="Texture" id=3]
+[ext_resource path="res://art-built/9patch/panel-9patch.png" type="Texture2D" id=3]
 [ext_resource path="res://scripts/scroll_container_draggable.gd" type="Script" id=4]
 [ext_resource path="res://components/spell_button_list.tscn" type="PackedScene" id=5]
-[ext_resource path="res://fonts/Amaranth-Bold-24.tres" type="DynamicFont" id=6]
-[ext_resource path="res://art-built/health-heart.png" type="Texture" id=7]
+[ext_resource path="res://fonts/Amaranth-Bold-24.tres" type="FontFile" id=6]
+[ext_resource path="res://art-built/health-heart.png" type="Texture2D" id=7]
 
 [node name="game_history" type="Control"]
 anchor_right = 1.0
-margin_bottom = 500.0
+offset_bottom = 500.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 
 [node name="background" type="NinePatchRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -11.0
-margin_right = 11.0
+offset_left = -11.0
+offset_right = 11.0
 texture = ExtResource( 3 )
 patch_margin_left = 11
 patch_margin_top = 11
@@ -29,138 +29,138 @@ patch_margin_bottom = 11
 anchor_left = 0.5
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -270.0
-margin_top = 5.0
-margin_right = 270.0
-margin_bottom = -5.0
+offset_left = -270.0
+offset_top = 5.0
+offset_right = 270.0
+offset_bottom = -5.0
 scroll_horizontal_enabled = false
 script = ExtResource( 4 )
 
 [node name="vbox" type="VBoxContainer" parent="scroll_container"]
-custom_constants/separation = 20
+theme_override_constants/separation = 20
 
 [node name="template_row" type="Control" parent="."]
 anchor_right = 1.0
-margin_bottom = 376.0
-rect_min_size = Vector2( 540, 380 )
+offset_bottom = 376.0
+custom_minimum_size = Vector2( 540, 380 )
 mouse_filter = 2
 
 [node name="enemy_spell_list" parent="template_row" instance=ExtResource( 5 )]
-margin_left = 155.0
-margin_top = 53.0
-margin_bottom = 203.0
+offset_left = 155.0
+offset_top = 53.0
+offset_bottom = 203.0
 
 [node name="my_spell_list" parent="template_row" instance=ExtResource( 5 )]
-margin_left = 155.0
-margin_top = 207.0
-margin_bottom = 357.0
+offset_left = 155.0
+offset_top = 207.0
+offset_bottom = 357.0
 
 [node name="turn_label" type="Label" parent="template_row"]
 anchor_right = 1.0
-margin_left = 25.0
-margin_top = 14.0
-margin_bottom = 54.0
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
+offset_left = 25.0
+offset_top = 14.0
+offset_bottom = 54.0
+theme_override_fonts/font = ExtResource( 6 )
+theme_override_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Turn 1"
 valign = 1
 
 [node name="enemy_health" type="Control" parent="template_row"]
-margin_left = 27.0
-margin_top = 101.0
-margin_right = 147.0
-margin_bottom = 151.0
-rect_min_size = Vector2( 120, 50 )
+offset_left = 27.0
+offset_top = 101.0
+offset_right = 147.0
+offset_bottom = 151.0
+custom_minimum_size = Vector2( 120, 50 )
 mouse_filter = 2
 
 [node name="heart" type="TextureRect" parent="template_row/enemy_health"]
-margin_right = 50.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 50, 50 )
+offset_right = 50.0
+offset_bottom = 50.0
+custom_minimum_size = Vector2( 50, 50 )
 mouse_filter = 2
 texture = ExtResource( 7 )
 expand = true
 stretch_mode = 6
 
 [node name="label" type="Label" parent="template_row/enemy_health"]
-margin_right = 50.0
-margin_bottom = 50.0
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.0156863, 0.294118, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
-custom_constants/shadow_as_outline = 1
+offset_right = 50.0
+offset_bottom = 50.0
+theme_override_fonts/font = ExtResource( 6 )
+theme_override_colors/font_color = Color( 1, 1, 1, 1 )
+theme_override_colors/font_shadow_color = Color( 1, 0.0156863, 0.294118, 1 )
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 1
 text = "25"
 align = 1
 
 [node name="delta_label" type="Label" parent="template_row/enemy_health"]
-margin_left = 60.0
-margin_right = 120.0
-margin_bottom = 50.0
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.0156863, 0.294118, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
-custom_constants/shadow_as_outline = 1
+offset_left = 60.0
+offset_right = 120.0
+offset_bottom = 50.0
+theme_override_fonts/font = ExtResource( 6 )
+theme_override_colors/font_color = Color( 1, 1, 1, 1 )
+theme_override_colors/font_shadow_color = Color( 1, 0.0156863, 0.294118, 1 )
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 1
 text = "-5"
 align = 1
 
 [node name="my_health" type="Control" parent="template_row"]
-margin_left = 27.0
-margin_top = 255.0
-margin_right = 147.0
-margin_bottom = 305.0
-rect_min_size = Vector2( 120, 50 )
+offset_left = 27.0
+offset_top = 255.0
+offset_right = 147.0
+offset_bottom = 305.0
+custom_minimum_size = Vector2( 120, 50 )
 mouse_filter = 2
 
 [node name="heart" type="TextureRect" parent="template_row/my_health"]
-margin_right = 50.0
-margin_bottom = 50.0
-rect_min_size = Vector2( 50, 50 )
+offset_right = 50.0
+offset_bottom = 50.0
+custom_minimum_size = Vector2( 50, 50 )
 mouse_filter = 2
 texture = ExtResource( 7 )
 expand = true
 stretch_mode = 6
 
 [node name="label" type="Label" parent="template_row/my_health"]
-margin_top = 2.0
-margin_right = 50.0
-margin_bottom = 52.0
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.0156863, 0.294118, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
-custom_constants/shadow_as_outline = 1
+offset_top = 2.0
+offset_right = 50.0
+offset_bottom = 52.0
+theme_override_fonts/font = ExtResource( 6 )
+theme_override_colors/font_color = Color( 1, 1, 1, 1 )
+theme_override_colors/font_shadow_color = Color( 1, 0.0156863, 0.294118, 1 )
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 1
 text = "25"
 align = 1
 
 [node name="delta_label" type="Label" parent="template_row/my_health"]
-margin_left = 60.0
-margin_right = 120.0
-margin_bottom = 50.0
-custom_fonts/font = ExtResource( 6 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 1, 0.0156863, 0.294118, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
-custom_constants/shadow_as_outline = 1
+offset_left = 60.0
+offset_right = 120.0
+offset_bottom = 50.0
+theme_override_fonts/font = ExtResource( 6 )
+theme_override_colors/font_color = Color( 1, 1, 1, 1 )
+theme_override_colors/font_shadow_color = Color( 1, 0.0156863, 0.294118, 1 )
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 1
 text = "-5"
 align = 1
 
 [node name="their_label" type="Label" parent="template_row"]
-margin_left = 27.0
-margin_top = 67.0
-margin_right = 82.0
-margin_bottom = 97.0
+offset_left = 27.0
+offset_top = 67.0
+offset_right = 82.0
+offset_bottom = 97.0
 text = "Them"
 
 [node name="my_label" type="Label" parent="template_row"]
-margin_left = 27.0
-margin_top = 221.0
-margin_right = 67.0
-margin_bottom = 251.0
+offset_left = 27.0
+offset_top = 221.0
+offset_right = 67.0
+offset_bottom = 251.0
 text = "You"
 

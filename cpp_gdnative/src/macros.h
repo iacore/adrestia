@@ -3,7 +3,7 @@
 #include <vector>
 #include <list>
 
-#include <Godot.hpp>
+#include <godot.hpp>
 #include <NativeScript.hpp>
 #include <ResourceLoader.hpp>
 #include <JSONParseResult.hpp>

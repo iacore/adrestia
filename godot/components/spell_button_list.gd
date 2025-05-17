@@ -3,21 +3,21 @@ extends Control
 signal pressed(index, spell)
 signal long_pressed(index, spell)
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var slot_image_hbox = $background
-onready var slot_image_template = $background/template
+@onready var slot_image_hbox = $background
+@onready var slot_image_template = $background/template
 
-onready var hbox = $hbox
-export var slots_to_show = 0
+@onready var hbox = $hbox
+@export var slots_to_show = 0
 
 var appear_anim = false
-var spells = null setget set_spells
+var spells = null: set = set_spells
 var spell_buttons = []
-var enabled_filter = null setget set_enabled_filter
-var unlocked_filter = null setget set_unlocked_filter
-var show_stats = false setget set_show_stats
-var immediately_show_tooltip = false setget set_immediately_show_tooltip
+var enabled_filter = null: set = set_enabled_filter
+var unlocked_filter = null: set = set_unlocked_filter
+var show_stats = false: set = set_show_stats
+var immediately_show_tooltip = false: set = set_immediately_show_tooltip
 
 func _ready():
 	if spells == null:
@@ -73,7 +73,7 @@ func redraw():
 			var spell = spell_button.spell
 			#print('adding %d: %s' % [i, spell.get_name()])
 			spell_button.immediately_show_tooltip = immediately_show_tooltip
-			spell_button.connect('pressed', self, 'on_pressed', [i, spell])
+			spell_button.connect('pressed', Callable(self, 'on_pressed').bind(i, spell))
 			hbox.add_child(spell_button)
 	else:
 		g.update_spell_buttons(spell_buttons, spells, appear_anim, show_stats, enabled_filter, unlocked_filter, null)

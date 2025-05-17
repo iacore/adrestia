@@ -7,7 +7,7 @@ var music_player
 var current_music_name
 var sound_last_played = {}
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
 func _ready():
 	music_player = AudioStreamPlayer.new()
@@ -29,7 +29,7 @@ func set_music(music_name, force=false):
 			Tween.TRANS_LINEAR,
 			Tween.EASE_IN)
 		tween.start()
-		yield(tween, 'tween_completed')
+		await tween.tween_completed
 		tween.queue_free()
 		music_player.stop()
 		var stream = load('res://sound/%s.ogg' % [music_name])
@@ -42,14 +42,14 @@ func set_music(music_name, force=false):
 
 func play_sound(sound_name):
 	if g.sfx_muted: return
-	if sound_last_played.has(sound_name) and OS.get_ticks_msec() - sound_last_played[sound_name] < same_sound_debounce_ms:
+	if sound_last_played.has(sound_name) and Time.get_ticks_msec() - sound_last_played[sound_name] < same_sound_debounce_ms:
 		return
-	sound_last_played[sound_name] = OS.get_ticks_msec()
+	sound_last_played[sound_name] = Time.get_ticks_msec()
 	var sound_player = AudioStreamPlayer.new()
 	add_child(sound_player)
 	sound_player.stream = load('res://sound/%s.wav' % [sound_name])
 	sound_player.play()
-	yield(sound_player, 'finished')
+	await sound_player.finished
 	sound_player.queue_free()
 
 func on_music_toggled():

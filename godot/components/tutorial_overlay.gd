@@ -3,24 +3,24 @@ extends Control
 signal node_found(node)
 signal popup_closed()
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var mouse_blocker = $mouse_blocker
-onready var big_text_wnd = $nine_patch_rect
-onready var tree_poll_timer = $tree_poll_timer
-onready var big_text = $nine_patch_rect/margin_container/rich_text_label
+@onready var mouse_blocker = $mouse_blocker
+@onready var big_text_wnd = $nine_patch_rect
+@onready var tree_poll_timer = $tree_poll_timer
+@onready var big_text = $nine_patch_rect/margin_container/rich_text_label
 
 var finished_first_turn = false
 var open_time = 0
 
 func _ready():
-	mouse_blocker.connect('gui_input', self, 'blocker_input')
-	tree_poll_timer.connect('timeout', self, 'timeout')
+	mouse_blocker.connect('gui_input', Callable(self, 'blocker_input'))
+	tree_poll_timer.connect('timeout', Callable(self, 'timeout'))
 	big_text_wnd.visible = false
 	mouse_blocker.visible = false
 
 func close_blocker():
-	if OS.get_ticks_msec() - open_time < 500:
+	if Time.get_ticks_msec() - open_time < 500:
 		return
 	if force_click_rect != null && !force_click_rect.has_point(get_viewport().get_mouse_position()):
 		return
@@ -39,7 +39,7 @@ func _input(event):
 	if mouse_blocker.mouse_filter == MOUSE_FILTER_IGNORE:
 		if g.event_is_pressed(event):
 			if force_click_rect != null && !force_click_rect.has_point(get_viewport().get_mouse_position()):
-				get_tree().set_input_as_handled()
+				get_viewport().set_input_as_handled()
 			else:
 				close_blocker()
 
@@ -67,14 +67,14 @@ func timeout():
 	emit_signal('node_found', node)
 
 func acquire_node(path):
-	yield(get_tree(), 'idle_frame')
+	await get_tree().idle_frame
 	# Try to get the node immediately for efficiency
 	var node = try_get_node(path)
 	if node != null:
 		return node
 	# If not found, poll for it
 	desire_path = path
-	node = yield(self, 'node_found')
+	node = await self.node_found
 	desire_path = null
 	return node
 
@@ -90,20 +90,20 @@ func _process(delta):
 	if tween_start_time == null:
 		set_process(false)
 		return
-	var cur_time = float(OS.get_ticks_msec())
+	var cur_time = float(Time.get_ticks_msec())
 	var completion = pow(min(1.0, (cur_time - tween_start_time) / (tween_end_time - tween_start_time)), 0.3)
 	var spotlight_pos  = new_spotlight_pos  * completion + old_spotlight_pos  * (1.0 - completion)
 	var spotlight_size = new_spotlight_size * completion + old_spotlight_size * (1.0 - completion)
-	mouse_blocker.material.set_shader_param('radius', 10.0);
-	mouse_blocker.material.set_shader_param('position', spotlight_pos);
-	mouse_blocker.material.set_shader_param('size', spotlight_size);
+	mouse_blocker.material.set_shader_parameter('radius', 10.0);
+	mouse_blocker.material.set_shader_parameter('position', spotlight_pos);
+	mouse_blocker.material.set_shader_parameter('size', spotlight_size);
 	if completion >= 1.0:
 		tween_start_time = null
 		set_process(false)
 
 func tween_spotlight_to(pos, size):
-	tween_start_time = float(OS.get_ticks_msec())
-	tween_end_time = float(OS.get_ticks_msec()) + 350.0
+	tween_start_time = float(Time.get_ticks_msec())
+	tween_end_time = float(Time.get_ticks_msec()) + 350.0
 	old_spotlight_pos = new_spotlight_pos
 	if not old_spotlight_pos: old_spotlight_pos = get_viewport_rect().size / 2.0
 	old_spotlight_size = new_spotlight_size
@@ -113,24 +113,24 @@ func tween_spotlight_to(pos, size):
 	set_process(true)
 
 func show_big_window(text):
-	open_time = OS.get_ticks_msec()
-	big_text.bbcode_text = text
+	open_time = Time.get_ticks_msec()
+	big_text.text = text
 	mouse_blocker.visible = true
-	mouse_blocker.material.set_shader_param('radius', 0.0);
+	mouse_blocker.material.set_shader_parameter('radius', 0.0);
 	big_text_wnd.visible = true
-	yield(self, 'popup_closed')
+	await self.popup_closed
 
 func show_tooltip(target, text, force=false):
-	open_time = OS.get_ticks_msec()
+	open_time = Time.get_ticks_msec()
 	var rect = target.get_global_rect()
 	mouse_blocker.visible = true
 	if force:
 		force_click_rect = rect
 	tween_spotlight_to(rect.position + (rect.size / 2.0), rect.size / 2.0)
-	yield(g.summon_tooltip(target, text), 'completed')
+	await g.summon_tooltip(target, text).completed
 	if g.tooltip:
 		g.tooltip.mouse_filter = MOUSE_FILTER_IGNORE
-	yield(self, 'popup_closed')
+	await self.popup_closed
 
 func play_button_pressed_override(select_root):
 	# Check that book list contains Conjuration
@@ -169,37 +169,37 @@ func should_long_press_button_override():
 func play_tutorial():
 	g.tooltip_min_open_time = 500
 	# Book Select
-	var selected_books_hbox = yield(self.acquire_node('ui/selected_books_hbox'), 'completed')
-	var select_root = yield(self.acquire_node(''), 'completed')
-	var play_button = yield(self.acquire_node('ui/play_button'), 'completed')
+	var selected_books_hbox = await self.acquire_node('ui/selected_books_hbox').completed
+	var select_root = await self.acquire_node('').completed
+	var play_button = await self.acquire_node('ui/play_button').completed
 
 	# Set up Play button override
 	g.safe_disconnect(play_button, 'pressed', select_root, 'on_play_button_pressed')
-	play_button.connect('pressed', self, 'play_button_pressed_override', [select_root])
+	play_button.connect('pressed', Callable(self, 'play_button_pressed_override').bind(select_root))
 
 	# Show information
-	yield(show_big_window("[b]Welcome to [color=#F74F01]Adrestia[/color]![/b]\n\nYour objective is to use your spells and your wit to defeat your enemy."), 'completed')
-	var books_hbox = yield(self.acquire_node('ui/books_scroll/books_hbox'), 'completed')
+	await show_big_window("[b]Welcome to [color=#F74F01]Adrestia[/color]![/b]\n\nYour objective is to use your spells and your wit to defeat your enemy.").completed
+	var books_hbox = await self.acquire_node('ui/books_scroll/books_hbox').completed
 	var book_bloodlust_button = books_hbox.get_child(0)
 	var book_frost_button = books_hbox.get_child(4)
-	yield(show_tooltip(book_bloodlust_button.get_child(0), 'Tap the [color=#DC0000][b]Book of Bloodlust[/b][/color] to see what spells it contains.', true), 'completed')
+	await show_tooltip(book_bloodlust_button.get_child(0), 'Tap the [color=#DC0000][b]Book of Bloodlust[/b][/color] to see what spells it contains.', true).completed
 	select_root.show_book_detail(book_bloodlust_button.book)
 
-	var spell_preview = yield(self.acquire_node('ui/spell_button_list'), 'completed')
-	yield(show_tooltip(spell_preview, 'Each book has four spells.'), 'completed')
+	var spell_preview = await self.acquire_node('ui/spell_button_list').completed
+	await show_tooltip(spell_preview, 'Each book has four spells.').completed
 	var spell_button = spell_preview.get_child(1).get_child(1)
-	yield(show_tooltip(spell_button, 'Tap the [color=#DC0000][b]Frenzy[/b][/color] spell to see what it does.', true), 'completed')
+	await show_tooltip(spell_button, 'Tap the [color=#DC0000][b]Frenzy[/b][/color] spell to see what it does.', true).completed
 	spell_button.on_long_press()
-	yield(g, 'tooltip_closed')
+	await g.tooltip_closed
 	var mana_indicator = spell_button.get_node('ui/cost/mp_icon')
-	yield(show_tooltip(mana_indicator, "The spell's mana cost is shown in this corner."), 'completed')
+	await show_tooltip(mana_indicator, "The spell's mana cost is shown in this corner.").completed
 
-	var book_slots = yield(self.acquire_node('ui/selected_books_hbox'), 'completed')
-	yield(show_big_window("For this tutorial, we will use two books:\nthe [color=#DC0000][b]Book of Bloodlust[/b][/color] and the [color=#2AA696][b]Book of Frost[/b][/color]."), 'completed')
+	var book_slots = await self.acquire_node('ui/selected_books_hbox').completed
+	await show_big_window("For this tutorial, we will use two books:\nthe [color=#DC0000][b]Book of Bloodlust[/b][/color] and the [color=#2AA696][b]Book of Frost[/b][/color].").completed
 	mouse_blocker.mouse_filter = MOUSE_FILTER_IGNORE
 	select_root.forced_book = 'bloodlust'
-	yield(show_tooltip(book_bloodlust_button, 'The [color=#DC0000][b]Book of Bloodlust[/b][/color] is an aggressive book that focuses on dealing damage. Drag it up to select it.'), 'completed')
-	yield(select_root, 'chose_book')
+	await show_tooltip(book_bloodlust_button, 'The [color=#DC0000][b]Book of Bloodlust[/b][/color] is an aggressive book that focuses on dealing damage. Drag it up to select it.').completed
+	await select_root.chose_book
 
 	# If not already visible on screen, wait for scroll to frost book.
 	var showed_scroll_tooltip = false
@@ -215,9 +215,9 @@ func play_tutorial():
 				break
 			still_checks += 1
 		if not showed_scroll_tooltip:
-			yield(show_tooltip(books_hbox, 'Now scroll to the right until you see the [color=#2AA696][b]Book of Frost[/b][/color].'), 'completed')
+			await show_tooltip(books_hbox, 'Now scroll to the right until you see the [color=#2AA696][b]Book of Frost[/b][/color].').completed
 			showed_scroll_tooltip = true
-		yield(tree_poll_timer, 'timeout')
+		await tree_poll_timer.timeout
 	mouse_blocker.mouse_filter = MOUSE_FILTER_STOP
 
 	select_root.forced_book = 'regulation'
@@ -225,23 +225,23 @@ func play_tutorial():
 		'The [color=#2AA696][b]Book of Frost[/b][/color] is a good book for defense. Tap it to see its spells, then drag it up to select it.', true), 'completed')
 	select_root.show_book_detail(book_frost_button.book)
 	if not select_root.has_selected_book('regulation'):
-		yield(select_root, 'chose_book')
+		await select_root.chose_book
 	select_root.forced_book = null
 	yield(show_tooltip(play_button,
 		"Good job! The third book is yours to choose. When you're done, press the [b]Done[/b] button to fight against an AI opponent."), 'completed')
 
 	# Game
 	g.tooltip_min_open_time = 0
-	var spell_select = yield(self.acquire_node('ui/spell_select'), 'completed')
-	var game_root = yield(self.acquire_node(''), 'completed')
-	var end_turn_button = yield(self.acquire_node('ui/end_turn_button'), 'completed')
+	var spell_select = await self.acquire_node('ui/spell_select').completed
+	var game_root = await self.acquire_node('').completed
+	var end_turn_button = await self.acquire_node('ui/end_turn_button').completed
 	# Override end turn button
 	g.safe_disconnect(end_turn_button, 'pressed', game_root, 'on_end_turn_button_pressed')
-	end_turn_button.connect('pressed', self, 'end_turn_button_pressed_override', [game_root])
+	end_turn_button.connect('pressed', Callable(self, 'end_turn_button_pressed_override').bind(game_root))
 	# Show information
 	yield(show_big_window(
 		'Nice work! Let\'s take a look around the game screen.\n\n[i]Tap to continue[/i]'), 'completed')
-	var my_stats = yield(self.acquire_node('ui/my_avatar'), 'completed')
+	var my_stats = await self.acquire_node('ui/my_avatar').completed
 	yield(show_tooltip(my_stats,
 		'This is you! You have [color=#FF054B][b]40[/b][/color] health and [color=#458BFF][b]3[/b][/color] mana. The [color=#458BFF][b]+3[/b][/color] beside your mana shows your mana regeneration; you\'ll get this much mana at the start of each turn.'), 'completed')
 
@@ -256,10 +256,10 @@ func play_tutorial():
 			book_btn_frost_i = i
 
 	# Turn 1
-	yield(show_tooltip(book_btn_frost, 'Tap the [color=#2AA696][b]Book of Frost[/b][/color] to open it up.', true), 'completed')
+	await show_tooltip(book_btn_frost, 'Tap the [color=#2AA696][b]Book of Frost[/b][/color] to open it up.', true).completed
 	book_btn_frost.get_node('book').emit_signal('pressed')
 	var spell_select_animator = spell_select.get_node('animation_player')
-	yield(spell_select_animator, 'animation_finished')
+	await spell_select_animator.animation_finished
 	var buy_spell_buttons = spell_select.get_node('spell_panel/ninepatch/hbox')
 	yield(show_tooltip(buy_spell_buttons,
 		'Notice that all the spells are locked. You haven\'t learned any of them yet.'), 'completed')
@@ -287,7 +287,7 @@ func play_tutorial():
 	yield(show_tooltip(spell_animation_area,
 		'Your enemy tried to damage you with [color=#FF4C2B][b]Razor Wind[/b][/color], but you will block it just in time with your [color=#00ADBA][b]Frost Shield[/b][/color].\n[i]Tap to continue[/i]'), 'completed')
 	game_root.animate_events = true
-	yield(game_root, 'turn_animation_finished')
+	await game_root.turn_animation_finished
 	finished_first_turn = true
 	close_blocker()
 
@@ -297,23 +297,23 @@ func play_tutorial():
 	yield(show_tooltip(book_btn_frost,
 		'Open up the [color=#2AA696][b]Book of Frost[/b][/color] again.', true), 'completed')
 	book_btn_frost.get_node('book').emit_signal('pressed')
-	yield(spell_select_animator, 'animation_finished')
+	await spell_select_animator.animation_finished
 	mouse_blocker.mouse_filter = MOUSE_FILTER_IGNORE
 	game_root.can_cast_spells = false
 	show_tooltip(buy_spell_buttons.get_child(1),
 		"Let's see what [color=#05ACB8][b]Iceberg[/b][/color] does. Long-press the spell to see its description.", true)
-	yield(g, 'tooltip_closed') # for the tutorial tooltip
+	await g.tooltip_closed # for the tutorial tooltip
 	mouse_blocker.mouse_filter = MOUSE_FILTER_STOP
-	buy_spell_buttons.get_child(1).texture_button.connect('pressed', self, 'should_long_press_button_override')
+	buy_spell_buttons.get_child(1).texture_button.connect('pressed', Callable(self, 'should_long_press_button_override'))
 	while true:
 		# for the spell detail view
-		var content = yield(g, 'tooltip_closed')
+		var content = await g.tooltip_closed
 		if 'Iceberg' in content:
 			break
 		else:
 			spell_select.on_open_book(book_btn_frost_i, spell_select.books[book_btn_frost_i])
 			should_long_press_button_override()
-	buy_spell_buttons.get_child(1).texture_button.disconnect('pressed', self, 'should_long_press_button_override')
+	buy_spell_buttons.get_child(1).texture_button.disconnect('pressed', Callable(self, 'should_long_press_button_override'))
 	game_root.can_cast_spells = true
 	yield(show_tooltip(buy_spell_buttons.get_child(1),
 		"[color=#05ACB8][b]Iceberg[/b][/color] is a powerful shield. But let's not learn it yet."), 'completed')
@@ -338,7 +338,7 @@ func play_tutorial():
 	yield(show_tooltip(spell_animation_area,
 		'Nicely done. Your [color=#00ADBA][b]Frost Shield[/b][/color] will block the first [color=#FF4C2B][b]Razor Wind[/b][/color] while your [color=#05ACB8][b]Iceberg[/b][/color] will block the second one.\n[i]Tap to continue[/i]'), 'completed')
 	game_root.animate_events = true
-	yield(game_root, 'turn_animation_finished')
+	await game_root.turn_animation_finished
 	close_blocker()
 
 	# Turn 3
@@ -347,11 +347,11 @@ func play_tutorial():
 		'Many spells leave effects that last multiple turns. Iceberg gives you a shield. Tap this effect to see a description.', true), 'completed')
 	sticky_display = game_root.get_node('ui/my_stickies/grid').get_child(0)
 	g.summon_sticky_tooltip(sticky_display, sticky_display.sticky)
-	yield(g, 'tooltip_closed')
+	await g.tooltip_closed
 	yield(show_tooltip(book_btn_bloodlust,
 		'With a strong shield already up, we can focus on the attack. Open up the [color=#DC0000][b]Book of Bloodlust[/b][/color].', true), 'completed')
 	book_btn_bloodlust.get_node('book').emit_signal('pressed')
-	yield(spell_select_animator, 'animation_finished')
+	await spell_select_animator.animation_finished
 	yield(show_tooltip(buy_spell_buttons.get_child(0),
 		"[color=#FF4C2B][b]Razor Wind[/b][/color] is the same spell your opponent tried to damage you with. Learn it now.", true), 'completed')
 	buy_spell_buttons.get_child(0).emit_signal('pressed')
@@ -373,7 +373,7 @@ func play_tutorial():
 	yield(show_tooltip(spell_animation_area,
 		'You are protected by your [color=#05ACB8][b]Iceberg[/b][/color] from last turn, but your own [color=#FF4C2B][b]Razor Wind[/b][/color]s will hit the enemy! Nice!\n[i]Tap to continue[/i]'), 'completed')
 	game_root.animate_events = true
-	yield(game_root, 'turn_animation_finished')
+	await game_root.turn_animation_finished
 	close_blocker()
 
 	# Turn 4
@@ -382,15 +382,15 @@ func play_tutorial():
 	yield(show_big_window(
 		"One final tip: many spells have an [b]on hit[/b] effect that triggers when they get through shields. Staying shielded can save you from a lot of pain."), 'completed')
 
-	yield(show_big_window("You're on your own now! Good luck."), 'completed')
+	await show_big_window("You're on your own now! Good luck.").completed
 
 	# Results
-	var results_text = yield(self.acquire_node('ui/results_text'), 'completed')
-	var results_root = yield(self.acquire_node(''), 'completed')
+	var results_text = await self.acquire_node('ui/results_text').completed
+	var results_root = await self.acquire_node('').completed
 	if results_root.winner == 0:
-		yield(show_big_window('Nice job! You\'re ready to test your skills against a real opponent.'), 'completed')
+		await show_big_window('Nice job! You\'re ready to test your skills against a real opponent.').completed
 	else:
-		yield(show_big_window('Looks like you didn\'t win. Maybe you should try the tutorial again.'), 'completed')
+		await show_big_window('Looks like you didn\'t win. Maybe you should try the tutorial again.').completed
 
 	# Clean self up
 	self.get_parent().remove_child(self)

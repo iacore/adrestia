@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://components/transition_bg.gd" type="Script" id=1]
-[ext_resource path="res://art-built/transition-bg.png" type="Texture" id=2]
+[ext_resource path="res://art-built/transition-bg.png" type="Texture2D" id=2]
 
 [sub_resource type="Animation" id=1]
 
@@ -10,26 +10,26 @@ length = 0.4
 loop = false
 step = 0.1
 tracks/0/type = "value"
-tracks/0/path = NodePath("texture_rect:rect_position")
+tracks/0/path = NodePath("texture_rect:position")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 582, 0 ), Vector2( 0, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("texture_rect:rect_rotation")
+tracks/1/path = NodePath("texture_rect:rotation")
 tracks/1/interp = 2
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ 60.0, 0.0 ]
 }
@@ -41,26 +41,26 @@ length = 0.4
 loop = false
 step = 0.1
 tracks/0/type = "value"
-tracks/0/path = NodePath("texture_rect:rect_position")
+tracks/0/path = NodePath("texture_rect:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ Vector2( 0, 0 ), Vector2( -540, 0 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("texture_rect:rect_rotation")
+tracks/1/path = NodePath("texture_rect:rotation")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PackedFloat32Array( 0, 0.4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
 "update": 0,
 "values": [ 0.0, -60.0 ]
 }
@@ -71,8 +71,8 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
+pivot_offset = Vector2( 0, 0 )
+clip_contents = false
 mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
@@ -85,10 +85,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 540.0
-margin_bottom = 960.0
-rect_pivot_offset = Vector2( 270, 480 )
-rect_clip_content = false
+offset_right = 540.0
+offset_bottom = 960.0
+pivot_offset = Vector2( 270, 480 )
+clip_contents = false
 mouse_filter = 1
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1

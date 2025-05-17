@@ -19,13 +19,13 @@ var forfeited = false
 
 func _notification(what):
 	if what == NOTIFICATION_PREDELETE:
-		g.network.disconnect('disconnected', self, 'disconnected')
+		g.network.disconnect('disconnected', Callable(self, 'disconnected'))
 
 func _init(g_, friend_code_=null):
 	g = g_
 	friend_code = friend_code_
 	rules = g.get_default_rules()
-	g.network.connect('disconnected', self, 'disconnected')
+	g.network.connect('disconnected', Callable(self, 'disconnected'))
 
 # jim: this bandaids an awful awful bug I can't diagnose
 var already_disconnected = false
@@ -38,7 +38,7 @@ func reconnect(update_message):
 	var game = update_message.updates[0]
 	game['events'] = []
 	if 'game_rules' in game:
-		rules.load_json_string(JSON.print(game['game_rules']))
+		rules.load_json_string(JSON.stringify(game['game_rules']))
 	if 'player_move' in game:
 		current_move = game['player_move']
 	on_push_active_games(update_message)

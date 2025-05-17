@@ -1,8 +1,8 @@
 extends Control
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var mana_gem_template = $mana_gem_template
+@onready var mana_gem_template = $mana_gem_template
 
 func _ready():
 	mana_gem_template.visible = false
@@ -17,7 +17,7 @@ func redraw(player, mp_left = null):
 		for i in range(mp_max):
 			var mana_gem = mana_gem_template.duplicate()
 			mana_gem.visible = true
-			mana_gem.rect_position.x += 20 * (mp_max - i - 1)
+			mana_gem.position.x += 20 * (mp_max - i - 1)
 			add_child(mana_gem)
 
 	for i in range(mp_max):

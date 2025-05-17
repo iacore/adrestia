@@ -1,21 +1,21 @@
 extends Node
 
-onready var g = get_node('/root/global')
+@onready var g = get_node('/root/global')
 
-onready var match_list = $ui/scroll_container/v_box_container
-onready var back_button = $ui/back_button
-onready var offline_warning = $ui/offline_warning
-onready var template_row = $ui/template_row
-onready var game_history_panel = $ui/game_history_panel
-onready var game_history = $ui/game_history_panel/game_history
-onready var done_button = $ui/game_history_panel/done_button
+@onready var match_list = $ui/scroll_container/v_box_container
+@onready var back_button = $ui/back_button
+@onready var offline_warning = $ui/offline_warning
+@onready var template_row = $ui/template_row
+@onready var game_history_panel = $ui/game_history_panel
+@onready var game_history = $ui/game_history_panel/game_history
+@onready var done_button = $ui/game_history_panel/done_button
 
 var games = []
 var history_state = null
 
 func _ready():
-	back_button.connect('pressed', self, 'on_back_button_pressed')
-	done_button.connect('pressed', self, 'on_done_button_pressed')
+	back_button.connect('pressed', Callable(self, 'on_back_button_pressed'))
+	done_button.connect('pressed', Callable(self, 'on_done_button_pressed'))
 	g.clear_children(match_list)
 	g.network.register_handlers(self, 'on_connected', 'on_disconnected', 'on_out_of_date')
 	offline_warning.visible = false
@@ -70,7 +70,7 @@ func redraw():
 		var title_label = g.child(row, 'title_label')
 		var date_label = g.child(row, 'date_label')
 		var view_button = g.child(row, 'view_button')
-		view_button.connect('pressed', self, 'on_view_button_pressed', [index])
+		view_button.connect('pressed', Callable(self, 'on_view_button_pressed').bind(index))
 		var win_text = ''
 		if game.winner_id == -2:
 			win_text = 'Draw'
@@ -78,8 +78,8 @@ func redraw():
 			win_text = 'Victory'
 		else:
 			win_text = 'Defeat'
-		title_label.bbcode_text = '[b]' + win_text + '[/b] vs. ' + game.opponent_user_name
-		print(title_label.bbcode_text)
+		title_label.text = '[b]' + win_text + '[/b] vs. ' + game.opponent_user_name
+		print(title_label.text)
 		date_label.text = game.creation_time.split(' ')[0]
 		row.visible = true
 		match_list.add_child(row)

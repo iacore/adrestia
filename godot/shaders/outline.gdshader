@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform float width : hint_range(0.0, 30.0);
-uniform vec4 outline_color : hint_color;
+uniform vec4 outline_color : source_color;
 uniform float detail = 8;
 uniform float PI = 3.141592653589;
 

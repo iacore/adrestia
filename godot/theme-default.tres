@@ -1,154 +1,155 @@
-[gd_resource type="Theme" load_steps=22 format=2]
+[gd_resource type="Theme" load_steps=21 format=3 uid="uid://bn1u7gtb6wom4"]
 
-[ext_resource path="res://fonts/Amaranth-Regular-24.tres" type="DynamicFont" id=1]
-[ext_resource path="res://art-built/checkbox-checked.png" type="Texture" id=2]
-[ext_resource path="res://art-built/checkbox-empty.png" type="Texture" id=3]
-[ext_resource path="res://9patch-default.stylebox" type="StyleBox" id=4]
-[ext_resource path="res://fonts/Amaranth-Bold-15.tres" type="DynamicFont" id=5]
-[ext_resource path="res://fonts/Amaranth-Italic-15.tres" type="DynamicFont" id=6]
-[ext_resource path="res://fonts/Amaranth-Regular-15.tres" type="DynamicFont" id=7]
-[ext_resource path="res://fonts/Amaranth-Regular.ttf" type="DynamicFontData" id=8]
+[ext_resource type="FontFile" path="res://fonts/Amaranth-Regular-24.tres" id="1"]
+[ext_resource type="Texture2D" uid="uid://da66dpgdoikwq" path="res://art-built/checkbox-checked.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://b2wk7auvq0b4u" path="res://art-built/checkbox-empty.png" id="3"]
+[ext_resource type="StyleBox" path="res://9patch-default.stylebox" id="4"]
+[ext_resource type="FontFile" path="res://fonts/Amaranth-Bold-15.tres" id="5"]
+[ext_resource type="FontFile" path="res://fonts/Amaranth-Italic-15.tres" id="6"]
+[ext_resource type="FontFile" path="res://fonts/Amaranth-Regular-15.tres" id="7"]
 
-[sub_resource type="StyleBoxEmpty" id=8]
+[sub_resource type="StyleBoxEmpty" id="8"]
 
-[sub_resource type="StyleBoxEmpty" id=9]
+[sub_resource type="StyleBoxEmpty" id="9"]
 
-[sub_resource type="StyleBoxEmpty" id=10]
+[sub_resource type="StyleBoxEmpty" id="10"]
 
-[sub_resource type="StyleBoxEmpty" id=11]
+[sub_resource type="StyleBoxEmpty" id="11"]
 
-[sub_resource type="StyleBoxEmpty" id=12]
+[sub_resource type="StyleBoxEmpty" id="12"]
 
-[sub_resource type="StyleBoxEmpty" id=13]
+[sub_resource type="StyleBoxEmpty" id="13"]
 
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0, 0, 0, 1 )
+[sub_resource type="StyleBoxFlat" id="1"]
+bg_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id="2"]
 content_margin_top = 5.0
-bg_color = Color( 0.6, 0.6, 0.6, 0 )
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
-[sub_resource type="StyleBoxFlat" id=3]
-bg_color = Color( 1, 1, 1, 1 )
+[sub_resource type="FontFile" id="7"]
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+
+[sub_resource type="StyleBoxFlat" id="3"]
+bg_color = Color(1, 1, 1, 1)
 border_width_top = 5
-border_color = Color( 0, 0, 0, 1 )
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id="4"]
 content_margin_left = 15.0
-content_margin_right = 15.0
 content_margin_top = 5.0
+content_margin_right = 15.0
 content_margin_bottom = 2.0
-bg_color = Color( 1, 1, 1, 1 )
+bg_color = Color(1, 1, 1, 1)
 border_width_top = 5
 border_width_bottom = 5
-border_color = Color( 0.752941, 0.752941, 0.752941, 1 )
+border_color = Color(0.752941, 0.752941, 0.752941, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 expand_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id=5]
+[sub_resource type="StyleBoxFlat" id="5"]
 content_margin_left = 15.0
-content_margin_right = 15.0
 content_margin_top = 5.0
+content_margin_right = 15.0
 content_margin_bottom = 2.0
-bg_color = Color( 1, 1, 1, 1 )
+bg_color = Color(1, 1, 1, 1)
 border_width_top = 5
 border_width_bottom = 5
-border_color = Color( 0, 0, 0, 1 )
+border_color = Color(0, 0, 0, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 expand_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxEmpty" id=6]
-
-[sub_resource type="DynamicFont" id=7]
-size = 24
-font_data = ExtResource( 8 )
+[sub_resource type="StyleBoxEmpty" id="6"]
 
 [resource]
-default_font = SubResource( 7 )
-CheckBox/colors/font_color = Color( 0, 0, 0, 1 )
-CheckBox/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
-CheckBox/colors/font_color_hover = Color( 0, 0, 0, 1 )
-CheckBox/colors/font_color_hover_pressed = Color( 0, 0, 0, 1 )
-CheckBox/colors/font_color_pressed = Color( 0, 0, 0, 1 )
+default_font = SubResource("7")
+CheckBox/colors/font_color = Color(0, 0, 0, 1)
+CheckBox/colors/font_color_disabled = Color(0.9, 0.9, 0.9, 0.2)
+CheckBox/colors/font_color_hover = Color(0, 0, 0, 1)
+CheckBox/colors/font_color_hover_pressed = Color(0, 0, 0, 1)
+CheckBox/colors/font_color_pressed = Color(0, 0, 0, 1)
 CheckBox/constants/check_vadjust = 0
 CheckBox/constants/hseparation = 8
-CheckBox/fonts/font = ExtResource( 1 )
-CheckBox/icons/checked = ExtResource( 2 )
+CheckBox/fonts/font = ExtResource("1")
+CheckBox/icons/checked = ExtResource("2")
 CheckBox/icons/radio_checked = null
 CheckBox/icons/radio_unchecked = null
-CheckBox/icons/unchecked = ExtResource( 3 )
-CheckBox/styles/disabled = SubResource( 8 )
-CheckBox/styles/focus = SubResource( 9 )
-CheckBox/styles/hover = SubResource( 10 )
-CheckBox/styles/hover_pressed = SubResource( 11 )
-CheckBox/styles/normal = SubResource( 12 )
-CheckBox/styles/pressed = SubResource( 13 )
+CheckBox/icons/unchecked = ExtResource("3")
+CheckBox/styles/disabled = SubResource("8")
+CheckBox/styles/focus = SubResource("9")
+CheckBox/styles/hover = SubResource("10")
+CheckBox/styles/hover_pressed = SubResource("11")
+CheckBox/styles/normal = SubResource("12")
+CheckBox/styles/pressed = SubResource("13")
 HScrollBar/icons/decrement = null
 HScrollBar/icons/decrement_highlight = null
 HScrollBar/icons/increment = null
 HScrollBar/icons/increment_highlight = null
-HScrollBar/styles/grabber = SubResource( 1 )
+HScrollBar/styles/grabber = SubResource("1")
 HScrollBar/styles/grabber_highlight = null
 HScrollBar/styles/grabber_pressed = null
-HScrollBar/styles/scroll = SubResource( 2 )
+HScrollBar/styles/scroll = SubResource("2")
 HScrollBar/styles/scroll_focus = null
-Label/colors/font_color = Color( 0, 0, 0, 1 )
-Label/colors/font_color_shadow = Color( 0, 0, 0, 0 )
+Label/colors/font_color = Color(0, 0, 0, 1)
+Label/colors/font_color_shadow = Color(0, 0, 0, 0)
 Label/constants/line_spacing = 3
 Label/constants/shadow_as_outline = 0
 Label/constants/shadow_offset_x = 1
 Label/constants/shadow_offset_y = 1
-Label/fonts/font = null
+Label/fonts/font = SubResource("7")
 Label/styles/normal = null
-LineEdit/colors/cursor_color = Color( 0, 0, 0, 1 )
-LineEdit/colors/font_color = Color( 0, 0, 0, 1 )
-LineEdit/colors/font_color_selected = Color( 0, 0, 0, 1 )
-LineEdit/colors/selection_color = Color( 1, 0.877075, 0.585938, 1 )
+LineEdit/colors/cursor_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_color_selected = Color(0, 0, 0, 1)
+LineEdit/colors/selection_color = Color(1, 0.877075, 0.585938, 1)
 LineEdit/constants/minimum_spaces = 12
-LineEdit/fonts/font = ExtResource( 1 )
-LineEdit/styles/focus = ExtResource( 4 )
-LineEdit/styles/normal = ExtResource( 4 )
+LineEdit/fonts/font = ExtResource("1")
+LineEdit/styles/focus = ExtResource("4")
+LineEdit/styles/normal = ExtResource("4")
 LineEdit/styles/read_only = null
-Panel/icons/ = null
-RichTextLabel/colors/default_color = Color( 0, 0, 0, 1 )
-RichTextLabel/colors/font_color_selected = Color( 0.490196, 0.490196, 0.490196, 1 )
-RichTextLabel/colors/selection_color = Color( 0.1, 0.1, 1, 0.8 )
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
+RichTextLabel/colors/font_color_selected = Color(0.490196, 0.490196, 0.490196, 1)
+RichTextLabel/colors/selection_color = Color(0.1, 0.1, 1, 0.8)
 RichTextLabel/constants/line_separation = 1
 RichTextLabel/constants/table_hseparation = 3
 RichTextLabel/constants/table_vseparation = 3
-RichTextLabel/fonts/bold_font = ExtResource( 5 )
-RichTextLabel/fonts/bold_italics_font = null
-RichTextLabel/fonts/italics_font = ExtResource( 6 )
-RichTextLabel/fonts/mono_font = null
-RichTextLabel/fonts/normal_font = ExtResource( 7 )
+RichTextLabel/fonts/bold_font = ExtResource("5")
+RichTextLabel/fonts/bold_italics_font = SubResource("7")
+RichTextLabel/fonts/italics_font = ExtResource("6")
+RichTextLabel/fonts/mono_font = SubResource("7")
+RichTextLabel/fonts/normal_font = ExtResource("7")
 RichTextLabel/styles/focus = null
 RichTextLabel/styles/normal = null
-TabContainer/colors/font_color_bg = Color( 0, 0, 0, 1 )
-TabContainer/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
-TabContainer/colors/font_color_fg = Color( 0, 0, 0, 1 )
+TabContainer/colors/font_color_bg = Color(0, 0, 0, 1)
+TabContainer/colors/font_color_disabled = Color(0.9, 0.9, 0.9, 0.2)
+TabContainer/colors/font_color_fg = Color(0, 0, 0, 1)
 TabContainer/constants/hseparation = 4
 TabContainer/constants/label_valign_bg = 2
 TabContainer/constants/label_valign_fg = 0
 TabContainer/constants/side_margin = 12
 TabContainer/constants/top_margin = 24
-TabContainer/fonts/font = null
+TabContainer/fonts/font = SubResource("7")
 TabContainer/icons/decrement = null
 TabContainer/icons/decrement_highlight = null
 TabContainer/icons/increment = null
 TabContainer/icons/increment_highlight = null
 TabContainer/icons/menu = null
 TabContainer/icons/menu_highlight = null
-TabContainer/styles/panel = SubResource( 3 )
-TabContainer/styles/tab_bg = SubResource( 4 )
-TabContainer/styles/tab_fg = SubResource( 5 )
+TabContainer/styles/panel = SubResource("3")
+TabContainer/styles/tab_bg = SubResource("4")
+TabContainer/styles/tab_fg = SubResource("5")
 VScrollBar/icons/decrement = null
 VScrollBar/icons/decrement_highlight = null
 VScrollBar/icons/increment = null
@@ -156,6 +157,5 @@ VScrollBar/icons/increment_highlight = null
 VScrollBar/styles/grabber = null
 VScrollBar/styles/grabber_highlight = null
 VScrollBar/styles/grabber_pressed = null
-VScrollBar/styles/scroll = SubResource( 6 )
+VScrollBar/styles/scroll = SubResource("6")
 VScrollBar/styles/scroll_focus = null
-
